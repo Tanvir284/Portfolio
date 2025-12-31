@@ -33,15 +33,25 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 
 
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=12">
 </head>
 
 <body>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="preloader_bot.png" alt="Cyber Bot" class="loader-mascot">
+            <h2 class="loader-text">Are you looking for <span class="loader-name">Tanvir?</span></h2>
+            <div class="loader-progress">0%</div>
+        </div>
+    </div>
 
     <div class="progress-container">
         <div class="progress-bar" id="progressBar"></div>
@@ -70,11 +80,19 @@
         <div class="hero-content">
             <div data-aos="fade-right">
                 <div class="tagline">AVAILABLE FOR WORK</div>
-                <h1 class="glitch" data-text="DESIGNING INTELLIGENCE">DESIGNING<br>INTELLIGENCE</h1>
-                <div class="typewriter" id="typewriter"></div>
+                <h1 style="font-size: 3.5rem; line-height: 1.2; margin-bottom: 10px;">Hi, I'm <span
+                        style="color:var(--primary)">Md Tanvir Islam</span></h1>
+                <h2 style="font-size: 1.8rem; color: #aaa; margin-bottom: 20px; font-weight: 400;">AI Architect &
+                    Software Engineer</h2>
+
+                <p class="hero-desc"
+                    style="max-width: 500px; color: var(--text-gray); margin: 20px 0; line-height: 1.6;">
+                    I engineered robust AI systems and scalable web applications. bridging the gap between theoretical
+                    AI models and production-ready software solutions.
+                </p>
                 <div style="margin-top: 30px;">
                     <a href="#work" class="btn btn-primary" data-magnetic>VIEW PROJECTS</a>
-                    <a href="resume.pdf" target="_blank" class="btn btn-outline" data-magnetic>RESUME</a>
+
                 </div>
             </div>
 
@@ -119,25 +137,83 @@
 
     <section id="about" class="section-container">
         <div class="section-header" data-aos="fade-up">
-            <h2>THE <span style="color:var(--primary)">ARCHITECT</span></h2>
-            <p>// Bridging the gap between theoretical AI and production engineering.</p>
+            <h2>ABOUT <span style="color:var(--primary)">ME</span></h2>
+            <p>// A closer look into my journey and passion.</p>
         </div>
-        <div class="about-grid">
-            <div class="about-text" data-aos="fade-right">
-                <p>Hello! I am <strong>Md Tanvir Islam</strong>, a passionate Software Engineer based in Bangladesh. I
-                    specialize in building robust, scalable AI systems and interactive web applications.</p>
-                <p>My philosophy is simple: <strong>If it can be imagined, it can be programmed.</strong> From
-                    diagnosing poultry diseases using Computer Vision to predicting cardiovascular risks with Medical
-                    Data Science, I solve real-world problems with code.</p>
+        <div class="about-grid-detailed">
+            <div class="about-image" data-aos="fade-right">
+                <img src="profile.jpg" alt="Tanvir Profile">
             </div>
-            <div class="skills-wrapper" data-aos="fade-left" style="display: flex; gap: 20px;">
-                <div class="stat-card">
-                    <h3>3+</h3>
-                    <p>YEARS EXP</p>
+
+            <div class="about-content-detailed" data-aos="fade-left">
+                <h3>I am <span>Md Tanvir Islam</span></h3>
+                <h4 style="color: #666; margin-bottom: 20px;">AI Architect & Software Engineer</h4>
+
+                <p>
+                    I am a passionate technology enthusiast with a deep love for solving complex problems through code.
+                    With a strong foundation in both <strong>Computer Vision</strong> and <strong>Web
+                        Development</strong>,
+                    I create systems that envision the future.
+                </p>
+                <p>
+                    My journey began with curiosity about how machines learn, leading me to specialize in
+                    <strong>Deep Learning</strong> and <strong>Neural Networks</strong>. Today, I build scalable
+                    applications that serve real-world needs.
+                </p>
+
+                <!-- Personal Focus & Interests -->
+                <div class="personal-focus" style="margin-top: 30px; margin-bottom: 30px;">
+                    <p style="margin-bottom: 15px; color: var(--text-gray); font-size: 0.95rem;">
+                        <i class="fas fa-seedling" style="color: var(--primary); margin-right: 8px;"></i>
+                        I'm currently learning <strong>Generative AI, MLOps, and Cloud Architecture</strong> to expand
+                        my
+                        ability to deploy scalable intelligent systems.
+                    </p>
+                    <p style="color: var(--text-gray); font-size: 0.95rem;">
+                        <i class="fas fa-comment-dots" style="color: var(--primary); margin-right: 8px;"></i>
+                        Ask me about <strong>Python, Neural Networks, Computer Vision, and Full-Stack
+                            Development</strong>.
+                    </p>
                 </div>
-                <div class="stat-card">
-                    <h3 style="color: var(--secondary);">15+</h3>
-                    <p>PROJECTS</p>
+
+                <!-- Education & Interests Cards -->
+                <div class="about-cards"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                    <div class="a-card"
+                        style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                            <i class="fas fa-graduation-cap" style="color: var(--primary); font-size: 1.5rem;"></i>
+                            <h4 style="margin: 0; font-size: 1rem; color: #fff;">Education</h4>
+                        </div>
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-gray);">B.Sc. in Computer Science</p>
+                    </div>
+
+                    <div class="a-card"
+                        style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                            <i class="fas fa-heart" style="color: var(--primary); font-size: 1.5rem;"></i>
+                            <h4 style="margin: 0; font-size: 1rem; color: #fff;">Interests</h4>
+                        </div>
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-gray);">AI Research, Gaming, Travel
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Strengths -->
+                <div class="strengths-section">
+                    <h4 style="color: #fff; margin-bottom: 15px; font-size: 1rem;">Core Strengths:</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <span class="strength-tag">Problem Solving</span>
+                        <span class="strength-tag">Critical Thinking</span>
+                        <span class="strength-tag">Fast Learner</span>
+                        <span class="strength-tag">Teamwork</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="#contact" class="btn btn-primary">HIRE ME</a>
+                    <a href="resume.pdf" target="_blank" class="btn btn-outline" style="margin-left: 15px;">DOWNLOAD
+                        CV</a>
                 </div>
             </div>
         </div>
@@ -258,8 +334,9 @@
             <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
                 <div class="t-date">2022 - 2024</div>
                 <h3 class="t-title">Competitive Programmer & Developer</h3>
-                <p class="t-desc">Engaged in competitive programming and software development alongside university
-                    studies.</p>
+                <p class="t-desc">Mastered Data Structures & Algorithms (DSA) and C++. Focused on optimizing
+                    time/space complexity and solving complex algorithmic challenges to build high-performance software.
+                </p>
             </div>
 
         </div>
@@ -352,49 +429,85 @@
         </div>
     </section>
 
+
+
     <section id="contact" class="section-container">
         <div class="contact-box" data-aos="zoom-in">
-            <h2>INITIALIZE <span style="color:var(--primary)">CONNECTION</span></h2>
-            <p style="color: #aaa; margin: 20px 0;">Open for high-impact engineering roles and collaborations.</p>
+            <div class="contact-left">
+                <h2>Get In <span
+                        style="background: linear-gradient(to right, #2563eb, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Touch</span>
+                </h2>
+                <p>Let's discuss your next project</p>
 
-            <div class="contact-info">
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ruhittanvir14@gmail.com"
-                        target="_blank">ruhittanvir14@gmail.com</a>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ruhittanvir14@gmail.com"
+                            target="_blank">ruhittanvir14@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+8801743612515</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Dhaka, Bangladesh</span>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <!-- TODO: Replace with your actual phone number -->
-                    <span>+8801743612515</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Dhaka, Bangladesh</span>
+
+                <div class="social-icons">
+                    <a href="https://github.com/Tanvir284" target="_blank" class="social-btn"
+                        aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/md-tanvir-islam-120699206/" target="_blank" class="social-btn"
+                        aria-label="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.instagram.com/ruhit__tanvir" target="_blank" class="social-btn"
+                        aria-label="Instagram Profile"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
-            <div class="social-icons">
-                <a href="https://github.com/Tanvir284" target="_blank" class="social-btn" aria-label="GitHub Profile"><i
-                        class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/md-tanvir-islam-120699206/" target="_blank" class="social-btn"
-                    aria-label="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
-                <!-- TODO: Replace # with your Instagram URL -->
-                <a href="https://www.instagram.com/ruhit__tanvir" target="_blank" class="social-btn"
-                    aria-label="Instagram Profile"><i class="fab fa-instagram"></i></a>
-            </div>
+            <form id="contactForm" class="contact-form" action="https://formsubmit.co/ruhittanvir14@gmail.com"
+                method="POST">
+                <!-- FormSubmit Configuration -->
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_subject" value="New Portfolio Message!">
+                <input type="text" name="_honey" style="display:none">
+
+                <div class="input-group">
+                    <input type="text" id="name" required placeholder=" ">
+                    <label for="name">Full Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" required placeholder=" ">
+                    <label for="email">Email Address</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="subject" required placeholder=" ">
+                    <label for="subject">Subject</label>
+                </div>
+                <div class="input-group">
+                    <textarea id="message" required placeholder=" " rows="4"></textarea>
+                    <label for="message">Message</label>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Send
+                    Message</button>
+            </form>
         </div>
     </section>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <script src="script.js?v=4"></script>
 
 
 
     <footer>
         <p align="center">&copy; <span id="year"></span>Developed by <span>Myself</span></p>
     </footer>
+    <div id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js?v=5"></script>
 </body>
 
 </html>
