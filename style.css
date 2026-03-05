@@ -2,11 +2,14 @@
     --bg: #050505;
     --surface: rgba(20, 20, 20, 0.6);
     --primary: #00f3ff;
-    --secondary: #7000ff;
+    /* Keep cyan but stronger glow */
+    --secondary: #b000ff;
+    /* Shift purple to be more vibrant pinkish-purple */
     --text: #ffffff;
     --text-gray: #a1a1aa;
-    --border: rgba(255, 255, 255, 0.1);
-    --glow: 0 0 20px rgba(0, 243, 255, 0.3);
+    --border: rgba(255, 255, 255, 0.15);
+    /* Slightly brighter border */
+    --glow: 0 0 20px rgba(0, 243, 255, 0.4);
 }
 
 * {
@@ -58,50 +61,81 @@ body {
 }
 
 /* --- 2. DECORATIVE ELEMENTS --- */
+/* Cinematic Noise Grain */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    /* Just below cursor */
+    opacity: 0.03;
+    /* Very subtle */
+    background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+}
+
 .grid-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -3;
+    /* Push way back */
     background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    /* Larger, cleaner grid */
     pointer-events: none;
 }
 
-#neuralCanvas {
+/* 3D WebGL Container */
+#webgl-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     z-index: -2;
-    opacity: 0.25;
+    /* Above grid, below content */
     pointer-events: none;
+    /* Let clicks pass through to site */
 }
 
-/* --- 3. CURSOR --- */
+/* --- 3. ELITE CURSOR --- */
 .cursor-outer {
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 243, 255, 0.5);
+    /* Cyan tint */
     border-radius: 50%;
     position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
     z-index: 9999;
-    /* Removed transition on outer cursor to fix lag/buggy feeling */
-    /* transition: transform 0.15s ease-out; */
-    mix-blend-mode: difference;
+    mix-blend-mode: exclusion;
+    /* Cinematic inverted color effect */
+    background: rgba(255, 255, 255, 0.05);
+    /* Slight fill */
+    transition: transform 0.1s ease-out, width 0.3s, height 0.3s, background 0.3s, border 0.3s;
+    transform: translate(-50%, -50%);
+}
+
+.cursor-outer.hover {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 1);
+    border: none;
+    mix-blend-mode: exclusion;
 }
 
 .cursor-inner {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background: var(--primary);
     border-radius: 50%;
     position: fixed;
@@ -109,6 +143,8 @@ body {
     left: 0;
     pointer-events: none;
     z-index: 9999;
+    transition: transform 0.05s linear;
+    transform: translate(-50%, -50%);
 }
 
 /* --- 4. NAV (UPDATED) --- */
@@ -160,7 +196,7 @@ nav {
 .nav-items {
     display: flex;
     gap: 15px;
-    /* Reduced gap since buttons have padding */
+    align-items: center;
 }
 
 .nav-items a {
@@ -174,31 +210,61 @@ nav {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.03);
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    /* Bouncy transition */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Removed underline ::after pseudo-element */
-
-.nav-items a:hover {
+.nav-items a:hover,
+.nav-items a.active {
     color: #fff;
     background: rgba(0, 243, 255, 0.1);
-    /* Subtle tint */
     border-color: var(--primary);
     box-shadow: 0 0 20px rgba(0, 243, 255, 0.4), inset 0 0 10px rgba(0, 243, 255, 0.2);
-    /* Outer + Inner Glow */
     letter-spacing: 3px;
-    /* Tech expansion effect */
     text-shadow: 0 0 8px var(--primary);
     transform: translateY(-2px);
-    /* Subtle lift */
 }
 
 .menu-toggle {
     display: none;
     font-size: 1.5rem;
     color: #fff;
-    cursor: none;
+    cursor: pointer;
+    /* Change from cursor: none for mobile support */
+    transition: transform 0.3s;
+}
+
+/* Mobile Nav Menu Integration */
+@media (max-width: 900px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-items {
+        position: fixed;
+        top: 75px;
+        /* Just below header */
+        right: -100%;
+        width: 100%;
+        height: max-content;
+        background: rgba(5, 5, 5, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 30px 5%;
+        border-bottom: 1px solid var(--border);
+        transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-items.active {
+        right: 0;
+    }
+
+    .nav-items a {
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
 }
 
 /* --- 5. HERO SECTION --- */
@@ -608,10 +674,11 @@ nav {
 }
 
 .section-header h2 {
-    font-size: 3rem;
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: -1.5px;
     margin-bottom: 10px;
     display: inline-block;
-    /* Required for transform */
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), text-shadow 0.3s;
     cursor: default;
 }
@@ -637,8 +704,9 @@ nav {
 /* New Detailed Grid */
 .about-grid-detailed {
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: 60px;
+    grid-template-columns: 1fr 1fr;
+    /* Equal split for better balance */
+    gap: 50px;
     align-items: center;
     margin-top: 40px;
 }
@@ -735,6 +803,52 @@ nav {
     color: #fff;
     font-weight: 600;
     font-size: 1rem;
+}
+
+/* About Section Cards */
+.about-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.a-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.a-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 243, 255, 0.1);
+}
+
+.a-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.a-card-icon {
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.a-card-title {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+}
+
+.a-card-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-gray);
 }
 
 /* Mobile Responsiveness for New About */

@@ -1,9 +1,51 @@
-AOS.init({ duration: 800, once: true });
+// Initialize Lenis Smooth Scrolling
+const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smooth: true,
+    mouseMultiplier: 1,
+    smoothTouch: false,
+    touchMultiplier: 2,
+    infinite: false,
+})
 
+// Integrate Lenis with GSAP ScrollTrigger
+// Only needed if using advanced pin/sync, but good for base sync
+lenis.on('scroll', ScrollTrigger.update)
+
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000)
+})
+
+gsap.ticker.lagSmoothing(0)
 // Mobile Menu Logic
 function toggleMenu() {
-    document.querySelector('.nav-items').classList.toggle('active');
+    const navItems = document.querySelector('.nav-items');
+    const icon = document.querySelector('.menu-toggle i');
+
+    navItems.classList.toggle('active');
+
+    // Swap icon
+    if (navItems.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
 }
+
+// Close menu when clicking a link
+document.querySelectorAll('.nav-items a').forEach(link => {
+    link.addEventListener('click', () => {
+        const navItems = document.querySelector('.nav-items');
+        if (navItems.classList.contains('active')) {
+            toggleMenu(); // Re-use toggle function to close & swap icon
+        }
+    });
+});
 
 // Scroll Progress
 window.onscroll = function () {
@@ -13,12 +55,35 @@ window.onscroll = function () {
     document.getElementById("progressBar").style.width = scrolled + "%";
 };
 
-// Cursor Logic
+// Cursor Logic (Elite Version)
 const cursorOuter = document.querySelector('.cursor-outer');
 const cursorInner = document.querySelector('.cursor-inner');
+let mouseX = 0, mouseY = 0;
+
 window.addEventListener('mousemove', e => {
-    cursorInner.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-    cursorOuter.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    // Smooth trailing for outer
+    gsap.to(cursorOuter, {
+        x: mouseX,
+        y: mouseY,
+        duration: 0.15,
+        ease: "power2.out"
+    });
+
+    // Instant for inner
+    gsap.set(cursorInner, {
+        x: mouseX,
+        y: mouseY
+    });
+});
+
+// Cursor Hover States
+const hoverElements = document.querySelectorAll('a, button, .project-card, .menu-toggle, .social-btn');
+hoverElements.forEach(el => {
+    el.addEventListener('mouseenter', () => cursorOuter.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursorOuter.classList.remove('hover'));
 });
 
 // Circle Text
@@ -41,79 +106,183 @@ function type() {
 }
 setTimeout(type, 500);
 
-/* --- NEURAL NETWORK BACKGROUND --- */
-const canvas = document.getElementById('neuralCanvas');
-const ctx = canvas.getContext('2d');
-let width, height;
-let particles = [];
+/* --- 3D WEBGL NEURAL SPHERE (THREE.JS) --- */
+const container = document.getElementById('webgl-container');
+let scene, camera, renderer, particlesMesh;
 
-function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+function initThreeJS() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 15;
+
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Create Particle Sphere
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 2000;
+    const posArray = new Float32Array(particlesCount * 3);
+
+    for (let i = 0; i < particlesCount * 3; i += 3) {
+        // Spherical distribution
+        const radius = 10;
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos((Math.random() * 2) - 1);
+
+        posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
+        posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        posArray[i + 2] = radius * Math.cos(phi);
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+    const material = new THREE.PointsMaterial({
+        size: 0.05,
+        color: 0x00f3ff,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+    });
+
+    particlesMesh = new THREE.Points(particlesGeometry, material);
+    scene.add(particlesMesh);
+
+    window.addEventListener('resize', onWindowResize);
+
+    // Mouse Interaction
+    document.addEventListener('mousemove', onDocumentMouseMove);
+
+    animateThreeJS();
 }
-window.addEventListener('resize', resize);
-resize();
 
-class Particle {
-    constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.size = Math.random() * 2 + 1;
-    }
+let mouseX3D = 0;
+let mouseY3D = 0;
 
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-    }
-
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 243, 255, 0.5)';
-        ctx.fill();
-    }
+function onDocumentMouseMove(event) {
+    mouseX3D = (event.clientX - window.innerWidth / 2) * 0.001;
+    mouseY3D = (event.clientY - window.innerHeight / 2) * 0.001;
 }
 
-function initParticles() {
-    particles = [];
-    const particleCount = Math.min(window.innerWidth / 10, 100);
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animateParticles() {
-    ctx.clearRect(0, 0, width, height);
+let clock = new THREE.Clock();
 
-    for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
+function animateThreeJS() {
+    requestAnimationFrame(animateThreeJS);
 
-        for (let j = i; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+    const elapsedTime = clock.getElapsedTime();
 
-            if (distance < 150) {
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(0, 243, 255, ${1 - distance / 150})`;
-                ctx.lineWidth = 0.5;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-            }
+    // Base Rotation
+    particlesMesh.rotation.y = elapsedTime * 0.1;
+    particlesMesh.rotation.z = elapsedTime * 0.05;
+
+    // Mouse Interaction Parallax
+    gsap.to(particlesMesh.rotation, {
+        x: mouseY3D * 0.5,
+        y: mouseX3D * 0.5 + (elapsedTime * 0.1),
+        duration: 2,
+        ease: "power2.out"
+    });
+
+    renderer.render(scene, camera);
+}
+
+// Initialize only if Three is loaded
+if (typeof THREE !== 'undefined') {
+    initThreeJS();
+}
+
+/* --- GSAP SCROLL ANIMATIONS --- */
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero Parallax
+gsap.to('.hero-visual', {
+    yPercent: 30,
+    ease: "none",
+    scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+    }
+});
+
+// Fade Up Sections and Elements
+gsap.utils.toArray('.section-header').forEach(header => {
+    gsap.from(header, {
+        opacity: 0,
+        y: 60,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+            trigger: header,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
         }
-    }
-    requestAnimationFrame(animateParticles);
-}
+    });
+});
 
-initParticles();
-animateParticles();
+// Staggered Cards (About, Work)
+gsap.utils.toArray(['.about-cards', '.project-grid', '.tech-stack-container']).forEach(container => {
+    const children = Array.from(container.children);
+    gsap.from(children, {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: container,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+        }
+    });
+});
+
+// Timeline Items GSAP reveal
+gsap.utils.toArray('.timeline-item').forEach(item => {
+    gsap.from(item, {
+        opacity: 0,
+        x: -50,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+            trigger: item,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+        }
+    });
+});
+
+
+// Initial Page Load Animations
+window.addEventListener('load', () => {
+    // Reveal Hero Text
+    gsap.from(".hero-content .tagline, .hero h1, .hero h2, .hero p, .hero a", {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out",
+        delay: 0.5 // Wait for preloader a bit
+    });
+
+    // Reveal 3D Elements/Floating cards
+    gsap.from(".main-img, .float-card", {
+        opacity: 0,
+        scale: 0.8,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: "elastic.out(1, 0.5)",
+        delay: 1
+    });
+});
 
 /* --- 3D TILT EFFECT FOR CARDS --- */
 document.querySelectorAll('.project-card').forEach(card => {
