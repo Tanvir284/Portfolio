@@ -37,12 +37,30 @@ function toggleMenu() {
     }
 }
 
-// Close menu when clicking a link
-document.querySelectorAll('.nav-items a').forEach(link => {
-    link.addEventListener('click', () => {
+// Close menu and smooth scroll when clicking a link
+document.querySelectorAll('.nav-items a, a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('href');
+
+        // Ensure it's an internal anchor link
+        if (targetId.startsWith('#') && targetId.length > 1) {
+            e.preventDefault(); // Stop native jump
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // Scroll smoothly using Lenis
+                lenis.scrollTo(targetElement, {
+                    offset: -80, // Offset for the fixed navbar
+                    duration: 1.5,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                });
+            }
+        }
+
+        // Close mobile menu if active
         const navItems = document.querySelector('.nav-items');
         if (navItems.classList.contains('active')) {
-            toggleMenu(); // Re-use toggle function to close & swap icon
+            toggleMenu();
         }
     });
 });
