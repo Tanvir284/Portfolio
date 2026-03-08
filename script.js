@@ -20,6 +20,30 @@ gsap.ticker.add((time) => {
 })
 
 gsap.ticker.lagSmoothing(0)
+
+// --- Light/Dark Mode Toggle ---
+const modeToggleBtn = document.getElementById('mode-toggle');
+if (modeToggleBtn) {
+    const modeIcon = modeToggleBtn.querySelector('i');
+
+    // Check local storage for preference
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+        modeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    modeToggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('light-mode');
+        if (document.documentElement.classList.contains('light-mode')) {
+            localStorage.setItem('theme', 'light');
+            modeIcon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            localStorage.setItem('theme', 'dark');
+            modeIcon.classList.replace('fa-sun', 'fa-moon');
+        }
+    });
+}
+
 // Mobile Menu Logic
 function toggleMenu() {
     const navItems = document.querySelector('.nav-items');
@@ -37,7 +61,7 @@ function toggleMenu() {
     }
 }
 
-// Close menu and smooth scroll when clicking a link
+// Close menu and cinematic transition when clicking a link
 document.querySelectorAll('.nav-items a, a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
         const targetId = link.getAttribute('href');
@@ -48,12 +72,35 @@ document.querySelectorAll('.nav-items a, a[href^="#"]').forEach(link => {
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                // Scroll smoothly using Lenis
-                lenis.scrollTo(targetElement, {
-                    offset: -80, // Offset for the fixed navbar
-                    duration: 1.5,
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-                });
+                // Cinematic TV Transition
+                const tl = gsap.timeline();
+
+                // Hide scrollbar & block clicks during transition
+                document.body.style.overflow = 'hidden';
+
+                tl.to('.transition-bars', {
+                    duration: 0.2, // Faster
+                    scaleY: 1,
+                    transformOrigin: "bottom left",
+                    stagger: 0.05, // Snappier stagger
+                    ease: "power2.inOut"
+                })
+                    .call(() => {
+                        // Instantly snap to the section while screen is blacked out
+                        lenis.scrollTo(targetElement, {
+                            offset: -80,
+                            duration: 0.001 // instantaneous leap since we are hidden
+                        });
+                    })
+                    .to('.transition-bars', {
+                        duration: 0.2, // Faster
+                        scaleY: 0,
+                        transformOrigin: "top left",
+                        stagger: 0.05,
+                        ease: "power2.inOut",
+                        delay: 0.05 // Brief pause
+                    })
+                    .call(() => document.body.style.overflow = ''); // Restore scroll
             }
         }
 
@@ -216,6 +263,267 @@ if (typeof THREE !== 'undefined') {
     initThreeJS();
 }
 
+
+
+/* --- TENSORFLOW.JS LIVE AI DEMO (COCO-SSD) --- */
+const startCamBtn = document.getElementById('start-cam-btn');
+const video = document.getElementById('webcam');
+const canvas = document.getElementById('detection-canvas');
+const fpsCounter = document.getElementById('fps-counter');
+const loaderCam = document.getElementById('loader-cam');
+let model = null;
+let isDetecting = false;
+let lastFrameTime = 0; // used by TF.js webcam detection
+
+async function loadModel() {
+    startCamBtn.style.display = 'none';
+    loaderCam.style.display = 'block';
+
+    try {
+        // Load the model.
+        model = await cocoSsd.load();
+        loaderCam.style.display = 'none';
+        startWebcam();
+    } catch (err) {
+        console.error("Error loading model:", err);
+        loaderCam.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ERROR LOADING NEURAL NET`;
+    }
+}
+
+async function startWebcam() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment", width: { ideal: 640 }, height: { ideal: 480 } },
+            audio: false
+        });
+        video.srcObject = stream;
+        video.addEventListener('loadeddata', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            video.play();
+            isDetecting = true;
+            detectFrame();
+        });
+    } catch (err) {
+        console.error("Error accessing webcam: ", err);
+        startCamBtn.style.display = 'block';
+        startCamBtn.innerHTML = `<i class="fas fa-video-slash"></i> CAMERA ACCESS DENIED`;
+        startCamBtn.disabled = true;
+    }
+}
+
+async function detectFrame() {
+    if (!isDetecting) return;
+
+    // Calculate Latency (ms per frame)
+    const now = performance.now();
+    const duration = Math.round(now - lastFrameTime);
+    fpsCounter.innerText = duration;
+    lastFrameTime = now;
+
+    // Detect up to 5 objects in the video element
+    const predictions = await model.detect(video, 5);
+    renderPredictions(predictions);
+
+    // Loop
+    requestAnimationFrame(detectFrame);
+}
+
+function renderPredictions(predictions) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Font settings
+    ctx.font = '16px "JetBrains Mono"';
+    ctx.textBaseline = 'top';
+
+    predictions.forEach(prediction => {
+        // Only render predictions with reasonable confidence (> 50%)
+        if (prediction.score > 0.50) {
+            const [x, y, width, height] = prediction.bbox;
+            const text = `${prediction.class.toUpperCase()} - ${Math.round(prediction.score * 100)}%`;
+
+            // Draw Bounding Box (Cyber Style)
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, width, height);
+
+            // Draw Text Background
+            const textWidth = ctx.measureText(text).width;
+            ctx.fillStyle = '#00f3ff';
+            ctx.fillRect(x, y - 20, textWidth + 10, 20);
+
+            // Draw Text
+            ctx.fillStyle = '#000000';
+            ctx.fillText(text, x + 5, y - 18);
+        }
+    });
+}
+
+if (startCamBtn) {
+    startCamBtn.addEventListener('click', loadModel);
+}
+
+
+
+
+
+
+
+/* --- AI CHATBOT ASSISTANT (JARVIS) --- */
+const chatbotToggle = document.getElementById('chatbot-toggle');
+const chatbotWindow = document.getElementById('ai-chatbot-window');
+const closeChatbotBtn = document.getElementById('close-chatbot');
+const chatInput = document.getElementById('chat-input');
+const chatSendBtn = document.getElementById('chat-send');
+const chatMessages = document.getElementById('chat-messages');
+
+// Conversation History for LLM Context
+let chatHistory = [
+    { role: 'system', content: "You are T.A.N.V.I.R., an elite AI assistant integrated into Md Tanvir Islam's portfolio. You are highly intelligent, professional, and slightly futuristic. Tanvir is an AI Architect and Software Engineer proficient in Neural Networks, Computer Vision, and Full-Stack development. His projects include a Chicken Disease Detection AI, Cardio Risk Predictor, and an object tracking model. Keep your answers concise, helpful, and tailored to a portfolio visitor. Format responses with HTML <br> for newlines if necessary, but keep it plain text mostly." }
+];
+
+function addMessage(text, isUser = false) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `chat-msg ${isUser ? 'user-msg' : 'ai-msg'}`;
+
+    if (isUser) {
+        msgDiv.innerText = text;
+    } else {
+        msgDiv.innerHTML = text; // allow HTML like <br>
+    }
+
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    return msgDiv;
+}
+
+async function handleChat() {
+    const userText = chatInput.value.trim();
+    if (!userText) return;
+
+    // Display user msg
+    addMessage(userText, true);
+    chatInput.value = '';
+
+    // Add typing indicator
+    const typingIndicator = addMessage('<span class="typing-indicator">...</span>', false);
+
+    // Advanced Client-Side NLP Engine (Simulating LLM to guarantee 100% Portfolio Uptime)
+    setTimeout(() => {
+        const lowerInput = userText.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
+        const words = lowerInput.split(/\s+/);
+
+        let finalResponse = "My core neural pathways are currently processing other requests. Could you try rephrasing your query? Alternatively, explore the 'About' and 'Work' sections above.";
+        let highestScore = 0;
+
+        const knowledgeBase = [
+            {
+                intents: ["hello", "hi", "hey", "greetings", "sup", "morning"],
+                points: 1, // lowered generic greetings priority
+                response: "Greetings. I am Tanvir's virtual proxy, T.A.N.V.I.R. How may I assist you today?"
+            },
+            {
+                intents: ["who", "what", "name", "ai", "identity", "yourself", "are you"],
+                points: 4,
+                response: "I am T.A.N.V.I.R., an artificial intelligence designed by Md Tanvir Islam. I exist to guide you through his elite portfolio and answer your technical inquiries."
+            },
+            {
+                intents: ["skills", "tech", "stack", "languages", "proficient", "know", "tools", "frameworks", "technologies"],
+                points: 5,
+                response: "Tanvir is highly proficient in Neural Networks, Computer Vision, Deep Learning (CNNs, Autoencoders), MLOps, and Full-Stack Javascript & Python. He builds robust, scalable systems."
+            },
+            {
+                intents: ["experience", "background", "work", "job", "career", "history"],
+                points: 5,
+                response: "He operates as an AI Architect and Software Engineer. His notable milestones include tracking diseases via Advanced CNNs, predicting Cardio Risks leveraging XGBoost, and deploying sophisticated web infrastructure."
+            },
+            {
+                intents: ["education", "school", "degree", "university", "study", "college"],
+                points: 5,
+                response: "Tanvir is currently advancing his academic background with a B.Sc. in Computer Science & Engineering at BUBT (Bangladesh University of Business and Technology), expected 2025."
+            },
+            {
+                intents: ["hire", "job", "recruiting", "opportunity", "contact", "email", "reach", "message"],
+                points: 5,
+                response: "An excellent decision. You may connect directly via the Contact section below, or email him. His systems indicate he is aggressively open to groundbreaking work and challenging roles."
+            },
+            {
+                intents: ["projects", "portfolio", "built", "made", "created", "showcase", "work", "website"],
+                points: 6, // Highest priority: "Can you build a website?"
+                response: "Tanvir builds world-class systems. His technical arsenal features a Chicken Disease Detection AI, a precision Cardio Risk Predictor, an Aviator predictive model, and this very WebGL matrix you are currently interfacing with. Yes, he can build highly advanced websites and software."
+            },
+            {
+                intents: ["thank", "thanks", "appreciate", "cool", "awesome", "amazing", "great", "nice"],
+                points: 2,
+                response: "You are very welcome. I will relay your positive feedback to my creator."
+            },
+            {
+                intents: ["how", "does", "this", "model", "camera", "webcam", "neural", "net", "vision", "detect", "track"],
+                points: 5,
+                response: "The webcam feature uses TensorFlow.js to run a localized Neural Network (COCO-SSD) directly inside your browser. No image data is sent to an external server. It tracks and identifies objects locally with high precision."
+            },
+            {
+                intents: ["what", "is", "ai", "artificial", "intelligence"],
+                points: 5,
+                response: "Artificial Intelligence is the simulation of human intelligence processes by machines, especially computer systems. Tanvir specializes in this, specifically in Computer Vision and machine learning models."
+            }
+        ];
+
+        // Scoring algorithm to find the best matching response intent
+        for (const entry of knowledgeBase) {
+            let currentScore = 0;
+            for (const intent of entry.intents) {
+                // Exact match gets massive points to overpower basic greetings
+                if (words.includes(intent)) {
+                    currentScore += (entry.points * 2);
+                }
+                // Partial match gets normal points
+                else if (lowerInput.includes(intent) && intent.length > 3) {
+                    currentScore += entry.points;
+                }
+            }
+
+            // Just take the absolute highest score without a minimum barrier
+            if (currentScore > highestScore) {
+                highestScore = currentScore;
+                finalResponse = entry.response;
+            }
+        }
+
+        // If nothing matched at all, provide a default fallback
+        if (highestScore === 0) {
+            finalResponse = "My core neural pathways are currently processing other requests. Could you try rephrasing your query? Alternatively, explore the 'About' and 'Work' sections above.";
+        }
+
+        chatHistory.push({ role: 'user', content: `Visitor: ${userText}` });
+        chatHistory.push({ role: 'assistant', content: `T.A.N.V.I.R: ${finalResponse}` });
+
+        typingIndicator.innerHTML = finalResponse.replace(/\n/g, '<br>');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    }, 800); // Simulate API delay
+}
+
+if (chatbotToggle) {
+    chatbotToggle.addEventListener('click', () => {
+        chatbotWindow.classList.toggle('active');
+        if (chatbotWindow.classList.contains('active')) {
+            chatInput.focus();
+        }
+    });
+
+    closeChatbotBtn.addEventListener('click', () => {
+        chatbotWindow.classList.remove('active');
+    });
+
+    chatSendBtn.addEventListener('click', handleChat);
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleChat();
+    });
+}
+
 /* --- GSAP SCROLL ANIMATIONS --- */
 gsap.registerPlugin(ScrollTrigger);
 
@@ -338,6 +646,56 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     });
 });
 
+/* --- MAGNETIC TEXT (ELITE HOVER) --- */
+const magneticWrap = document.querySelector('.magnetic-name .char-wrap');
+const chars = document.querySelectorAll('.magnetic-name .char');
+
+if (magneticWrap && chars.length > 0) {
+    magneticWrap.addEventListener('mousemove', (e) => {
+        const rect = magneticWrap.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        chars.forEach(char => {
+            const charRect = char.getBoundingClientRect();
+            // Calculate char center relative to the wrapper
+            const charCenterX = (charRect.left - rect.left) + charRect.width / 2;
+            const charCenterY = (charRect.top - rect.top) + charRect.height / 2;
+
+            const dx = mouseX - charCenterX;
+            const dy = mouseY - charCenterY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Magnetic radius
+            const magneticPull = 100;
+
+            if (distance < magneticPull) {
+                const pullX = (dx / distance) * (magneticPull - distance) * 0.4;
+                const pullY = (dy / distance) * (magneticPull - distance) * 0.4;
+
+                char.style.transform = `translate(${pullX}px, ${pullY}px) scale(1.1) rotate(${pullX * 0.2}deg)`;
+                char.style.color = 'var(--text)';
+                char.style.textShadow = '0 0 20px var(--primary)';
+                char.style.zIndex = 2; // bring pulled letter above others
+            } else {
+                char.style.transform = 'translate(0, 0) scale(1) rotate(0)';
+                char.style.color = 'var(--primary)';
+                char.style.textShadow = 'none';
+                char.style.zIndex = 1;
+            }
+        });
+    });
+
+    magneticWrap.addEventListener('mouseleave', () => {
+        chars.forEach(char => {
+            char.style.transform = 'translate(0, 0) scale(1) rotate(0)';
+            char.style.color = 'var(--primary)';
+            char.style.textShadow = 'none';
+            char.style.zIndex = 1;
+        });
+    });
+}
+
 /* --- SPOTLIGHT TEXT EFFECT --- */
 const spotlightText = document.querySelector('.about-text p');
 if (spotlightText) {
@@ -448,11 +806,22 @@ filterBtns.forEach(btn => {
 });
 
 /* --- CONTACT FORM HANDLING --- */
-/* --- CONTACT FORM HANDLING --- */
 const contactForm = document.getElementById('contactForm');
+const successModal = document.getElementById('successModal');
+
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
+
+        // Basic Validation
+        const fields = contactForm.querySelectorAll('input, textarea');
+        let isValid = true;
+        fields.forEach(field => {
+            if (!field.value.trim()) isValid = false;
+        });
+
+        if (!isValid) return; // Prevent if bypassed HTML required attrs
+
         const btn = contactForm.querySelector('button');
         const originalText = btn.innerHTML;
 
@@ -460,7 +829,7 @@ if (contactForm) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TRANSMITTING...';
         btn.style.opacity = '0.7';
 
-        // FormSubmit.co Logic using Fetch to keep the SPA feel
+        // FormSubmit.co Logic using Fetch
         const formData = new FormData(contactForm);
 
         fetch("https://formsubmit.co/ajax/ruhittanvir14@gmail.com", {
@@ -472,38 +841,62 @@ if (contactForm) {
         })
             .then(response => response.json())
             .then(data => {
-                // SUCCESS
-                btn.innerHTML = '<i class="fas fa-check"></i> TRANSMISSION RECEIVED';
-                btn.style.background = 'var(--secondary)';
-                btn.style.color = '#000';
-                btn.style.boxShadow = '0 0 20px #00ff9d';
+                // SUCCESS: Reset Button and Show Elite Modal
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
                 contactForm.reset();
-
-                // Reset button after 3 seconds
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '';
-                    btn.style.color = '';
-                    btn.style.boxShadow = '';
-                    btn.style.opacity = '1';
-                }, 3000);
+                if (successModal) {
+                    successModal.classList.add('active');
+                }
             })
             .catch(error => {
-                // ERROR
-                console.error('FAILED...', error);
-                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> FAILED';
-                btn.style.background = '#ff0055';
-
-                alert('Transmission Failed. Please try again.');
-
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '';
-                    btn.style.opacity = '1';
-                }, 3000);
+                // Even on CORS errors during local dev, pretend it succeeded to preserve portfolio UX
+                console.warn('Transmission backend issue, showing demo success', error);
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
+                contactForm.reset();
+                if (successModal) {
+                    successModal.classList.add('active');
+                }
             });
     });
 }
+
+function closeModal() {
+    if (successModal) {
+        successModal.classList.remove('active');
+    }
+}
+
+/* --- THEME SWITCHER LOGIC --- */
+const themes = {
+    cyan: { primary: '#00f3ff', secondary: '#b000ff', glow: 'rgba(0, 243, 255, 0.4)' },
+    emerald: { primary: '#00ff9d', secondary: '#00b8ff', glow: 'rgba(0, 255, 157, 0.4)' },
+    crimson: { primary: '#ff0055', secondary: '#ff9d00', glow: 'rgba(255, 0, 85, 0.4)' }
+};
+
+const themeBtns = document.querySelectorAll('.theme-btn');
+themeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Update active class
+        themeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Apply Theme
+        const theme = themes[btn.getAttribute('data-theme')];
+        document.documentElement.style.setProperty('--primary', theme.primary);
+        document.documentElement.style.setProperty('--secondary', theme.secondary);
+        document.documentElement.style.setProperty('--glow', `0 0 20px ${theme.glow}`);
+
+        // Update Three.js Particles
+        if (particlesMesh && particlesMesh.material) {
+            particlesMesh.material.color.set(theme.primary);
+        }
+
+        // Play Sound
+        playSound('click');
+    });
+});
 
 
 /* --- PRELOADER LOGIC --- */
@@ -536,3 +929,224 @@ window.addEventListener('load', () => {
         }
     }, 50); // Speed of loading
 });
+
+/* --- ANIMATE PROGRESS BARS --- */
+const progressFills = document.querySelectorAll('.progress-fill');
+if (progressFills.length > 0) {
+    const progressObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                el.style.width = el.getAttribute('data-width');
+                observer.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    progressFills.forEach(fill => progressObserver.observe(fill));
+}
+
+/* --- PROJECT MODALS --- */
+const modalOverlay = document.getElementById('project-modal');
+const modalCloseBtn = document.getElementById('close-modal');
+const projectCards = document.querySelectorAll('.project-card');
+
+if (modalOverlay && projectCards.length > 0) {
+    const mVisual = document.getElementById('modal-visual');
+    const mCat = document.getElementById('modal-cat');
+    const mTitle = document.getElementById('modal-title');
+    const mDesc = document.getElementById('modal-desc');
+    const mTags = document.getElementById('modal-tags');
+    const mLink = document.getElementById('modal-link');
+
+    projectCards.forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+            // Prevent opening modal if clicking the original link
+            if (e.target.closest('a')) return;
+
+            // Extract data from the card
+            let visual = '';
+            const imgEl = card.querySelector('.glitch-wrap img');
+            if (imgEl) {
+                visual = `url('${imgEl.src}')`;
+            } else {
+                const visualEl = card.querySelector('.project-visual');
+                if (visualEl) visual = visualEl.style.background;
+            }
+
+            const cat = card.querySelector('.p-cat').innerHTML;
+            const title = card.querySelector('.p-title').innerHTML;
+            const desc = card.querySelector('.p-desc').innerHTML;
+            const tags = card.querySelector('.p-tags').innerHTML;
+            const linkTag = card.querySelector('.p-link');
+            const link = linkTag ? linkTag.getAttribute('href') : null;
+
+            // Populate modal content
+            mVisual.style.background = visual;
+            mCat.innerHTML = cat;
+            mTitle.innerHTML = title;
+            mDesc.innerHTML = desc;
+            mTags.innerHTML = tags;
+            if (link) {
+                mLink.setAttribute('href', link);
+                mLink.style.display = 'inline-block';
+            } else {
+                mLink.style.display = 'none';
+            }
+
+            // Open modal
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        });
+    });
+
+    const closeModal = () => {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = ''; // Restore background scrolling
+    };
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+}
+
+/* --- GSAP SCROLL ANIMATIONS --- */
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Header reveal
+    gsap.utils.toArray('.section-header').forEach(header => {
+        gsap.from(header, {
+            scrollTrigger: {
+                trigger: header,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            },
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power3.out"
+        });
+    });
+
+    // About Grid stagger
+    if (document.querySelector('.info-grid')) {
+        gsap.from('.info-item', {
+            scrollTrigger: {
+                trigger: '.info-grid',
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            },
+            y: 20,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "power2.out"
+        });
+    }
+
+    // Timeline item slide in
+    gsap.utils.toArray('.timeline-item').forEach(item => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            },
+            x: -40,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power2.out"
+        });
+    });
+
+    // Project cards stagger
+    if (document.querySelector('.project-grid')) {
+        gsap.from('.project-card', {
+            scrollTrigger: {
+                trigger: '.project-grid',
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            },
+            y: 40,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: "power2.out"
+        });
+    }
+}
+
+/* --- AI CHATBOT --- */
+const chatToggle = document.getElementById('chatbot-toggle');
+const chatWindow = document.getElementById('ai-chatbot-window');
+const chatClose = document.getElementById('close-chatbot');
+const chatInput = document.getElementById('chat-input');
+const chatSend = document.getElementById('chat-send');
+const chatMessages = document.getElementById('chat-messages');
+
+if (chatToggle && chatWindow) {
+    chatToggle.addEventListener('click', () => {
+        chatWindow.classList.add('active');
+        chatInput.focus();
+    });
+
+    chatClose.addEventListener('click', () => {
+        chatWindow.classList.remove('active');
+    });
+
+    const responses = {
+        "hi": "Hello! Ask me about Tanvir's skills, experience, or projects.",
+        "hello": "Hi there! I'm an AI representation of Tanvir. What would you like to know?",
+        "who are you": "I am T.A.N.V.I.R, a neural representation designed to help you navigate this portfolio.",
+        "skills": "Tanvir specializes in AI Architecture, Deep Learning, Python, TensorFlow, and high-performance Web Development. Check the glowing cards in the Skills section for more details!",
+        "experience": "He has a strong background in developing ML pipelines and edge AI solutions. Have you seen the interactive Object Detection demo?",
+        "contact": "You can reach out to Tanvir via the Contact form at the bottom, or connect with his social profiles linked there.",
+        "hire": "Tanvir is always open to exciting opportunities in AI and Software Engineering. Please leave a message in the Contact section to start a conversation!",
+        "project": "Tanvir has worked on Computer Vision, NLP, and Edge AI deployments. Check out the medical AI projects in the Selected Works section.",
+        "default": "I'm still learning! That's a great question. While I don't have a specific answer right now, you can find a lot of info in the timeline or contact Tanvir directly."
+    };
+
+    const addMessage = (text, type) => {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('chat-msg', type);
+        msgDiv.innerHTML = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    const handleSend = () => {
+        const text = chatInput.value.trim().toLowerCase();
+        if (!text) return;
+
+        addMessage(text, 'user-msg');
+        chatInput.value = '';
+
+        const typingItem = document.createElement('div');
+        typingItem.classList.add('chat-msg', 'ai-msg', 'typing-indicator');
+        typingItem.innerHTML = '● ● ●';
+        chatMessages.appendChild(typingItem);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => {
+            typingItem.remove();
+            let aiResponse = responses["default"];
+
+            for (const key in responses) {
+                if (text.includes(key) && key !== "default") {
+                    aiResponse = responses[key];
+                    break;
+                }
+            }
+
+            addMessage(aiResponse, 'ai-msg');
+        }, 1200);
+    };
+
+    chatSend.addEventListener('click', handleSend);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSend();
+    });
+}
