@@ -900,7 +900,7 @@ themeBtns.forEach(btn => {
 
 
 /* --- PRELOADER LOGIC --- */
-window.addEventListener('load', () => {
+const startPreloader = () => {
     const preloader = document.getElementById('preloader');
     const percentageElement = document.querySelector('.loader-progress');
     let percentage = 0;
@@ -921,14 +921,20 @@ window.addEventListener('load', () => {
         if (percentage === 100) {
             clearInterval(loadInterval);
 
-            // Wait a bit at 100% then fade out
+            // Wait a bit at 100% then slide out
             setTimeout(() => {
                 preloader.classList.add('loaded');
                 document.body.style.overflow = 'auto'; // Re-enable scrolling
             }, 800);
         }
     }, 50); // Speed of loading
-});
+};
+
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    startPreloader();
+} else {
+    window.addEventListener('load', startPreloader);
+}
 
 /* --- ANIMATE PROGRESS BARS --- */
 const progressFills = document.querySelectorAll('.progress-fill');
@@ -1079,74 +1085,3 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     }
 }
 
-/* --- AI CHATBOT --- */
-const chatToggle = document.getElementById('chatbot-toggle');
-const chatWindow = document.getElementById('ai-chatbot-window');
-const chatClose = document.getElementById('close-chatbot');
-const chatInput = document.getElementById('chat-input');
-const chatSend = document.getElementById('chat-send');
-const chatMessages = document.getElementById('chat-messages');
-
-if (chatToggle && chatWindow) {
-    chatToggle.addEventListener('click', () => {
-        chatWindow.classList.add('active');
-        chatInput.focus();
-    });
-
-    chatClose.addEventListener('click', () => {
-        chatWindow.classList.remove('active');
-    });
-
-    const responses = {
-        "hi": "Hello! Ask me about Tanvir's skills, experience, or projects.",
-        "hello": "Hi there! I'm an AI representation of Tanvir. What would you like to know?",
-        "who are you": "I am T.A.N.V.I.R, a neural representation designed to help you navigate this portfolio.",
-        "skills": "Tanvir specializes in AI Architecture, Deep Learning, Python, TensorFlow, and high-performance Web Development. Check the glowing cards in the Skills section for more details!",
-        "experience": "He has a strong background in developing ML pipelines and edge AI solutions. Have you seen the interactive Object Detection demo?",
-        "contact": "You can reach out to Tanvir via the Contact form at the bottom, or connect with his social profiles linked there.",
-        "hire": "Tanvir is always open to exciting opportunities in AI and Software Engineering. Please leave a message in the Contact section to start a conversation!",
-        "project": "Tanvir has worked on Computer Vision, NLP, and Edge AI deployments. Check out the medical AI projects in the Selected Works section.",
-        "default": "I'm still learning! That's a great question. While I don't have a specific answer right now, you can find a lot of info in the timeline or contact Tanvir directly."
-    };
-
-    const addMessage = (text, type) => {
-        const msgDiv = document.createElement('div');
-        msgDiv.classList.add('chat-msg', type);
-        msgDiv.innerHTML = text;
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    };
-
-    const handleSend = () => {
-        const text = chatInput.value.trim().toLowerCase();
-        if (!text) return;
-
-        addMessage(text, 'user-msg');
-        chatInput.value = '';
-
-        const typingItem = document.createElement('div');
-        typingItem.classList.add('chat-msg', 'ai-msg', 'typing-indicator');
-        typingItem.innerHTML = '● ● ●';
-        chatMessages.appendChild(typingItem);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        setTimeout(() => {
-            typingItem.remove();
-            let aiResponse = responses["default"];
-
-            for (const key in responses) {
-                if (text.includes(key) && key !== "default") {
-                    aiResponse = responses[key];
-                    break;
-                }
-            }
-
-            addMessage(aiResponse, 'ai-msg');
-        }, 1200);
-    };
-
-    chatSend.addEventListener('click', handleSend);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
-    });
-}
