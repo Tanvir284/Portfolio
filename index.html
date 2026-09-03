@@ -8,7 +8,7 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description"
-        content="MD Tanvir Islam - AI Architect & Software Engineer specializing in Machine Learning, Deep Learning, Computer Vision, and Full-Stack Development. Building intelligent solutions with Python, TensorFlow, and React.">
+        content="MD Tanvir Islam - AI Architect &amp; Software Engineer. Computer Science graduate specialising in Machine Learning, Deep Learning and Computer Vision. Builds and deploys AI systems with PyTorch, TensorFlow, Flask and Docker.">
     <meta name="keywords"
         content="AI Engineer, Machine Learning, Deep Learning, Computer Vision, Software Engineer, Python, TensorFlow, React, Data Science">
     <meta name="author" content="MD Tanvir Islam">
@@ -19,7 +19,9 @@
         content="Specializing in Machine Learning, Deep Learning, and Computer Vision. Building intelligent solutions that solve real-world problems.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tanvir284.github.io/Portfolio/">
-    <meta property="og:image" content="https://tanvir284.github.io/Portfolio/profile.jpg">
+    <meta property="og:image" content="https://tanvir284.github.io/Portfolio/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="MD Tanvir Islam - AI Architect & Software Engineer">
 
     <!-- Twitter Card Meta Tags -->
@@ -27,7 +29,7 @@
     <meta name="twitter:title" content="MD Tanvir Islam | AI Architect">
     <meta name="twitter:description"
         content="AI Architect specializing in Machine Learning, Deep Learning, and Computer Vision.">
-    <meta name="twitter:image" content="https://tanvir284.github.io/Portfolio/profile.jpg">
+    <meta name="twitter:image" content="https://tanvir284.github.io/Portfolio/og-image.png">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png">
@@ -44,7 +46,107 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=13">
+    <link rel="stylesheet" href="style.css?v=17">
+
+    <!-- Structured data: helps recruiters and search engines parse who you are.
+         TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Md Tanvir Islam",
+      "url": "https://tanvir284.github.io/Portfolio/",
+      "image": "https://tanvir284.github.io/Portfolio/profile.jpg",
+      "jobTitle": "AI Architect & Software Engineer",
+      "email": "mailto:ruhittanvir14@gmail.com",
+      "telephone": "+8801828077520",
+      "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Dhaka",
+            "addressCountry": "BD"
+      },
+      "description": "Computer Science graduate specialising in Artificial Intelligence, with hands-on experience in machine learning, software development and data analysis.",
+      "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "Bangladesh University of Business and Technology (BUBT)",
+            "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Dhaka",
+                  "addressCountry": "BD"
+            }
+      },
+      "hasCredential": [
+            {
+                  "@type": "EducationalOccupationalCredential",
+                  "credentialCategory": "degree",
+                  "name": "B.Sc. in Computer Science and Engineering",
+                  "recognizedBy": {
+                        "@type": "CollegeOrUniversity",
+                        "name": "Bangladesh University of Business and Technology (BUBT)"
+                  }
+            },
+            {
+                  "@type": "EducationalOccupationalCredential",
+                  "credentialCategory": "certificate",
+                  "name": "Google Data Analytics Professional Certificate",
+                  "recognizedBy": {
+                        "@type": "Organization",
+                        "name": "Google"
+                  }
+            },
+            {
+                  "@type": "EducationalOccupationalCredential",
+                  "credentialCategory": "certificate",
+                  "name": "IBM Data Science Professional Certificate",
+                  "recognizedBy": {
+                        "@type": "Organization",
+                        "name": "IBM"
+                  }
+            },
+            {
+                  "@type": "EducationalOccupationalCredential",
+                  "credentialCategory": "certificate",
+                  "name": "IBM AI Developer Professional Certificate",
+                  "recognizedBy": {
+                        "@type": "Organization",
+                        "name": "IBM"
+                  }
+            }
+      ],
+      "knowsAbout": [
+            "Machine Learning",
+            "Deep Learning",
+            "Computer Vision",
+            "Natural Language Processing",
+            "PyTorch",
+            "TensorFlow",
+            "Scikit-learn",
+            "Transformers",
+            "Python",
+            "SQL",
+            "Full-Stack Development",
+            "Data Analysis",
+            "Docker"
+      ],
+      "sameAs": [
+            "https://github.com/Tanvir284",
+            "https://www.linkedin.com/in/md-tanvir-islam-120699206/"
+      ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Md Tanvir Islam — Portfolio",
+      "url": "https://tanvir284.github.io/Portfolio/",
+      "author": {
+            "@type": "Person",
+            "name": "Md Tanvir Islam"
+      }
+}
+    </script>
+
 </head>
 
 <body>
@@ -101,7 +203,10 @@
             <a href="#skills">SKILLS</a>
             <a href="#experience">EXPERIENCE</a>
             <a href="#education">EDUCATION</a>
+            <a href="#webgl3d">3D</a>
             <a href="#work">WORK</a>
+            <a href="#github">GITHUB</a>
+            <a href="#credentials">CREDENTIALS</a>
             <a href="#contact">CONTACT</a>
             <button id="mode-toggle" class="mode-toggle" aria-label="Toggle Light/Dark Mode">
                 <i class="fas fa-moon"></i>
@@ -243,9 +348,31 @@
 
                 <div style="margin-top: 30px;">
                     <a href="#contact" class="btn btn-primary">HIRE ME</a>
-                    <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="margin-left: 15px;">DOWNLOAD
-                        CV</a>
+                    <a href="resume.html" class="btn btn-outline" style="margin-left: 15px;">VIEW RESUME</a>
+                    <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline"
+                        style="margin-left: 15px;">DOWNLOAD CV</a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE glTF MODEL VIEWER (lazy-loaded WebGL) -->
+    <section id="webgl3d" class="section-container">
+        <div class="section-header">
+            <h2>REAL-TIME <span style="color:var(--primary)">3D</span></h2>
+            <p>// A glTF model streamed into a Three.js/WebGL scene &mdash; drag to rotate.</p>
+        </div>
+
+        <div class="brain-wrap">
+            <div id="brain-canvas" class="brain-canvas" role="img"
+                aria-label="Interactive three-dimensional mech figure rendered in WebGL">
+                <div class="brain-status" id="brain-status">
+                    <i class="fas fa-cube" aria-hidden="true"></i>
+                    <span>Loading the 3D scene&hellip;</span>
+                </div>
+            </div>
+            <div class="brain-hint" id="brain-hint" hidden>
+                <i class="fas fa-arrows-rotate" aria-hidden="true"></i> Drag to rotate &middot; scroll page to continue
             </div>
         </div>
     </section>
@@ -396,10 +523,12 @@
         </div>
         <div class="timeline">
             <div class="timeline-item">
-                <div class="t-date">2026 - PRESENT</div>
-                <h3 class="t-title">Research Assistant</h3>
-                <p class="t-desc">Conducting research on Computer Vision applications in agriculture, medical, and
-                    healthcare. Working to publish papers on Deep Learning models.</p>
+                <div class="t-date">JAN 2026 &ndash; FEB 2026</div>
+                <h3 class="t-title">Research Assistant &middot; InsightEdu</h3>
+                <p class="t-desc">Artificial Intelligence research. Worked across ML, DL, NLP and Transformer-based
+                    projects &mdash; dataset preprocessing, model training, evaluation and iterative experimentation
+                    with Python, PyTorch and Scikit-learn. Reviewed literature, reproduced state-of-the-art baselines,
+                    and drafted methodology and experimental-results sections for research papers.</p>
             </div>
 
             <div class="timeline-item">
@@ -427,12 +556,11 @@
         </div>
         <div class="timeline" style="border-left: 2px solid var(--secondary);">
             <div class="timeline-item">
-                <div class="t-date" style="color: var(--secondary);">2022 - 2025</div>
-                <h3 class="t-title">B.Sc. in Computer Science & Engineering</h3>
+                <div class="t-date" style="color: var(--secondary);">JAN 2022 &ndash; JAN 2026 &middot; GRADUATED</div>
+                <h3 class="t-title">B.Sc. in Computer Science &amp; Engineering</h3>
                 <p class="t-desc">
-                    <strong>Bangladesh University of Business and Technology</strong><br>
-                    Major in Artificial Intelligence. Focused on Deep Learning architectures, Algorithms, and System
-                    Design.
+                    <strong>Bangladesh University of Business and Technology (BUBT)</strong><br>
+                    CGPA 3.36 / 4.00. Focused on Deep Learning architectures, Algorithms, and System Design.
                 </p>
             </div>
         </div>
@@ -445,18 +573,64 @@
             <h2>SELECTED <span style="color:var(--primary)">WORKS</span></h2>
             <p>// High-performance solutions tailored for real-world impact.</p>
         </div>
+        <div class="project-filters" role="group" aria-label="Filter projects by domain">
+            <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">ALL</button>
+            <button type="button" class="filter-btn" data-filter="ai" aria-pressed="false">AI / DEEP LEARNING</button>
+            <button type="button" class="filter-btn" data-filter="ml" aria-pressed="false">MACHINE LEARNING</button>
+            <button type="button" class="filter-btn" data-filter="web" aria-pressed="false">FULL-STACK</button>
+            <button type="button" class="filter-btn" data-filter="graphics" aria-pressed="false">GRAPHICS</button>
+        </div>
+        <p class="filter-count" role="status" aria-live="polite"></p>
         <div class="project-grid">
+            <!-- Project 6: MangoCare AI (flagship - live deployed) -->
+            <div class="project-card featured" data-domain="ai">
+                <div class="project-visual glitch-wrap">
+                    <img width="640" height="640" src="./assets/project6.webp" alt="MangoCare AI" loading="lazy" decoding="async">
+                </div>
+                <div class="content-wrapper">
+                    <div class="p-cat">DEEP LEARNING &bull; FULL-STACK &bull; DEPLOYED</div>
+                    <h3 class="p-title">MangoCare AI</h3>
+                    <p class="p-desc">A full-stack AI web app that classifies <strong>8 mango leaf disease
+                            categories</strong> in real time using a fine-tuned <strong>DenseNet-121</strong>. Features
+                        secure authentication, an interactive diagnosis dashboard with confidence scores and treatment
+                        recommendations, and a REST API. Containerised with Docker and deployed live on Hugging Face
+                        Spaces.</p>
+                    <ul class="p-metrics">
+                        <li><span class="m-val">8</span><span class="m-key">disease classes</span></li>
+                        <li><span class="m-val">Live</span><span class="m-key">on HF Spaces</span></li>
+                    </ul>
+                    <div class="p-tags">
+                        <span>PyTorch</span>
+                        <span>DenseNet-121</span>
+                        <span>Flask</span>
+                        <span>Docker</span>
+                        <span>REST API</span>
+                    </div>
+                    <a href="https://github.com/Tanvir284/MangoCare-AI" target="_blank" rel="noopener noreferrer" class="p-link">VIEW SOURCE
+                        CODE <i class="fas fa-arrow-right" style="font-size: 0.8em; margin-left: 5px;"></i></a>
+                    <!-- TODO(Tanvir): paste your Hugging Face Spaces URL here, then delete this comment
+                         and the hidden attribute below so the live demo button shows.
+                    <a href="PASTE_HUGGING_FACE_SPACES_URL" target="_blank" rel="noopener noreferrer" class="p-link">TRY IT LIVE
+                        <i class="fas fa-external-link-alt" style="font-size: 0.8em; margin-left: 5px;"></i></a>
+                    -->
+                </div>
+            </div>
+
             <!-- Project 1: E-Commerce Shop -->
-            <div class="project-card">
+            <div class="project-card" data-domain="web">
                 <div class="project-visual glitch-wrap">
                     <img width="640" height="640" src="./assets/project1.webp" alt="E-Commerce Shop" loading="lazy" decoding="async">
                 </div>
                 <div class="content-wrapper">
                     <div class="p-cat">FULL-STACK • WEB DEVELOPMENT</div>
                     <h3 class="p-title">E-Commerce Shop</h3>
-                    <p class="p-desc">A robust electronic commerce platform facilitating seamless online transactions.
-                        Built with a scalable architecture to handle product catalogs, user authentication, and shopping
-                        cart functionality effectively.</p>
+                    <p class="p-desc">A full-stack e-commerce system with product catalogue, cart, order management and an
+                        admin dashboard supporting <strong>200+ SKUs</strong>. Implemented secure authentication and
+                        optimised SQL queries, cutting average page load time by <strong>35%</strong>.</p>
+                    <ul class="p-metrics">
+                        <li><span class="m-val">200+</span><span class="m-key">SKUs supported</span></li>
+                        <li><span class="m-val">-35%</span><span class="m-key">page load time</span></li>
+                    </ul>
                     <div class="p-tags">
                         <span>PHP</span>
                         <span>JavaScript</span>
@@ -469,7 +643,7 @@
             </div>
 
             <!-- Project 2: Employee Management System -->
-            <div class="project-card">
+            <div class="project-card" data-domain="web">
                 <div class="project-visual glitch-wrap">
                     <img width="640" height="640" src="./assets/project2.webp" alt="Employee Management System" loading="lazy" decoding="async">
                 </div>
@@ -492,7 +666,7 @@
             </div>
 
             <!-- Project 3: The Aviator 3D Plane -->
-            <div class="project-card">
+            <div class="project-card" data-domain="graphics">
                 <div class="project-visual glitch-wrap">
                     <img width="640" height="640" src="./assets/project3.webp" alt="The Aviator 3D Plane" loading="lazy" decoding="async">
                 </div>
@@ -514,16 +688,21 @@
             </div>
 
             <!-- Project 4: Breast Lesion ML AI -->
-            <div class="project-card">
+            <div class="project-card" data-domain="ai">
                 <div class="project-visual glitch-wrap">
                     <img width="640" height="640" src="./assets/project4.webp" alt="Breast Lesion AI" loading="lazy" decoding="async">
                 </div>
                 <div class="content-wrapper">
                     <div class="p-cat">DEEP LEARNING • HEALTHCARE AI</div>
                     <h3 class="p-title">Breast Lesion AI</h3>
-                    <p class="p-desc">An advanced ML pipeline for medical image analysis. This project utilizes Transfer
-                        Learning on an Encoder-Decoder Network to accurately segment and classify breast lesions from
-                        complex medical scans.</p>
+                    <p class="p-desc">A deep learning pipeline using <strong>U-Net with a ResNet-50 backbone</strong> to
+                        segment and classify breast lesions from ultrasound images. Achieved a
+                        <strong>91% Dice coefficient</strong>, outperforming the baseline CNN by 7 percentage
+                        points.</p>
+                    <ul class="p-metrics">
+                        <li><span class="m-val">91%</span><span class="m-key">Dice coefficient</span></li>
+                        <li><span class="m-val">+7pp</span><span class="m-key">over baseline CNN</span></li>
+                    </ul>
                     <div class="p-tags">
                         <span>Python</span>
                         <span>TensorFlow</span>
@@ -536,8 +715,35 @@
                 </div>
             </div>
 
+            <!-- Project 7: Concrete Compressive Strength -->
+            <div class="project-card" data-domain="ml">
+                <div class="project-visual glitch-wrap">
+                    <img width="640" height="640" src="./assets/project7.webp" alt="Concrete Compressive Strength Prediction" loading="lazy" decoding="async">
+                </div>
+                <div class="content-wrapper">
+                    <div class="p-cat">MACHINE LEARNING &bull; REGRESSION</div>
+                    <h3 class="p-title">Concrete Strength Prediction</h3>
+                    <p class="p-desc">Built and compared <strong>five regression models</strong> (Linear, Ridge, Random
+                        Forest, Gradient Boosting, XGBoost) to predict concrete compressive strength. Random Forest
+                        achieved the lowest <strong>RMSE of 4.2 MPa</strong>, with the water-cement ratio identified as
+                        the dominant predictor.</p>
+                    <ul class="p-metrics">
+                        <li><span class="m-val">4.2</span><span class="m-key">MPa RMSE (best)</span></li>
+                        <li><span class="m-val">5</span><span class="m-key">models compared</span></li>
+                    </ul>
+                    <div class="p-tags">
+                        <span>Scikit-learn</span>
+                        <span>XGBoost</span>
+                        <span>Pandas</span>
+                        <span>Regression</span>
+                    </div>
+                    <a href="https://github.com/Tanvir284/Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms" target="_blank" rel="noopener noreferrer" class="p-link">VIEW SOURCE
+                        CODE <i class="fas fa-arrow-right" style="font-size: 0.8em; margin-left: 5px;"></i></a>
+                </div>
+            </div>
+
             <!-- Project 5: Hotel Management System -->
-            <div class="project-card">
+            <div class="project-card" data-domain="web">
                 <div class="project-visual glitch-wrap">
                     <img width="640" height="640" src="./assets/project5.webp" alt="Hotel Management System" loading="lazy" decoding="async">
                 </div>
@@ -563,6 +769,77 @@
 
 
 
+    <!-- LIVE GITHUB ACTIVITY -->
+    <section id="github" class="section-container" style="background: #080808;">
+        <div class="section-header">
+            <h2>LIVE FROM <span style="color:var(--primary)">GITHUB</span></h2>
+            <p>// Pulled from the GitHub API in real time.</p>
+        </div>
+
+        <div class="gh-stats" id="gh-stats">
+            <div class="gh-stat">
+                <span class="gh-num" data-gh="repos">&mdash;</span>
+                <span class="gh-label">Public repos</span>
+            </div>
+            <div class="gh-stat">
+                <span class="gh-num" data-gh="stars">&mdash;</span>
+                <span class="gh-label">Stars earned</span>
+            </div>
+            <div class="gh-stat">
+                <span class="gh-num" data-gh="followers">&mdash;</span>
+                <span class="gh-label">Followers</span>
+            </div>
+            <div class="gh-stat">
+                <span class="gh-num" data-gh="languages">&mdash;</span>
+                <span class="gh-label">Languages used</span>
+            </div>
+        </div>
+
+        <div class="gh-repos" id="gh-repos" aria-live="polite">
+            <p class="gh-loading">Fetching latest repositories&hellip;</p>
+        </div>
+
+        <a href="https://github.com/Tanvir284" target="_blank" rel="noopener noreferrer" class="btn btn-outline gh-cta">
+            VIEW ALL ON GITHUB <i class="fas fa-arrow-up-right-from-square"
+                style="font-size: 0.8em; margin-left: 8px;" aria-hidden="true"></i>
+        </a>
+    </section>
+
+    <section id="credentials" class="section-container">
+        <div class="section-header">
+            <h2>CERTIFICATIONS &amp; <span style="color:var(--primary)">ACHIEVEMENTS</span></h2>
+            <p>// Verified training and competitive results.</p>
+        </div>
+
+        <div class="cred-grid">
+            <article class="cred-card">
+                <i class="fas fa-certificate cred-icon" aria-hidden="true"></i>
+                <h3>Google Data Analytics</h3>
+                <p>Professional Certificate</p>
+            </article>
+            <article class="cred-card">
+                <i class="fas fa-certificate cred-icon" aria-hidden="true"></i>
+                <h3>IBM Data Science</h3>
+                <p>Professional Certificate</p>
+            </article>
+            <article class="cred-card">
+                <i class="fas fa-certificate cred-icon" aria-hidden="true"></i>
+                <h3>IBM AI Developer</h3>
+                <p>Professional Certificate</p>
+            </article>
+            <article class="cred-card award">
+                <i class="fas fa-trophy cred-icon" aria-hidden="true"></i>
+                <h3>AI Battle 2024 &mdash; 2nd Place</h3>
+                <p>Advanced Python track &middot; BUBT CSE Department</p>
+            </article>
+            <article class="cred-card award">
+                <i class="fas fa-award cred-icon" aria-hidden="true"></i>
+                <h3>Brainstorming Week &mdash; 3rd Place</h3>
+                <p>AI Research Poster &middot; BUBT (2024)</p>
+            </article>
+        </div>
+    </section>
+
     <section id="contact" class="section-container">
         <div class="contact-box">
             <div class="contact-left">
@@ -579,7 +856,7 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>+8801743612515</span>
+                        <a href="tel:+8801828077520">+8801828077520</a>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
@@ -594,6 +871,15 @@
                         aria-label="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
                     <a href="https://www.instagram.com/ruhit__tanvir" target="_blank" rel="noopener noreferrer" class="social-btn"
                         aria-label="Instagram Profile"><i class="fab fa-instagram"></i></a>
+                    <!-- TODO(Tanvir): paste your profile URLs and delete the comment markers.
+                         These matter more than Instagram for AI/ML roles.
+                    <a href="PASTE_KAGGLE_URL" target="_blank" rel="noopener noreferrer" class="social-btn"
+                        aria-label="Kaggle Profile"><i class="fab fa-kaggle"></i></a>
+                    <a href="PASTE_HUGGING_FACE_URL" target="_blank" rel="noopener noreferrer" class="social-btn"
+                        aria-label="Hugging Face Profile"><i class="fas fa-robot"></i></a>
+                    <a href="PASTE_GOOGLE_SCHOLAR_OR_ORCID_URL" target="_blank" rel="noopener noreferrer" class="social-btn"
+                        aria-label="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                    -->
                 </div>
             </div>
 
@@ -639,7 +925,8 @@
         </div>
     </div>
     <footer>
-        <p>&copy; <span id="year"></span> Developed by <span>Myself</span></p>
+        <p>&copy; <span id="year"></span> <span>Md Tanvir Islam</span> &middot; Built from scratch with
+            Three.js, GSAP &amp; TensorFlow.js</p>
     </footer>
     <div id="backToTop" class="back-to-top" role="button" tabindex="0" aria-label="Back to top">
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
@@ -699,13 +986,15 @@
 
     <!-- Three.js for 3D WebGL Background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GLTFLoader matching the r128 build above (loads THREE.GLTFLoader) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <!-- TensorFlow.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=15"></script>
+    <script src="script.js?v=21"></script>
 </body>
 
 </html>

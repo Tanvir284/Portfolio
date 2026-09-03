@@ -283,6 +283,139 @@ if (typeof THREE !== 'undefined') {
 
 
 
+/* --- INTERACTIVE 3D BRAIN (brain.glb, lazy-loaded) --- */
+const brainHost = document.getElementById('brain-canvas');
+
+if (brainHost && typeof THREE !== 'undefined') {
+    const status = document.getElementById('brain-status');
+    const hint = document.getElementById('brain-hint');
+    let started = false;
+
+    const initBrain = () => {
+        if (started) return;
+        started = true;
+
+        if (!THREE.GLTFLoader) {
+            if (status) status.innerHTML = '<span>3D loader unavailable.</span>';
+            return;
+        }
+        if (status) status.innerHTML =
+            '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>Loading neural model&hellip;</span>';
+
+        const w = brainHost.clientWidth;
+        const h = brainHost.clientHeight;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, w / h, 0.01, 100);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        brainHost.appendChild(renderer.domElement);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+        const key = new THREE.PointLight(0x00f3ff, 1.5, 100);
+        key.position.set(3, 4, 5);
+        scene.add(key);
+        const rim = new THREE.PointLight(0xb000ff, 1.1, 100);
+        rim.position.set(-4, -2, -4);
+        scene.add(rim);
+
+        const pivot = new THREE.Group();
+        scene.add(pivot);
+
+        new THREE.GLTFLoader().load('brain.glb', (gltf) => {
+            const model = gltf.scene;
+
+            // Give every part the site's holographic look instead of the
+            // model's 59 original anatomical materials.
+            model.traverse((child) => {
+                if (!child.isMesh) return;
+                child.material = new THREE.MeshPhongMaterial({
+                    color: 0x0d2b33,
+                    emissive: 0x00f3ff,
+                    emissiveIntensity: 0.16,
+                    shininess: 60,
+                    transparent: true,
+                    opacity: 0.92,
+                    side: THREE.DoubleSide
+                });
+            });
+
+            // Centre the model and scale it to a predictable size
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+            const centre = box.getCenter(new THREE.Vector3());
+            model.position.sub(centre);
+            const scale = 2.6 / Math.max(size.x, size.y, size.z);
+            model.scale.setScalar(scale);
+            pivot.add(model);
+
+            camera.position.set(0, 0, 4.6);
+            camera.lookAt(0, 0, 0);
+
+            if (status) status.remove();
+            if (hint) hint.hidden = false;
+
+            let dragging = false, px = 0, py = 0;
+            let velX = prefersReducedMotion ? 0 : 0.0025, velY = 0;
+
+            const down = (x, y) => { dragging = true; px = x; py = y; };
+            const move = (x, y) => {
+                if (!dragging) return;
+                velX = (x - px) * 0.005;
+                velY = (y - py) * 0.005;
+                pivot.rotation.y += velX;
+                pivot.rotation.x += velY;
+                px = x; py = y;
+            };
+            const up = () => { dragging = false; };
+
+            const el = renderer.domElement;
+            el.style.cursor = 'grab';
+            el.addEventListener('pointerdown', e => { down(e.clientX, e.clientY); el.style.cursor = 'grabbing'; });
+            window.addEventListener('pointermove', e => move(e.clientX, e.clientY));
+            window.addEventListener('pointerup', () => { up(); el.style.cursor = 'grab'; });
+
+            let visible = true;
+            new IntersectionObserver(([e]) => { visible = e.isIntersecting; },
+                { threshold: 0 }).observe(brainHost);
+
+            (function loop() {
+                requestAnimationFrame(loop);
+                if (!visible || document.hidden) return;   // don't burn GPU off-screen
+                if (!dragging) {
+                    if (!prefersReducedMotion) pivot.rotation.y += 0.0025;
+                    // ease out any flick momentum
+                    velX *= 0.94; velY *= 0.94;
+                    pivot.rotation.y += velX;
+                    pivot.rotation.x += velY;
+                }
+                pivot.rotation.x = Math.max(-0.9, Math.min(0.9, pivot.rotation.x));
+                renderer.render(scene, camera);
+            })();
+
+            window.addEventListener('resize', () => {
+                const nw = brainHost.clientWidth, nh = brainHost.clientHeight;
+                if (!nw || !nh) return;
+                camera.aspect = nw / nh;
+                camera.updateProjectionMatrix();
+                renderer.setSize(nw, nh);
+            });
+        },
+        undefined,
+        (err) => {
+            console.error('Could not load brain.glb:', err);
+            if (status) status.innerHTML =
+                '<i class="fas fa-triangle-exclamation" aria-hidden="true"></i><span>3D model failed to load.</span>';
+        });
+    };
+
+    // 3.2 MB is too heavy to fetch on page load -- wait until it is nearly in view
+    new IntersectionObserver((entries, obs) => {
+        if (entries[0].isIntersecting) { obs.disconnect(); initBrain(); }
+    }, { rootMargin: '200px' }).observe(brainHost);
+}
+
 /* --- TENSORFLOW.JS LIVE AI DEMO (COCO-SSD) --- */
 const startCamBtn = document.getElementById('start-cam-btn');
 const video = document.getElementById('webcam');
@@ -430,6 +563,11 @@ const chatInput = document.getElementById('chat-input');
 const chatSendBtn = document.getElementById('chat-send');
 const chatMessages = document.getElementById('chat-messages');
 
+// Set this to your deployed Cloudflare Worker URL to use a real LLM.
+// See worker/README.md. While it is null the offline matcher below is used,
+// so the assistant still works if the Worker is down or out of credit.
+const CHAT_API = null; // e.g. 'https://tanvir-assistant.your-name.workers.dev'
+
 // Conversation History for LLM Context
 let chatHistory = [
     { role: 'system', content: "You are T.A.N.V.I.R., an elite AI assistant integrated into Md Tanvir Islam's portfolio. You are highly intelligent, professional, and slightly futuristic. Tanvir is an AI Architect and Software Engineer proficient in Neural Networks, Computer Vision, and Full-Stack development. His projects include a Chicken Disease Detection AI, Cardio Risk Predictor, and an object tracking model. Keep your answers concise, helpful, and tailored to a portfolio visitor. Format responses with HTML <br> for newlines if necessary, but keep it plain text mostly." }
@@ -464,7 +602,13 @@ async function handleChat() {
     // Add typing indicator
     const typingIndicator = addMessage('<span class="typing-indicator">...</span>', false);
 
-    // Advanced Client-Side NLP Engine (Simulating LLM to guarantee 100% Portfolio Uptime)
+    if (CHAT_API) {
+        askTheModel(userText, typingIndicator);
+        return;
+    }
+
+    // Offline fallback: a local keyword matcher. Not an LLM -- it is here so the
+    // assistant still answers when no Worker is configured.
     setTimeout(() => {
         const lowerInput = userText.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
         const words = lowerInput.split(/\s+/);
@@ -557,13 +701,47 @@ async function handleChat() {
             finalResponse = "My core neural pathways are currently processing other requests. Could you try rephrasing your query? Alternatively, explore the 'About' and 'Work' sections above.";
         }
 
-        chatHistory.push({ role: 'user', content: `Visitor: ${userText}` });
-        chatHistory.push({ role: 'assistant', content: `T.A.N.V.I.R: ${finalResponse}` });
+        chatHistory.push({ role: 'user', content: userText });
+        chatHistory.push({ role: 'assistant', content: finalResponse });
 
         typingIndicator.innerHTML = finalResponse.replace(/\n/g, '<br>');
         if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
 
     }, 800); // Simulate API delay
+}
+
+// Real LLM path -- the API key lives in the Worker, never in this file.
+async function askTheModel(userText, bubble) {
+    const setText = (text) => {
+        bubble.textContent = text;
+        if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    try {
+        const res = await fetch(CHAT_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            // Send only the plain turns; the system prompt lives in the Worker
+            body: JSON.stringify({
+                message: userText,
+                history: chatHistory.filter(m => m.role !== 'system').slice(-12)
+            })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+            setText(data.error || 'The assistant is unavailable right now.');
+            return;
+        }
+
+        setText(data.reply);
+        chatHistory.push({ role: 'user', content: userText });
+        chatHistory.push({ role: 'assistant', content: data.reply });
+    } catch (err) {
+        console.error('Assistant request failed:', err);
+        setText('I could not reach the assistant. Please email ruhittanvir14@gmail.com.');
+    }
 }
 
 if (chatbotToggle && chatbotWindow) {
@@ -757,11 +935,14 @@ function playSound(type) {
     }
 }
 
-// Attach hover sounds to interactive elements
-document.querySelectorAll('a, button, .tech-badge, .project-card, .social-btn').forEach(el => {
-    el.addEventListener('mouseenter', () => playSound('hover'));
-    el.addEventListener('click', () => playSound('click'));
-});
+// Click feedback only. Hover sounds previously fired on every link, button and
+// tech badge (~100 elements), which made simply moving the mouse noisy.
+document.querySelectorAll('.btn, .project-card, .social-btn, .filter-btn, .theme-btn')
+    .forEach(el => el.addEventListener('click', () => playSound('click')));
+
+// Keep the hover chirp for the few large, deliberate targets
+document.querySelectorAll('.btn-primary, .project-card')
+    .forEach(el => el.addEventListener('mouseenter', () => playSound('hover')));
 
 
 
@@ -789,6 +970,151 @@ if (backToTopBtn) {
             backToTopBtn.click();
         }
     });
+}
+
+/* --- PROJECT FILTERING --- */
+const filterBtns = document.querySelectorAll('.filter-btn');
+const filterCount = document.querySelector('.filter-count');
+
+if (filterBtns.length > 0) {
+    const cards = Array.from(document.querySelectorAll('.project-card'));
+
+    const applyFilter = (filter) => {
+        let shown = 0;
+        cards.forEach(card => {
+            const match = filter === 'all' || card.dataset.domain === filter;
+            card.classList.toggle('is-hidden', !match);
+            if (match) shown++;
+        });
+
+        filterBtns.forEach(b => {
+            const on = b.dataset.filter === filter;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-pressed', String(on));
+        });
+
+        if (filterCount) {
+            filterCount.textContent = filter === 'all'
+                ? `${shown} projects`
+                : `${shown} of ${cards.length} projects`;
+        }
+
+        // Cards changing visibility shifts everything below them
+        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+    };
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            applyFilter(btn.dataset.filter);
+            playSound('click');
+        });
+    });
+
+    applyFilter('all');
+}
+
+/* --- LIVE GITHUB ACTIVITY --- */
+const ghRepos = document.getElementById('gh-repos');
+
+if (ghRepos) {
+    const GH_USER = 'Tanvir284';
+    const CACHE_KEY = 'gh-cache-v1';
+    const CACHE_TTL = 60 * 60 * 1000; // 1 hour -- the API allows 60 calls/hr unauthenticated
+
+    const esc = (str) => String(str).replace(/[&<>"']/g,
+        c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const setStat = (key, value) => {
+        const el = document.querySelector(`[data-gh="${key}"]`);
+        if (el) el.textContent = value;
+    };
+
+    const render = (user, repos) => {
+        // Skip forks and this portfolio itself; show the most recently pushed work
+        // Skip forks, this portfolio, and the profile-README repo
+        const skip = new Set(['portfolio', GH_USER.toLowerCase()]);
+        const own = repos
+            .filter(r => !r.fork && !skip.has(r.name.toLowerCase()))
+            .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+            .slice(0, 6);
+
+        const stars = repos.reduce((n, r) => n + (r.stargazers_count || 0), 0);
+        const langs = new Set(repos.map(r => r.language).filter(Boolean));
+
+        setStat('repos', user ? user.public_repos : repos.length);
+        setStat('stars', stars);
+        setStat('followers', user ? user.followers : '—');
+        setStat('languages', langs.size);
+
+        ghRepos.innerHTML = own.map(r => `
+            <a class="gh-card" href="${esc(r.html_url)}" target="_blank" rel="noopener noreferrer">
+                <span class="gh-name"><i class="fas fa-code-branch" aria-hidden="true"></i> ${esc(r.name)}</span>
+                <span class="gh-desc">${esc(r.description || 'No description provided.')}</span>
+                <span class="gh-meta">
+                    ${r.language ? `<span class="gh-lang">${esc(r.language)}</span>` : ''}
+                    ${r.stargazers_count ? `<span><i class="fas fa-star" aria-hidden="true"></i> ${r.stargazers_count}</span>` : ''}
+                    <span class="gh-when">updated ${timeAgo(r.pushed_at)}</span>
+                </span>
+            </a>`).join('');
+    };
+
+    function timeAgo(iso) {
+        const days = Math.floor((Date.now() - new Date(iso)) / 86400000);
+        if (days <= 0) return 'today';
+        if (days === 1) return 'yesterday';
+        if (days < 30) return `${days} days ago`;
+        const months = Math.floor(days / 30);
+        if (months < 12) return `${months} month${months > 1 ? 's' : ''} ago`;
+        const years = Math.floor(months / 12);
+        return `${years} year${years > 1 ? 's' : ''} ago`;
+    }
+
+    const cached = (() => {
+        try {
+            const raw = localStorage.getItem(CACHE_KEY);
+            if (!raw) return null;
+            const obj = JSON.parse(raw);
+            return (Date.now() - obj.at < CACHE_TTL) ? obj : null;
+        } catch (e) { return null; }
+    })();
+
+    if (cached) {
+        render(cached.user, cached.repos);
+    } else {
+        Promise.all([
+            fetch(`https://api.github.com/users/${GH_USER}`).then(r => r.ok ? r.json() : null),
+            fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`)
+                .then(r => r.ok ? r.json() : Promise.reject(new Error('repos ' + r.status)))
+        ])
+            .then(([user, repos]) => {
+                if (!Array.isArray(repos)) throw new Error('unexpected payload');
+                render(user, repos);
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), user, repos }));
+                } catch (e) { /* quota or private mode */ }
+            })
+            .catch(err => {
+                // Rate-limited or offline: fall back to the snapshot committed in the repo
+                console.warn('GitHub API unavailable, using local snapshot:', err);
+                fetch('repos.json')
+                    .then(r => r.json())
+                    .then(list => render(null, list.map(r => ({
+                        name: r.name,
+                        description: r.description,
+                        html_url: r.html_url,
+                        language: (r.languages && r.languages[0]) || null,
+                        stargazers_count: 0,
+                        fork: false,
+                        pushed_at: new Date().toISOString()
+                    }))))
+                    .catch(() => {
+                        ghRepos.innerHTML =
+                            '<p class="gh-loading">Could not load repositories right now. ' +
+                            '<a href="https://github.com/Tanvir284" target="_blank" rel="noopener noreferrer">' +
+                            'Browse them on GitHub</a>.</p>';
+                    });
+            });
+    }
 }
 
 /* --- CONTACT FORM HANDLING --- */

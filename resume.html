@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume | Md Tanvir Islam — AI Architect &amp; Software Engineer</title>
+
+    <meta name="description"
+        content="Resume of Md Tanvir Islam — Computer Science graduate specialising in Artificial Intelligence, with experience in machine learning, software development and data analysis.">
+    <meta name="theme-color" content="#050505">
+    <link rel="canonical" href="https://tanvir284.github.io/Portfolio/resume.html">
+
+    <meta property="og:title" content="Resume | Md Tanvir Islam">
+    <meta property="og:description" content="AI Architect &amp; Software Engineer — full resume.">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://tanvir284.github.io/Portfolio/resume.html">
+    <meta property="og:image" content="https://tanvir284.github.io/Portfolio/og-image.png">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: rgba(255, 255, 255, 0.03);
+            --primary: #00f3ff;
+            --secondary: #b000ff;
+            --text: #ffffff;
+            --text-gray: #a1a1aa;
+            --border: rgba(255, 255, 255, 0.14);
+        }
+
+        :root.light-mode {
+            --bg: #ffffff;
+            --surface: #f6f8fa;
+            --primary: #0070a8;
+            --secondary: #7a1fd0;
+            --text: #0f172a;
+            --text-gray: #475569;
+            --border: rgba(0, 0, 0, 0.14);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', system-ui, sans-serif;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 56px 24px 96px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 44px;
+        }
+
+        .toolbar a,
+        .toolbar button {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.76rem;
+            letter-spacing: 0.06em;
+            text-decoration: none;
+            color: var(--text-gray);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 9px 18px;
+            cursor: pointer;
+            transition: color .25s, border-color .25s;
+        }
+
+        .toolbar a:hover,
+        .toolbar button:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .toolbar .group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        header.masthead {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 28px;
+            margin-bottom: 36px;
+        }
+
+        h1 {
+            font-size: clamp(2.1rem, 6vw, 3.1rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .role {
+            font-size: 1.12rem;
+            color: var(--primary);
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        .contact-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            margin-top: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .contact-line a {
+            color: var(--text-gray);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .contact-line a:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .item {
+            margin-bottom: 24px;
+        }
+
+        .item-head {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 14px;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        h3 {
+            font-size: 1.06rem;
+            font-weight: 700;
+        }
+
+        .when {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--text-gray);
+            white-space: nowrap;
+        }
+
+        .where {
+            font-size: 0.92rem;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+        }
+
+        .stack {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.73rem;
+            color: var(--primary);
+            margin: 4px 0 8px;
+        }
+
+        p,
+        li {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .skills dt {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.06em;
+            color: var(--text);
+            text-transform: uppercase;
+            margin-top: 14px;
+        }
+
+        .skills dd {
+            margin: 4px 0 0;
+            color: var(--text-gray);
+            font-size: 0.93rem;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 10px 28px;
+        }
+
+        .links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            border-bottom: 1px solid transparent;
+        }
+
+        .links a:hover {
+            border-bottom-color: var(--primary);
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        @media print {
+
+            .toolbar,
+            .no-print {
+                display: none !important;
+            }
+
+            :root {
+                --bg: #fff;
+                --text: #000;
+                --text-gray: #333;
+                --primary: #005f7a;
+                --border: #ccc;
+            }
+
+            body {
+                background: #fff;
+                color: #000;
+                font-size: 11pt;
+                line-height: 1.45;
+            }
+
+            .wrap {
+                max-width: none;
+                padding: 0;
+            }
+
+            section {
+                margin-bottom: 18px;
+                break-inside: avoid;
+            }
+
+            .item {
+                break-inside: avoid;
+                margin-bottom: 14px;
+            }
+
+            h1 {
+                font-size: 22pt;
+            }
+
+            a {
+                color: #000;
+                text-decoration: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <nav class="toolbar">
+            <a href="index.html">&larr; BACK TO PORTFOLIO</a>
+            <div class="group">
+                <button type="button" id="theme-toggle" aria-label="Toggle light and dark mode">THEME</button>
+                <button type="button" onclick="window.print()">PRINT / SAVE PDF</button>
+                <a href="resume.pdf" target="_blank" rel="noopener noreferrer">ORIGINAL PDF</a>
+            </div>
+        </nav>
+
+        <header class="masthead">
+            <h1>Md Tanvir Islam</h1>
+            <div class="role">AI Architect &amp; Software Engineer</div>
+            <div class="contact-line">
+                <span><i class="fas fa-location-dot" aria-hidden="true"></i> Dhaka, Bangladesh</span>
+                <a href="mailto:ruhittanvir14@gmail.com">ruhittanvir14@gmail.com</a>
+                <a href="tel:+8801828077520">+880 1828 077520</a>
+                <a href="https://github.com/Tanvir284" target="_blank" rel="noopener noreferrer">github.com/Tanvir284</a>
+                <a href="https://www.linkedin.com/in/md-tanvir-islam-120699206/" target="_blank"
+                    rel="noopener noreferrer">LinkedIn</a>
+            </div>
+        </header>
+
+        <section>
+            <h2>Professional Summary</h2>
+            <p>Computer Science graduate specialising in Artificial Intelligence with hands-on experience in machine
+                learning, software development and data analysis. Proficient in Python, SQL and modern development
+                frameworks, with experience developing AI solutions, building full-stack applications and conducting
+                research. Seeking entry-level opportunities in Software Engineering, AI/ML, Data Analytics or
+                IT-related roles.</p>
+        </section>
+
+        <section>
+            <h2>Experience</h2>
+            <div class="item">
+                <div class="item-head">
+                    <h3>Research Assistant &middot; InsightEdu</h3>
+                    <span class="when">Jan 2026 &ndash; Feb 2026</span>
+                </div>
+                <div class="where">Artificial Intelligence Research</div>
+                <ul>
+                    <li>Worked across multiple ML, DL, NLP and Transformer-based projects &mdash; from dataset
+                        preprocessing and model training through to evaluation and iterative experimentation using
+                        Python, PyTorch and Scikit-learn.</li>
+                    <li>Contributed to applied AI research by reviewing literature, reproducing state-of-the-art
+                        baselines, and assisting in drafting research paper sections covering methodology and
+                        experimental results.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Education</h2>
+            <div class="item">
+                <div class="item-head">
+                    <h3>B.Sc. in Computer Science and Engineering</h3>
+                    <span class="when">Jan 2022 &ndash; Jan 2026</span>
+                </div>
+                <div class="where">Bangladesh University of Business and Technology (BUBT) &middot; CGPA 3.36 / 4.00
+                    &middot; <strong>Graduated</strong></div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Projects</h2>
+
+            <div class="item">
+                <div class="item-head">
+                    <h3>MangoCare AI &mdash; Mango Leaf Disease Detection</h3>
+                    <span class="links"><a href="https://github.com/Tanvir284/MangoCare-AI" target="_blank"
+                            rel="noopener noreferrer">GitHub</a></span>
+                </div>
+                <div class="stack">Python &middot; Flask &middot; PyTorch &middot; DenseNet-121 &middot; Docker &middot;
+                    Hugging Face Spaces</div>
+                <p>Built a full-stack AI web app that classifies 8 mango leaf disease categories in real time using a
+                    fine-tuned DenseNet-121 model. Features secure authentication, an interactive diagnosis dashboard
+                    with confidence scores and treatment recommendations, and a REST API. Containerised with Docker and
+                    deployed live on Hugging Face Spaces.</p>
+            </div>
+
+            <div class="item">
+                <div class="item-head">
+                    <h3>Personal Portfolio Website</h3>
+                    <span class="links"><a href="https://github.com/Tanvir284/Portfolio" target="_blank"
+                            rel="noopener noreferrer">GitHub</a> &middot; <a href="index.html">Live</a></span>
+                </div>
+                <div class="stack">HTML5 &middot; CSS3 &middot; JavaScript &middot; Three.js &middot; GitHub Pages</div>
+                <p>Designed and developed a responsive personal portfolio with an interactive 3D brain model rendered
+                    via Three.js/WebGL, dynamic project fetching from the GitHub API, and a custom preloader animation.
+                    Deployed on GitHub Pages with a fully custom domain setup.</p>
+            </div>
+
+            <div class="item">
+                <div class="item-head">
+                    <h3>Breast Lesion Segmentation &amp; Classification</h3>
+                    <span class="links"><a
+                            href="https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network"
+                            target="_blank" rel="noopener noreferrer">GitHub</a></span>
+                </div>
+                <div class="stack">Python &middot; TensorFlow &middot; Transfer Learning &middot; Computer Vision</div>
+                <p>Developed a deep learning pipeline using U-Net with a ResNet-50 backbone to segment and classify
+                    breast lesions from ultrasound images. Achieved a <strong>91% Dice coefficient</strong>,
+                    outperforming the baseline CNN by 7 percentage points.</p>
+            </div>
+
+            <div class="item">
+                <div class="item-head">
+                    <h3>Concrete Compressive Strength Prediction</h3>
+                    <span class="links"><a
+                            href="https://github.com/Tanvir284/Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms"
+                            target="_blank" rel="noopener noreferrer">GitHub</a></span>
+                </div>
+                <div class="stack">Python &middot; Scikit-learn &middot; Pandas &middot; Regression</div>
+                <p>Built and compared five regression models (Linear, Ridge, Random Forest, Gradient Boosting, XGBoost)
+                    to predict concrete strength. Random Forest achieved the lowest <strong>RMSE of 4.2 MPa</strong>,
+                    with the water-cement ratio identified as the dominant predictor.</p>
+            </div>
+
+            <div class="item">
+                <div class="item-head">
+                    <h3>E-Commerce Platform</h3>
+                    <span class="links"><a href="https://github.com/Tanvir284/E-Commerce-Shop" target="_blank"
+                            rel="noopener noreferrer">GitHub</a></span>
+                </div>
+                <div class="stack">PHP &middot; MySQL &middot; JavaScript &middot; HTML/CSS</div>
+                <p>Engineered a full-stack e-commerce system with product catalogue, cart, order management and admin
+                    dashboard supporting <strong>200+ SKUs</strong>. Implemented secure authentication and optimised SQL
+                    queries, reducing average page load time by <strong>35%</strong>.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Technical Skills</h2>
+            <dl class="skills">
+                <dt>Programming Languages</dt>
+                <dd>Python, SQL, JavaScript, Java, C++, C#</dd>
+                <dt>AI / Machine Learning</dt>
+                <dd>PyTorch, TensorFlow, Scikit-learn, Transformers (Hugging Face), LLMs, NLP, Computer Vision, OpenCV
+                </dd>
+                <dt>Web Development &amp; APIs</dt>
+                <dd>React.js, Node.js, Django, Flask, FastAPI, REST APIs, HTML, CSS, PHP</dd>
+                <dt>Databases</dt>
+                <dd>MySQL, SQL Server, Oracle SQL, PostgreSQL, MongoDB, Vector Databases</dd>
+                <dt>Data Analysis &amp; Visualisation</dt>
+                <dd>Pandas, NumPy, Matplotlib, Seaborn, Power BI, Tableau</dd>
+                <dt>Tools &amp; Technologies</dt>
+                <dd>Git, GitHub, GitLab, Linux, Jupyter Notebook, VS Code, Docker, GitHub Actions, Jenkins, Terraform,
+                    Postman</dd>
+            </dl>
+        </section>
+
+        <section>
+            <h2>Certifications</h2>
+            <ul class="two-col">
+                <li>Google Data Analytics Professional Certificate</li>
+                <li>IBM Data Science Professional Certificate</li>
+                <li>IBM AI Developer Professional Certificate</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Achievements</h2>
+            <ul>
+                <li><strong>AI Battle 2024 &mdash; 2nd Place</strong>, Advanced Python track, BUBT Computer Science
+                    &amp; Engineering Department</li>
+                <li><strong>Brainstorming Week &mdash; 3rd Place</strong>, AI Research Poster, BUBT (2024)</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            try {
+                if (localStorage.getItem('theme') === 'light') root.classList.add('light-mode');
+            } catch (e) { /* private mode */ }
+
+            var btn = document.getElementById('theme-toggle');
+            if (btn) btn.addEventListener('click', function () {
+                var light = root.classList.toggle('light-mode');
+                try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (e) { }
+            });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+name = "tanvir-assistant"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# Lock this to your own origin so nobody else can spend your API credits.
+ALLOWED_ORIGIN = "https://tanvir284.github.io"
+
+# Set the key as a secret, never here:
+#   wrangler secret put ANTHROPIC_API_KEY
