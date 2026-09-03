@@ -18,25 +18,33 @@
     <meta property="og:description"
         content="Specializing in Machine Learning, Deep Learning, and Computer Vision. Building intelligent solutions that solve real-world problems.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="profile.jpg">
+    <meta property="og:url" content="https://tanvir284.github.io/Portfolio/">
+    <meta property="og:image" content="https://tanvir284.github.io/Portfolio/profile.jpg">
+    <meta property="og:image:alt" content="MD Tanvir Islam - AI Architect & Software Engineer">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="MD Tanvir Islam | AI Architect">
     <meta name="twitter:description"
         content="AI Architect specializing in Machine Learning, Deep Learning, and Computer Vision.">
-    <meta name="twitter:image" content="profile.jpg">
+    <meta name="twitter:image" content="https://tanvir284.github.io/Portfolio/profile.jpg">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png">
 
+    <meta name="theme-color" content="#050505">
+    <link rel="canonical" href="https://tanvir284.github.io/Portfolio/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=12">
+    <link rel="stylesheet" href="style.css?v=13">
 </head>
 
 <body>
@@ -52,9 +60,9 @@
     <!-- PRELOADER -->
     <div id="preloader">
         <div class="loader-content">
-            <img src="preloader_bot.png" alt="Cyber Bot" class="loader-mascot">
+            <img src="preloader_bot.png" alt="Cyber Bot" class="loader-mascot" loading="lazy" decoding="async">
             <h2 class="loader-text">Are you looking for <span class="loader-name">Tanvir?</span></h2>
-            <div class="loader-progress">0%</div>
+            <div class="loader-progress">0</div>
         </div>
     </div>
 
@@ -69,14 +77,15 @@
 
     <!-- 3D WebGL Container -->
     <div id="webgl-container"></div>
-    <!-- Fallback Canvas (Old 2D) -->
-    <canvas id="neuralCanvas" style="display: none;"></canvas>
 
     <!-- Cyber Theme Switcher -->
-    <div class="theme-switcher">
-        <div class="theme-btn active" data-theme="cyan" style="--t-color: #00f3ff;"></div>
-        <div class="theme-btn" data-theme="emerald" style="--t-color: #00ff9d;"></div>
-        <div class="theme-btn" data-theme="crimson" style="--t-color: #ff0055;"></div>
+    <div class="theme-switcher" role="group" aria-label="Accent colour">
+        <div class="theme-btn active" data-theme="cyan" style="--t-color: #00f3ff;" role="button" tabindex="0"
+            aria-label="Cyan accent" aria-pressed="true"></div>
+        <div class="theme-btn" data-theme="emerald" style="--t-color: #00ff9d;" role="button" tabindex="0"
+            aria-label="Emerald accent" aria-pressed="false"></div>
+        <div class="theme-btn" data-theme="crimson" style="--t-color: #ff0055;" role="button" tabindex="0"
+            aria-label="Crimson accent" aria-pressed="false"></div>
     </div>
 
     <div class="cursor-outer"></div>
@@ -84,8 +93,9 @@
 
     <nav>
         <div class="logo">TANVIR<span>.DEV</span></div>
-        <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-        <div class="nav-items">
+        <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Toggle navigation menu"
+            aria-expanded="false" aria-controls="nav-items"><i class="fas fa-bars" aria-hidden="true"></i></button>
+        <div class="nav-items" id="nav-items">
             <a href="#home">HOME</a>
             <a href="#about">ABOUT</a>
             <a href="#skills">SKILLS</a>
@@ -112,7 +122,7 @@
 
                 <p class="hero-desc"
                     style="max-width: 500px; color: var(--text-gray); margin: 20px 0; line-height: 1.6;">
-                    I engineered robust AI systems and scalable web applications. bridging the gap between theoretical
+                    I engineer robust AI systems and scalable web applications, bridging the gap between theoretical
                     AI models and production-ready software solutions.
                 </p>
                 <div style="margin-top: 30px;">
@@ -124,10 +134,8 @@
             <div class="hero-visual">
                 <div class="circle-text" id="circleText"></div>
                 <!-- Optimized image with WebP support -->
-                <picture>
-                    <source srcset="profile.jpg" type="image/webp">
-                    <img src="profile.jpg" alt="MD Tanvir Islam - AI Architect Profile" class="main-img">
-                </picture>
+                <img src="profile.jpg" width="420" height="420" fetchpriority="high"
+                    alt="MD Tanvir Islam - AI Architect Profile" class="main-img">
 
                 <div class="float-card fc-1">
                     <i class="fas fa-code fc-icon"></i>
@@ -167,7 +175,8 @@
         </div>
         <div class="about-grid-detailed">
             <div class="about-image">
-                <img src="profile.jpg" alt="Tanvir Profile">
+                <img src="profile.jpg" width="420" height="520" loading="lazy" decoding="async"
+                    alt="Portrait of MD Tanvir Islam">
             </div>
 
             <div class="about-content-detailed">
@@ -234,7 +243,7 @@
 
                 <div style="margin-top: 30px;">
                     <a href="#contact" class="btn btn-primary">HIRE ME</a>
-                    <a href="resume.pdf" target="_blank" class="btn btn-outline" style="margin-left: 15px;">DOWNLOAD
+                    <a href="resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="margin-left: 15px;">DOWNLOAD
                         CV</a>
                 </div>
             </div>
@@ -291,91 +300,91 @@
                 <!-- Badges -->
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"
-                    alt="Python">
+                    alt="Python" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white"
-                    alt="C++">
+                    alt="C++" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white"
-                    alt="C#">
+                    alt="C#" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"
-                    alt="Java">
+                    alt="Java" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E"
-                    alt="JavaScript">
+                    alt="JavaScript" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"
-                    alt="TypeScript">
+                    alt="TypeScript" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white"
-                    alt="Django">
+                    alt="Django" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"
-                    alt="React">
+                    alt="React" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white"
-                    alt="Node.js">
+                    alt="Node.js" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white"
-                    alt="TensorFlow">
+                    alt="TensorFlow" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white"
-                    alt="PyTorch">
+                    alt="PyTorch" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"
-                    alt="Docker">
+                    alt="Docker" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white"
-                    alt="AWS">
+                    alt="AWS" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white"
-                    alt="Kubernetes">
+                    alt="Kubernetes" loading="lazy" decoding="async">
             </div>
             <!-- Duplicate for seamless looping -->
             <div class="marquee-track" aria-hidden="true">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"
-                    alt="Python">
+                    alt="Python" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white"
-                    alt="C++">
+                    alt="C++" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white"
-                    alt="C#">
+                    alt="C#" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"
-                    alt="Java">
+                    alt="Java" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E"
-                    alt="JavaScript">
+                    alt="JavaScript" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"
-                    alt="TypeScript">
+                    alt="TypeScript" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white"
-                    alt="Django">
+                    alt="Django" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"
-                    alt="React">
+                    alt="React" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white"
-                    alt="Node.js">
+                    alt="Node.js" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white"
-                    alt="TensorFlow">
+                    alt="TensorFlow" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white"
-                    alt="PyTorch">
+                    alt="PyTorch" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"
-                    alt="Docker">
+                    alt="Docker" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white"
-                    alt="AWS">
+                    alt="AWS" loading="lazy" decoding="async">
                 <img class="tech-badge"
                     src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white"
-                    alt="Kubernetes">
+                    alt="Kubernetes" loading="lazy" decoding="async">
             </div>
         </div>
     </section>
@@ -440,7 +449,7 @@
             <!-- Project 1: E-Commerce Shop -->
             <div class="project-card">
                 <div class="project-visual glitch-wrap">
-                    <img src="./assets/project1.png" alt="E-Commerce Shop">
+                    <img width="640" height="640" src="./assets/project1.webp" alt="E-Commerce Shop" loading="lazy" decoding="async">
                 </div>
                 <div class="content-wrapper">
                     <div class="p-cat">FULL-STACK • WEB DEVELOPMENT</div>
@@ -454,7 +463,7 @@
                         <span>HTML/CSS</span>
                         <span>Docker</span>
                     </div>
-                    <a href="https://github.com/Tanvir284/E-Commerce-Shop" target="_blank" class="p-link">VIEW SOURCE
+                    <a href="https://github.com/Tanvir284/E-Commerce-Shop" target="_blank" rel="noopener noreferrer" class="p-link">VIEW SOURCE
                         CODE <i class="fas fa-arrow-right" style="font-size: 0.8em; margin-left: 5px;"></i></a>
                 </div>
             </div>
@@ -462,7 +471,7 @@
             <!-- Project 2: Employee Management System -->
             <div class="project-card">
                 <div class="project-visual glitch-wrap">
-                    <img src="./assets/project2.png" alt="Employee Management System">
+                    <img width="640" height="640" src="./assets/project2.webp" alt="Employee Management System" loading="lazy" decoding="async">
                 </div>
                 <div class="content-wrapper">
                     <div class="p-cat">ENTERPRISE • .NET</div>
@@ -476,7 +485,7 @@
                         <span>PowerShell</span>
                         <span>Enterprise</span>
                     </div>
-                    <a href="https://github.com/Tanvir284/Employee-Management-system-" target="_blank"
+                    <a href="https://github.com/Tanvir284/Employee-Management-system-" target="_blank" rel="noopener noreferrer"
                         class="p-link">VIEW SOURCE CODE <i class="fas fa-arrow-right"
                             style="font-size: 0.8em; margin-left: 5px;"></i></a>
                 </div>
@@ -485,7 +494,7 @@
             <!-- Project 3: The Aviator 3D Plane -->
             <div class="project-card">
                 <div class="project-visual glitch-wrap">
-                    <img src="./assets/project3.png" alt="The Aviator 3D Plane">
+                    <img width="640" height="640" src="./assets/project3.webp" alt="The Aviator 3D Plane" loading="lazy" decoding="async">
                 </div>
                 <div class="content-wrapper">
                     <div class="p-cat">COMPUTER GRAPHICS • OPENGL</div>
@@ -499,7 +508,7 @@
                         <span>Computer Graphics</span>
                         <span>3D Engine</span>
                     </div>
-                    <a href="https://github.com/Tanvir284/THE_AVIATOR_3D_PLANE" target="_blank" class="p-link">VIEW
+                    <a href="https://github.com/Tanvir284/THE_AVIATOR_3D_PLANE" target="_blank" rel="noopener noreferrer" class="p-link">VIEW
                         SOURCE CODE <i class="fas fa-arrow-right" style="font-size: 0.8em; margin-left: 5px;"></i></a>
                 </div>
             </div>
@@ -507,7 +516,7 @@
             <!-- Project 4: Breast Lesion ML AI -->
             <div class="project-card">
                 <div class="project-visual glitch-wrap">
-                    <img src="./assets/project4.png" alt="Breast Lesion AI">
+                    <img width="640" height="640" src="./assets/project4.webp" alt="Breast Lesion AI" loading="lazy" decoding="async">
                 </div>
                 <div class="content-wrapper">
                     <div class="p-cat">DEEP LEARNING • HEALTHCARE AI</div>
@@ -522,7 +531,7 @@
                         <span>Computer Vision</span>
                     </div>
                     <a href="https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network"
-                        target="_blank" class="p-link">VIEW SOURCE CODE <i class="fas fa-arrow-right"
+                        target="_blank" rel="noopener noreferrer" class="p-link">VIEW SOURCE CODE <i class="fas fa-arrow-right"
                             style="font-size: 0.8em; margin-left: 5px;"></i></a>
                 </div>
             </div>
@@ -530,7 +539,7 @@
             <!-- Project 5: Hotel Management System -->
             <div class="project-card">
                 <div class="project-visual glitch-wrap">
-                    <img src="./assets/project5.png" alt="Hotel Management System">
+                    <img width="640" height="640" src="./assets/project5.webp" alt="Hotel Management System" loading="lazy" decoding="async">
                 </div>
                 <div class="content-wrapper">
                     <div class="p-cat">SOFTWARE ENGINEERING • CORE C</div>
@@ -544,7 +553,7 @@
                         <span>Console App</span>
                         <span>Algorithms</span>
                     </div>
-                    <a href="https://github.com/Tanvir284/Hotel-Management-Sytem-With-C" target="_blank"
+                    <a href="https://github.com/Tanvir284/Hotel-Management-Sytem-With-C" target="_blank" rel="noopener noreferrer"
                         class="p-link">VIEW SOURCE CODE <i class="fas fa-arrow-right"
                             style="font-size: 0.8em; margin-left: 5px;"></i></a>
                 </div>
@@ -566,7 +575,7 @@
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
                         <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ruhittanvir14@gmail.com"
-                            target="_blank">ruhittanvir14@gmail.com</a>
+                            target="_blank" rel="noopener noreferrer">ruhittanvir14@gmail.com</a>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
@@ -579,11 +588,11 @@
                 </div>
 
                 <div class="social-icons">
-                    <a href="https://github.com/Tanvir284" target="_blank" class="social-btn"
+                    <a href="https://github.com/Tanvir284" target="_blank" rel="noopener noreferrer" class="social-btn"
                         aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/md-tanvir-islam-120699206/" target="_blank" class="social-btn"
+                    <a href="https://www.linkedin.com/in/md-tanvir-islam-120699206/" target="_blank" rel="noopener noreferrer" class="social-btn"
                         aria-label="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://www.instagram.com/ruhit__tanvir" target="_blank" class="social-btn"
+                    <a href="https://www.instagram.com/ruhit__tanvir" target="_blank" rel="noopener noreferrer" class="social-btn"
                         aria-label="Instagram Profile"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
@@ -612,8 +621,10 @@
                     <textarea id="message" name="message" required placeholder=" " rows="4"></textarea>
                     <label for="message">Message</label>
                 </div>
-                <button type="submit" class="btn"><i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Send
+                <button type="submit" class="btn"><i class="fas fa-paper-plane" style="margin-right: 8px;"
+                        aria-hidden="true"></i> Send
                     Message</button>
+                <p id="form-status" class="form-status" role="alert" aria-live="polite" hidden></p>
             </form>
         </div>
     </section>
@@ -628,22 +639,24 @@
         </div>
     </div>
     <footer>
-        <p align="center">&copy; <span id="year"></span>Developed by <span>Myself</span></p>
+        <p>&copy; <span id="year"></span> Developed by <span>Myself</span></p>
     </footer>
-    <div id="backToTop" class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
+    <div id="backToTop" class="back-to-top" role="button" tabindex="0" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </div>
 
     <!-- AI CHATBOT WIDGET (JARVIS) -->
-    <button id="chatbot-toggle" class="chatbot-toggle">
-        <i class="fas fa-robot"></i>
+    <button id="chatbot-toggle" class="chatbot-toggle" type="button" aria-label="Open AI assistant"
+        aria-expanded="false" aria-controls="ai-chatbot-window">
+        <i class="fas fa-robot" aria-hidden="true"></i>
         <div class="chat-ping"></div>
     </button>
 
     <div id="ai-chatbot-window" class="chatbot-window">
         <div class="chat-header">
             <span><i class="fas fa-microchip"></i> T.A.N.V.I.R - AI Assistant</span>
-            <button id="close-chatbot"><i class="fas fa-times"></i></button>
+            <button id="close-chatbot" type="button" aria-label="Close AI assistant"><i class="fas fa-times"
+                    aria-hidden="true"></i></button>
         </div>
         <div class="chat-body" id="chat-messages">
             <div class="chat-msg ai-msg">
@@ -653,16 +666,17 @@
             </div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Ask me about Tanvir's skills...">
-            <button id="chat-send"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" id="chat-input" aria-label="Message the AI assistant"
+                placeholder="Ask me about Tanvir's skills...">
+            <button id="chat-send" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
         </div>
-    </div>
     </div>
 
     <!-- Project Modal Overlay -->
     <div id="project-modal" class="project-modal-overlay">
         <div class="project-modal-content">
-            <button id="close-modal" class="close-modal-btn"><i class="fas fa-times"></i></button>
+            <button id="close-modal" class="close-modal-btn" type="button" aria-label="Close project details"><i
+                    class="fas fa-times" aria-hidden="true"></i></button>
             <div class="modal-body">
                 <div class="modal-visual" id="modal-visual"></div>
                 <div class="modal-info">
@@ -670,7 +684,7 @@
                     <h3 class="modal-title" id="modal-title">Project Title</h3>
                     <p class="modal-desc" id="modal-desc">Project Description</p>
                     <div class="modal-tags" id="modal-tags"></div>
-                    <a href="#" id="modal-link" target="_blank" class="modal-btn btn btn-primary">VIEW SOURCE <i
+                    <a href="#" id="modal-link" target="_blank" rel="noopener noreferrer" class="modal-btn btn btn-primary">VIEW SOURCE <i
                             class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
                 </div>
             </div>
@@ -691,7 +705,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=13"></script>
+    <script src="script.js?v=15"></script>
 </body>
 
 </html>

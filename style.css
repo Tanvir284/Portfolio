@@ -1087,17 +1087,18 @@ nav {
 }
 
 .tech-badge {
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    height: 45px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1));
+    transition: filter 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.3s;
     cursor: pointer;
-    filter: opacity(0.9);
-    /* Slightly transparent if you want, or just remove filter entirely */
     position: relative;
     z-index: 1;
 }
 
 .tech-badge:hover {
-    transform: scale(1.2) rotate(5deg);
-    filter: opacity(1) drop-shadow(0 0 10px var(--primary));
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px var(--primary));
     z-index: 10;
 }
 
@@ -1647,6 +1648,10 @@ nav {
 
 /* Contact Form (Dark Mode) */
 .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: left;
     background: rgba(255, 255, 255, 0.02);
     padding: 40px;
     border-radius: 16px;
@@ -1851,14 +1856,6 @@ nav {
 }
 
 /* --- CONTACT FORM --- */
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    text-align: left;
-    margin-bottom: 30px;
-}
-
 .input-group {
     position: relative;
 }
@@ -2254,19 +2251,6 @@ footer {
     animation-play-state: paused;
 }
 
-.tech-badge {
-    height: 45px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1));
-    transition: filter 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.3s;
-    cursor: pointer;
-}
-
-.tech-badge:hover {
-    filter: drop-shadow(0 0 15px var(--primary));
-    transform: scale(1.1);
-}
-
 @keyframes scroll-left {
     from {
         transform: translateX(0);
@@ -2512,4 +2496,90 @@ footer {
 
 .modal-btn {
     align-self: flex-start;
+}
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+/* The page hides the native cursor, so keyboard users previously had no
+   indication of focus anywhere outside the contact form. */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Skip the outline for pointer users who click rather than tab */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Contact form failure message (previously the page faked success instead) */
+.form-status {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.form-status.error {
+    color: #ff4d6d;
+}
+
+.form-status[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   This site is animation-heavy (smooth scroll, parallax, particle field,
+   marquees, page transitions). Honour the OS-level preference.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    /* Stop the infinite marquees outright */
+    .marquee-content,
+    .marquee-track {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    /* The custom cursor is pure motion; fall back to the real one */
+    body {
+        cursor: auto;
+    }
+
+    .cursor-outer,
+    .cursor-inner {
+        display: none !important;
+    }
+
+    /* Never leave content stranded at opacity:0 if an animation is skipped */
+    .section-header,
+    .timeline-item,
+    .project-card,
+    .a-card {
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }

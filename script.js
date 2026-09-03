@@ -1,10 +1,19 @@
+// Visitors who ask their OS for less motion get a calmer, static page.
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Small helper so a blocked/unavailable localStorage never breaks the page
+const storage = {
+    get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+    set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* private mode */ } }
+};
+
 // Initialize Lenis Smooth Scrolling
 const lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
     direction: 'vertical',
     gestureDirection: 'vertical',
-    smooth: true,
+    smooth: !prefersReducedMotion,
     mouseMultiplier: 1,
     smoothTouch: false,
     touchMultiplier: 2,
@@ -24,10 +33,10 @@ gsap.ticker.lagSmoothing(0)
 // --- Light/Dark Mode Toggle ---
 const modeToggleBtn = document.getElementById('mode-toggle');
 if (modeToggleBtn) {
-    const modeIcon = modeToggleBtn.querySelector('i');
+    const modeIcon = modeToggleBtn.querySelector('i') || document.createElement('i');
 
     // Check local storage for preference
-    if (localStorage.getItem('theme') === 'light') {
+    if (storage.get('theme') === 'light') {
         document.documentElement.classList.add('light-mode');
         modeIcon.classList.replace('fa-moon', 'fa-sun');
     }
@@ -35,10 +44,10 @@ if (modeToggleBtn) {
     modeToggleBtn.addEventListener('click', () => {
         document.documentElement.classList.toggle('light-mode');
         if (document.documentElement.classList.contains('light-mode')) {
-            localStorage.setItem('theme', 'light');
+            storage.set('theme', 'light');
             modeIcon.classList.replace('fa-moon', 'fa-sun');
         } else {
-            localStorage.setItem('theme', 'dark');
+            storage.set('theme', 'dark');
             modeIcon.classList.replace('fa-sun', 'fa-moon');
         }
     });
@@ -47,17 +56,19 @@ if (modeToggleBtn) {
 // Mobile Menu Logic
 function toggleMenu() {
     const navItems = document.querySelector('.nav-items');
-    const icon = document.querySelector('.menu-toggle i');
+    const toggle = document.querySelector('.menu-toggle');
+    const icon = toggle && toggle.querySelector('i');
+    if (!navItems) return;
 
-    navItems.classList.toggle('active');
+    const isOpen = navItems.classList.toggle('active');
+
+    // Keep assistive tech in sync with the menu state
+    if (toggle) toggle.setAttribute('aria-expanded', String(isOpen));
 
     // Swap icon
-    if (navItems.classList.contains('active')) {
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-times');
-    } else {
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
+    if (icon) {
+        icon.classList.toggle('fa-bars', !isOpen);
+        icon.classList.toggle('fa-times', isOpen);
     }
 }
 
@@ -67,11 +78,15 @@ document.querySelectorAll('.nav-items a, a[href^="#"]').forEach(link => {
         const targetId = link.getAttribute('href');
 
         // Ensure it's an internal anchor link
-        if (targetId.startsWith('#') && targetId.length > 1) {
+        if (targetId && targetId.startsWith('#') && targetId.length > 1) {
             e.preventDefault(); // Stop native jump
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
+                if (prefersReducedMotion || typeof gsap === 'undefined') {
+                    // Skip the cinematic wipe entirely
+                    lenis.scrollTo(targetElement, { offset: -80 });
+                } else {
                 // Cinematic TV Transition
                 const tl = gsap.timeline();
 
@@ -101,31 +116,37 @@ document.querySelectorAll('.nav-items a, a[href^="#"]').forEach(link => {
                         delay: 0.05 // Brief pause
                     })
                     .call(() => document.body.style.overflow = ''); // Restore scroll
+                }
             }
         }
 
         // Close mobile menu if active
         const navItems = document.querySelector('.nav-items');
-        if (navItems.classList.contains('active')) {
+        if (navItems && navItems.classList.contains('active')) {
             toggleMenu();
         }
     });
 });
 
 // Scroll Progress
-window.onscroll = function () {
-    let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let scrolled = (winScroll / height) * 100;
-    document.getElementById("progressBar").style.width = scrolled + "%";
-};
+const progressBar = document.getElementById("progressBar");
+if (progressBar) {
+    const updateProgress = () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        progressBar.style.width = scrolled + "%";
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+}
 
 // Cursor Logic (Elite Version)
 const cursorOuter = document.querySelector('.cursor-outer');
 const cursorInner = document.querySelector('.cursor-inner');
 let mouseX = 0, mouseY = 0;
 
-window.addEventListener('mousemove', e => {
+if (cursorOuter && cursorInner) window.addEventListener('mousemove', e => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 
@@ -146,7 +167,7 @@ window.addEventListener('mousemove', e => {
 
 // Cursor Hover States
 const hoverElements = document.querySelectorAll('a, button, .project-card, .menu-toggle, .social-btn');
-hoverElements.forEach(el => {
+if (cursorOuter) hoverElements.forEach(el => {
     el.addEventListener('mouseenter', () => cursorOuter.classList.add('hover'));
     el.addEventListener('mouseleave', () => cursorOuter.classList.remove('hover'));
 });
@@ -154,22 +175,12 @@ hoverElements.forEach(el => {
 // Circle Text
 const text = "SOFTWARE ENGINEER • AI ENGINEER • DATA SCIENTIST • MACHINE LEARNING • DEEP LEARNING • ";
 const circleText = document.getElementById('circleText');
-circleText.innerHTML = text.split("").map(
-    (char, i) => `<span style="transform:rotate(${i * 8}deg)">${char}</span>`
-).join("");
-
-// Typewriter
-const typeText = "Md Tanvir Islam";
-const typeContainer = document.getElementById('typewriter');
-let typeIndex = 0;
-function type() {
-    if (typeIndex < typeText.length) {
-        typeContainer.innerHTML += typeText.charAt(typeIndex);
-        typeIndex++;
-        setTimeout(type, 100);
-    }
+if (circleText) {
+    circleText.innerHTML = text.split("").map(
+        (char, i) => `<span style="transform:rotate(${i * 8}deg)">${char}</span>`
+    ).join("");
 }
-setTimeout(type, 500);
+
 
 /* --- 3D WEBGL NEURAL SPHERE (THREE.JS) --- */
 const container = document.getElementById('webgl-container');
@@ -239,6 +250,13 @@ function onWindowResize() {
 let clock = new THREE.Clock();
 
 function animateThreeJS() {
+    // A slowly rotating particle field is decorative motion; draw it once
+    // and stop when the visitor has asked for reduced motion.
+    if (prefersReducedMotion) {
+        renderer.render(scene, camera);
+        return;
+    }
+
     requestAnimationFrame(animateThreeJS);
 
     const elapsedTime = clock.getElapsedTime();
@@ -274,8 +292,15 @@ const loaderCam = document.getElementById('loader-cam');
 let model = null;
 let isDetecting = false;
 let lastFrameTime = 0; // used by TF.js webcam detection
+let camStream = null;  // kept so the camera can actually be released
 
 async function loadModel() {
+    if (!startCamBtn || !loaderCam) return;
+    if (typeof cocoSsd === 'undefined') {
+        loaderCam.innerHTML = `<i class="fas fa-exclamation-triangle"></i> MODEL LIBRARY UNAVAILABLE`;
+        loaderCam.style.display = 'block';
+        return;
+    }
     startCamBtn.style.display = 'none';
     loaderCam.style.display = 'block';
 
@@ -296,14 +321,16 @@ async function startWebcam() {
             video: { facingMode: "environment", width: { ideal: 640 }, height: { ideal: 480 } },
             audio: false
         });
+        camStream = stream;
         video.srcObject = stream;
         video.addEventListener('loadeddata', () => {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             video.play();
             isDetecting = true;
+            lastFrameTime = performance.now(); // otherwise the first reading is ~epoch-sized
             detectFrame();
-        });
+        }, { once: true });
     } catch (err) {
         console.error("Error accessing webcam: ", err);
         startCamBtn.style.display = 'block';
@@ -315,21 +342,46 @@ async function startWebcam() {
 async function detectFrame() {
     if (!isDetecting) return;
 
+    // Skip work entirely while the tab is in the background
+    if (document.hidden) {
+        requestAnimationFrame(detectFrame);
+        return;
+    }
+
     // Calculate Latency (ms per frame)
     const now = performance.now();
     const duration = Math.round(now - lastFrameTime);
-    fpsCounter.innerText = duration;
+    if (fpsCounter) fpsCounter.innerText = duration;
     lastFrameTime = now;
 
-    // Detect up to 5 objects in the video element
-    const predictions = await model.detect(video, 5);
-    renderPredictions(predictions);
+    try {
+        // Detect up to 5 objects in the video element
+        const predictions = await model.detect(video, 5);
+        renderPredictions(predictions);
+    } catch (err) {
+        console.error("Detection failed, stopping loop:", err);
+        stopWebcam();
+        return;
+    }
 
     // Loop
     requestAnimationFrame(detectFrame);
 }
 
+// Release the camera instead of leaving it running forever
+function stopWebcam() {
+    isDetecting = false;
+    if (camStream) {
+        camStream.getTracks().forEach(track => track.stop());
+        camStream = null;
+    }
+    if (video) video.srcObject = null;
+}
+
+window.addEventListener('pagehide', stopWebcam);
+
 function renderPredictions(predictions) {
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -393,6 +445,7 @@ function addMessage(text, isUser = false) {
         msgDiv.innerHTML = text; // allow HTML like <br>
     }
 
+    if (!chatMessages) return msgDiv;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -400,6 +453,7 @@ function addMessage(text, isUser = false) {
 }
 
 async function handleChat() {
+    if (!chatInput || !chatMessages) return;
     const userText = chatInput.value.trim();
     if (!userText) return;
 
@@ -471,13 +525,19 @@ async function handleChat() {
             }
         ];
 
+        // Filler words appear as "intents" on several entries, so a question
+        // like "what are your skills" scored higher on identity ("what", "are")
+        // than on skills. They still count, but only at a fraction of the weight.
+        const FILLER = new Set(['what', 'is', 'are', 'this', 'does', 'how', 'do',
+            'can', 'the', 'a', 'an', 'your', 'you', 'me', 'my', 'tell']);
+
         // Scoring algorithm to find the best matching response intent
         for (const entry of knowledgeBase) {
             let currentScore = 0;
             for (const intent of entry.intents) {
                 // Exact match gets massive points to overpower basic greetings
                 if (words.includes(intent)) {
-                    currentScore += (entry.points * 2);
+                    currentScore += FILLER.has(intent) ? entry.points * 0.25 : entry.points * 2;
                 }
                 // Partial match gets normal points
                 else if (lowerInput.includes(intent) && intent.length > 3) {
@@ -501,30 +561,37 @@ async function handleChat() {
         chatHistory.push({ role: 'assistant', content: `T.A.N.V.I.R: ${finalResponse}` });
 
         typingIndicator.innerHTML = finalResponse.replace(/\n/g, '<br>');
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
 
     }, 800); // Simulate API delay
 }
 
-if (chatbotToggle) {
+if (chatbotToggle && chatbotWindow) {
     chatbotToggle.addEventListener('click', () => {
-        chatbotWindow.classList.toggle('active');
-        if (chatbotWindow.classList.contains('active')) {
-            chatInput.focus();
-        }
+        const isOpen = chatbotWindow.classList.toggle('active');
+        chatbotToggle.setAttribute('aria-expanded', String(isOpen));
+        if (isOpen && chatInput) chatInput.focus();
     });
 
-    closeChatbotBtn.addEventListener('click', () => {
+    const closeChat = () => {
         chatbotWindow.classList.remove('active');
+        chatbotToggle.setAttribute('aria-expanded', 'false');
+    };
+
+    if (closeChatbotBtn) closeChatbotBtn.addEventListener('click', closeChat);
+    if (chatSendBtn) chatSendBtn.addEventListener('click', handleChat);
+    if (chatInput) chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleChat();
     });
 
-    chatSendBtn.addEventListener('click', handleChat);
-    chatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') handleChat();
+    // Escape closes the assistant
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && chatbotWindow.classList.contains('active')) closeChat();
     });
 }
 
 /* --- GSAP SCROLL ANIMATIONS --- */
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !prefersReducedMotion) {
 gsap.registerPlugin(ScrollTrigger);
 
 // Hero Parallax
@@ -587,8 +654,10 @@ gsap.utils.toArray('.timeline-item').forEach(item => {
 });
 
 
+} // end GSAP scroll animations
+
 // Initial Page Load Animations
-window.addEventListener('load', () => {
+if (!prefersReducedMotion) window.addEventListener('load', () => {
     // Reveal Hero Text
     gsap.from(".hero-content .tagline, .hero h1, .hero h2, .hero p, .hero a", {
         opacity: 0,
@@ -646,86 +715,22 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     });
 });
 
-/* --- MAGNETIC TEXT (ELITE HOVER) --- */
-const magneticWrap = document.querySelector('.magnetic-name .char-wrap');
-const chars = document.querySelectorAll('.magnetic-name .char');
-
-if (magneticWrap && chars.length > 0) {
-    magneticWrap.addEventListener('mousemove', (e) => {
-        const rect = magneticWrap.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        chars.forEach(char => {
-            const charRect = char.getBoundingClientRect();
-            // Calculate char center relative to the wrapper
-            const charCenterX = (charRect.left - rect.left) + charRect.width / 2;
-            const charCenterY = (charRect.top - rect.top) + charRect.height / 2;
-
-            const dx = mouseX - charCenterX;
-            const dy = mouseY - charCenterY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            // Magnetic radius
-            const magneticPull = 100;
-
-            if (distance < magneticPull) {
-                const pullX = (dx / distance) * (magneticPull - distance) * 0.4;
-                const pullY = (dy / distance) * (magneticPull - distance) * 0.4;
-
-                char.style.transform = `translate(${pullX}px, ${pullY}px) scale(1.1) rotate(${pullX * 0.2}deg)`;
-                char.style.color = 'var(--text)';
-                char.style.textShadow = '0 0 20px var(--primary)';
-                char.style.zIndex = 2; // bring pulled letter above others
-            } else {
-                char.style.transform = 'translate(0, 0) scale(1) rotate(0)';
-                char.style.color = 'var(--primary)';
-                char.style.textShadow = 'none';
-                char.style.zIndex = 1;
-            }
-        });
-    });
-
-    magneticWrap.addEventListener('mouseleave', () => {
-        chars.forEach(char => {
-            char.style.transform = 'translate(0, 0) scale(1) rotate(0)';
-            char.style.color = 'var(--primary)';
-            char.style.textShadow = 'none';
-            char.style.zIndex = 1;
-        });
-    });
-}
-
-/* --- SPOTLIGHT TEXT EFFECT --- */
-const spotlightText = document.querySelector('.about-text p');
-if (spotlightText) {
-    // Initial state
-    spotlightText.style.color = 'var(--text-gray)';
-    spotlightText.style.transition = 'color 0.5s';
-
-    spotlightText.addEventListener('mousemove', (e) => {
-        const rect = spotlightText.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        // Dynamic gradient based on mouse position
-        spotlightText.style.background = `radial-gradient(circle at ${x}px ${y}px, #fff 0%, #666 120px, var(--text-gray) 200px)`;
-        spotlightText.style.webkitBackgroundClip = 'text';
-        spotlightText.style.webkitTextFillColor = 'transparent';
-        spotlightText.style.transition = 'none'; // Instant follow
-    });
-
-    spotlightText.addEventListener('mouseleave', () => {
-        spotlightText.style.background = 'none';
-        spotlightText.style.webkitTextFillColor = 'var(--text-gray)';
-        spotlightText.style.transition = 'color 0.5s'; // Smooth fade out
-    });
-}
-
 /* --- SOUND FX SYSTEM (Web Audio API) --- */
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// Created lazily on the first real user gesture: building it at page load
+// trips the browser autoplay policy and logs a console warning every visit.
+let audioCtx = null;
+
+function getAudioCtx() {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    if (!audioCtx) audioCtx = new Ctx();
+    return audioCtx;
+}
 
 function playSound(type) {
+    if (prefersReducedMotion) return; // respect the OS-level preference
+    const audioCtx = getAudioCtx();
+    if (!audioCtx) return;
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const osc = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
@@ -763,58 +768,43 @@ document.querySelectorAll('a, button, .tech-badge, .project-card, .social-btn').
 /* --- BACK TO TOP LOGIC --- */
 const backToTopBtn = document.getElementById('backToTop');
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 500) {
-        backToTopBtn.classList.add('active');
-    } else {
-        backToTopBtn.classList.remove('active');
-    }
-});
+if (backToTopBtn) {
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('active', window.scrollY > 500);
+    }, { passive: true });
 
-backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    backToTopBtn.addEventListener('click', () => {
+        // Go through Lenis so it matches the site's smooth scrolling
+        if (typeof lenis !== 'undefined' && lenis) {
+            lenis.scrollTo(0);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     });
-});
 
-/* --- GALLERY FILTERING --- */
-const filterBtns = document.querySelectorAll('.filter-btn');
-const galleryItems = document.querySelectorAll('.gallery-item');
-
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Remove active class from all
-        filterBtns.forEach(b => b.classList.remove('active'));
-        // Add active to clicked
-        btn.classList.add('active');
-
-        const filter = btn.getAttribute('data-filter');
-
-        galleryItems.forEach(item => {
-            if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                item.style.display = 'block';
-                setTimeout(() => item.style.opacity = '1', 50);
-                setTimeout(() => item.style.transform = 'scale(1)', 50);
-            } else {
-                item.style.opacity = '0';
-                item.style.transform = 'scale(0.8)';
-                setTimeout(() => item.style.display = 'none', 300);
-            }
-        });
+    // Keyboard support (it is a div, not a button)
+    backToTopBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            backToTopBtn.click();
+        }
     });
-});
+}
 
 /* --- CONTACT FORM HANDLING --- */
 const contactForm = document.getElementById('contactForm');
 const successModal = document.getElementById('successModal');
+const formStatus = document.getElementById('form-status');
 
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Basic Validation
-        const fields = contactForm.querySelectorAll('input, textarea');
+        // Basic Validation -- only the visible, user-facing fields.
+        // FormSubmit's config inputs (_captcha/_template/_subject) and the
+        // _honey honeypot must be excluded: the honeypot is empty by design,
+        // so including it made every submission fail silently.
+        const fields = contactForm.querySelectorAll('input[required], textarea[required]');
         let isValid = true;
         fields.forEach(field => {
             if (!field.value.trim()) isValid = false;
@@ -824,6 +814,13 @@ if (contactForm) {
 
         const btn = contactForm.querySelector('button');
         const originalText = btn.innerHTML;
+
+        // Clear any previous failure message
+        if (formStatus) {
+            formStatus.hidden = true;
+            formStatus.textContent = '';
+            formStatus.classList.remove('error');
+        }
 
         // Visual Feedback (Loading)
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TRANSMITTING...';
@@ -841,7 +838,10 @@ if (contactForm) {
         })
             .then(response => response.json())
             .then(data => {
-                // SUCCESS: Reset Button and Show Elite Modal
+                // FormSubmit reports its own outcome in the payload
+                if (data && String(data.success) === 'false') {
+                    throw new Error(data.message || 'Submission rejected');
+                }
                 btn.innerHTML = originalText;
                 btn.style.opacity = '1';
                 contactForm.reset();
@@ -850,13 +850,14 @@ if (contactForm) {
                 }
             })
             .catch(error => {
-                // Even on CORS errors during local dev, pretend it succeeded to preserve portfolio UX
-                console.warn('Transmission backend issue, showing demo success', error);
+                // Tell the visitor the truth: the message did not go through.
+                console.error('Contact form submission failed:', error);
                 btn.innerHTML = originalText;
                 btn.style.opacity = '1';
-                contactForm.reset();
-                if (successModal) {
-                    successModal.classList.add('active');
+                if (formStatus) {
+                    formStatus.textContent = 'Transmission failed. Please email ruhittanvir14@gmail.com directly.';
+                    formStatus.classList.add('error');
+                    formStatus.hidden = false;
                 }
             });
     });
@@ -876,28 +877,53 @@ const themes = {
 };
 
 const themeBtns = document.querySelectorAll('.theme-btn');
+
+function applyAccent(name) {
+    const theme = themes[name];
+    if (!theme) return;
+
+    themeBtns.forEach(b => {
+        const isActive = b.getAttribute('data-theme') === name;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', String(isActive));
+    });
+
+    document.documentElement.style.setProperty('--primary', theme.primary);
+    document.documentElement.style.setProperty('--secondary', theme.secondary);
+    document.documentElement.style.setProperty('--glow', `0 0 20px ${theme.glow}`);
+
+    // Update Three.js Particles
+    if (particlesMesh && particlesMesh.material) {
+        particlesMesh.material.color.set(theme.primary);
+    }
+}
+
 themeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Update active class
-        themeBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Apply Theme
-        const theme = themes[btn.getAttribute('data-theme')];
-        document.documentElement.style.setProperty('--primary', theme.primary);
-        document.documentElement.style.setProperty('--secondary', theme.secondary);
-        document.documentElement.style.setProperty('--glow', `0 0 20px ${theme.glow}`);
-
-        // Update Three.js Particles
-        if (particlesMesh && particlesMesh.material) {
-            particlesMesh.material.color.set(theme.primary);
-        }
-
-        // Play Sound
+    const activate = () => {
+        const name = btn.getAttribute('data-theme');
+        applyAccent(name);
+        storage.set('accent', name);
         playSound('click');
+    };
+
+    btn.addEventListener('click', activate);
+    // The swatches are divs, so give them keyboard activation too
+    btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+        }
     });
 });
 
+// Restore the visitor's saved accent
+const savedAccent = storage.get('accent');
+if (savedAccent && themes[savedAccent]) applyAccent(savedAccent);
+
+
+/* --- FOOTER YEAR --- */
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 /* --- PRELOADER LOGIC --- */
 const startPreloader = () => {
@@ -924,7 +950,7 @@ const startPreloader = () => {
             // Wait a bit at 100% then slide out
             setTimeout(() => {
                 preloader.classList.add('loaded');
-                document.body.style.overflow = 'auto'; // Re-enable scrolling
+                document.body.style.overflow = ''; // Re-enable scrolling
             }, 800);
         }
     }, 50); // Speed of loading
@@ -934,22 +960,6 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
     startPreloader();
 } else {
     window.addEventListener('load', startPreloader);
-}
-
-/* --- ANIMATE PROGRESS BARS --- */
-const progressFills = document.querySelectorAll('.progress-fill');
-if (progressFills.length > 0) {
-    const progressObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                el.style.width = el.getAttribute('data-width');
-                observer.unobserve(el);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    progressFills.forEach(fill => progressObserver.observe(fill));
 }
 
 /* --- PROJECT MODALS --- */
@@ -981,24 +991,30 @@ if (modalOverlay && projectCards.length > 0) {
                 if (visualEl) visual = visualEl.style.background;
             }
 
-            const cat = card.querySelector('.p-cat').innerHTML;
-            const title = card.querySelector('.p-title').innerHTML;
-            const desc = card.querySelector('.p-desc').innerHTML;
-            const tags = card.querySelector('.p-tags').innerHTML;
+            const pick = (sel) => {
+                const el = card.querySelector(sel);
+                return el ? el.innerHTML : '';
+            };
+            const cat = pick('.p-cat');
+            const title = pick('.p-title');
+            const desc = pick('.p-desc');
+            const tags = pick('.p-tags');
             const linkTag = card.querySelector('.p-link');
             const link = linkTag ? linkTag.getAttribute('href') : null;
 
             // Populate modal content
-            mVisual.style.background = visual;
-            mCat.innerHTML = cat;
-            mTitle.innerHTML = title;
-            mDesc.innerHTML = desc;
-            mTags.innerHTML = tags;
-            if (link) {
-                mLink.setAttribute('href', link);
-                mLink.style.display = 'inline-block';
-            } else {
-                mLink.style.display = 'none';
+            if (mVisual) mVisual.style.background = visual;
+            if (mCat) mCat.innerHTML = cat;
+            if (mTitle) mTitle.innerHTML = title;
+            if (mDesc) mDesc.innerHTML = desc;
+            if (mTags) mTags.innerHTML = tags;
+            if (mLink) {
+                if (link) {
+                    mLink.setAttribute('href', link);
+                    mLink.style.display = 'inline-block';
+                } else {
+                    mLink.style.display = 'none';
+                }
             }
 
             // Open modal
@@ -1012,76 +1028,11 @@ if (modalOverlay && projectCards.length > 0) {
         document.body.style.overflow = ''; // Restore background scrolling
     };
 
-    modalCloseBtn.addEventListener('click', closeModal);
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
     modalOverlay.addEventListener('click', (e) => {
         if (e.target === modalOverlay) closeModal();
     });
-}
-
-/* --- GSAP SCROLL ANIMATIONS --- */
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Header reveal
-    gsap.utils.toArray('.section-header').forEach(header => {
-        gsap.from(header, {
-            scrollTrigger: {
-                trigger: header,
-                start: "top 85%",
-                toggleActions: "play none none reverse"
-            },
-            y: 30,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out"
-        });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
     });
-
-    // About Grid stagger
-    if (document.querySelector('.info-grid')) {
-        gsap.from('.info-item', {
-            scrollTrigger: {
-                trigger: '.info-grid',
-                start: "top 85%",
-                toggleActions: "play none none reverse"
-            },
-            y: 20,
-            opacity: 0,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "power2.out"
-        });
-    }
-
-    // Timeline item slide in
-    gsap.utils.toArray('.timeline-item').forEach(item => {
-        gsap.from(item, {
-            scrollTrigger: {
-                trigger: item,
-                start: "top 85%",
-                toggleActions: "play none none reverse"
-            },
-            x: -40,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power2.out"
-        });
-    });
-
-    // Project cards stagger
-    if (document.querySelector('.project-grid')) {
-        gsap.from('.project-card', {
-            scrollTrigger: {
-                trigger: '.project-grid',
-                start: "top 85%",
-                toggleActions: "play none none reverse"
-            },
-            y: 40,
-            opacity: 0,
-            duration: 0.6,
-            stagger: 0.15,
-            ease: "power2.out"
-        });
-    }
 }
-
