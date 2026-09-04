@@ -22,7 +22,25 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=34">
+    <link rel="stylesheet" href="style.css?v=41">
+    <script>
+        /* Applied before first paint: set on <html> after the page has already
+           rendered, the theme swap gets stuck on any element with
+           `transition: all`, which left the nav and cards dark while their
+           text went dark too. This also removes the dark-to-light flash. */
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t === 'light') document.documentElement.classList.add('light-mode');
+                var a = localStorage.getItem('accent');
+                var m = { cyan: ['#00f3ff', '#b000ff'], emerald: ['#00ff9d', '#00b8ff'], crimson: ['#ff0055', '#ff9d00'] };
+                if (a && m[a]) {
+                    document.documentElement.style.setProperty('--primary', m[a][0]);
+                    document.documentElement.style.setProperty('--secondary', m[a][1]);
+                }
+            } catch (e) { /* private mode */ }
+        })();
+    </script>
 </head>
 
 <body class="subpage">

@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=34">
+    <link rel="stylesheet" href="style.css?v=41">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -147,6 +147,24 @@
 }
     </script>
 
+    <script>
+        /* Applied before first paint: set on <html> after the page has already
+           rendered, the theme swap gets stuck on any element with
+           `transition: all`, which left the nav and cards dark while their
+           text went dark too. This also removes the dark-to-light flash. */
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t === 'light') document.documentElement.classList.add('light-mode');
+                var a = localStorage.getItem('accent');
+                var m = { cyan: ['#00f3ff', '#b000ff'], emerald: ['#00ff9d', '#00b8ff'], crimson: ['#ff0055', '#ff9d00'] };
+                if (a && m[a]) {
+                    document.documentElement.style.setProperty('--primary', m[a][0]);
+                    document.documentElement.style.setProperty('--secondary', m[a][1]);
+                }
+            } catch (e) { /* private mode */ }
+        })();
+    </script>
 </head>
 
 <body>
@@ -416,7 +434,7 @@
     <!-- INTERACTIVE glTF MODEL VIEWER (lazy-loaded WebGL) -->
 
     <!-- LIVE AI DEMO SECTION -->
-    <section id="ai-demo" class="section-container" style="background: rgba(10, 10, 10, 0.8);">
+    <section id="ai-demo" class="section-container" data-alt-bg>
         <div class="section-header">
             <h2>LIVE AI <span style="color:var(--primary)">VISION</span></h2>
             <p>// Real-time Object Detection powered by TensorFlow.js (COCO-SSD)</p>
@@ -455,7 +473,7 @@
         </div>
     </section>
 
-    <section id="skills" class="section-container" style="background: #080808;">
+    <section id="skills" class="section-container" data-alt-bg>
         <div class="section-header">
             <h2>TECHNICAL <span style="color:var(--primary)">ARSENAL</span></h2>
             <p>// 57 tools and technologies, grouped by discipline.</p>
@@ -655,7 +673,7 @@
 
 
 
-    <section id="work" class="section-container" style="background: #080808;">
+    <section id="work" class="section-container" data-alt-bg>
         <div class="section-header">
             <h2>SELECTED <span style="color:var(--primary)">WORKS</span></h2>
             <p>// 18 shipped projects &mdash; deep learning, full-stack systems and automation.</p>
@@ -976,7 +994,7 @@
 
 
     <!-- LIVE GITHUB ACTIVITY -->
-    <section id="github" class="section-container" style="background: #080808;">
+    <section id="github" class="section-container" data-alt-bg>
         <div class="section-header">
             <h2>LIVE FROM <span style="color:var(--primary)">GITHUB</span></h2>
             <p>// Pulled from the GitHub API in real time.</p>
