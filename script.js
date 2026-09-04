@@ -1042,6 +1042,111 @@ if (filterBtns.length > 0) {
     applyFilter('all');
 }
 
+/* --- LIVE GITHUB ACTIVITY --- */
+const ghRepos = document.getElementById('gh-repos');
+
+if (ghRepos) {
+    const GH_USER = 'Tanvir284';
+    const CACHE_KEY = 'gh-cache-v2';
+    const CACHE_TTL = 60 * 60 * 1000; // the API allows 60 calls/hr unauthenticated
+
+    const esc = (str) => String(str).replace(/[&<>"']/g,
+        c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const setStat = (key, value) => {
+        const el = document.querySelector(`[data-gh="${key}"]`);
+        if (el) el.textContent = value;
+    };
+
+    function timeAgo(iso) {
+        const days = Math.floor((Date.now() - new Date(iso)) / 86400000);
+        if (days <= 0) return 'today';
+        if (days === 1) return 'yesterday';
+        if (days < 30) return `${days} days ago`;
+        const months = Math.floor(days / 30);
+        if (months < 12) return `${months} month${months > 1 ? 's' : ''} ago`;
+        const years = Math.floor(months / 12);
+        return `${years} year${years > 1 ? 's' : ''} ago`;
+    }
+
+    const render = (user, repos, live) => {
+        const skip = new Set(['portfolio', GH_USER.toLowerCase()]);
+        const own = repos
+            .filter(r => !r.fork && !skip.has(r.name.toLowerCase()))
+            .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+            .slice(0, 6);
+
+        const stars = repos.reduce((n, r) => n + (r.stargazers_count || 0), 0);
+        const langs = new Set(repos.map(r => r.language).filter(Boolean));
+
+        setStat('repos', (user && user.public_repos) || repos.length);
+        setStat('stars', stars);
+        setStat('followers', (user && user.followers != null) ? user.followers : '—');
+        setStat('languages', langs.size);
+
+        ghRepos.innerHTML = own.map(r => `
+            <a class="gh-card" href="${esc(r.html_url)}" target="_blank" rel="noopener noreferrer">
+                <span class="gh-name"><i class="fas fa-code-branch" aria-hidden="true"></i> ${esc(r.name)}</span>
+                <span class="gh-desc">${esc(r.description || 'No description provided.')}</span>
+                <span class="gh-meta">
+                    ${r.language ? `<span class="gh-lang">${esc(r.language)}</span>` : ''}
+                    ${r.stargazers_count ? `<span><i class="fas fa-star" aria-hidden="true"></i> ${r.stargazers_count}</span>` : ''}
+                    <span class="gh-when">updated ${timeAgo(r.pushed_at)}</span>
+                </span>
+            </a>`).join('');
+
+        const note = document.querySelector('.gh-note');
+        if (note) note.textContent = live ? '' : 'Showing a saved snapshot — the GitHub API is unreachable right now.';
+    };
+
+    // Committed snapshot, so the section always has real content to show even
+    // when the API is rate-limited, blocked, or the visitor is offline.
+    const useSnapshot = () => fetch('repos.json')
+        .then(r => r.json())
+        .then(d => render(d.user, d.repos, false))
+        .catch(() => {
+            ghRepos.innerHTML =
+                '<p class="gh-loading">Could not load repositories. ' +
+                '<a href="https://github.com/Tanvir284" target="_blank" rel="noopener noreferrer">' +
+                'Browse them on GitHub</a>.</p>';
+        });
+
+    let cached = null;
+    try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        const obj = raw && JSON.parse(raw);
+        if (obj && Date.now() - obj.at < CACHE_TTL) cached = obj;
+    } catch (e) { /* private mode */ }
+
+    if (cached) {
+        render(cached.user, cached.repos, true);
+    } else {
+        // Wrapped in try/catch: a blocked host can make fetch throw outright,
+        // which would otherwise kill the rest of this file.
+        try {
+            Promise.all([
+                fetch(`https://api.github.com/users/${GH_USER}`).then(r => r.ok ? r.json() : null),
+                fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`)
+                    .then(r => r.ok ? r.json() : Promise.reject(new Error('repos ' + r.status)))
+            ])
+                .then(([user, repos]) => {
+                    if (!Array.isArray(repos)) throw new Error('unexpected payload');
+                    render(user, repos, true);
+                    try {
+                        localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), user, repos }));
+                    } catch (e) { /* quota or private mode */ }
+                })
+                .catch(err => {
+                    console.warn('GitHub API unavailable, using snapshot:', err);
+                    useSnapshot();
+                });
+        } catch (err) {
+            console.warn('GitHub API call threw, using snapshot:', err);
+            useSnapshot();
+        }
+    }
+}
+
 /* --- CONTACT FORM HANDLING --- */
 const contactForm = document.getElementById('contactForm');
 const successModal = document.getElementById('successModal');

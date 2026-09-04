@@ -1,52 +1,280 @@
-[
-  {
-    "name": "E-Commerce-Shop",
-    "description": null,
-    "languages": [
-      "HTML",
-      "PHP",
-      "CSS",
-      "JavaScript",
-      "Dockerfile"
-    ],
-    "topics": [],
-    "html_url": "https://github.com/Tanvir284/E-Commerce-Shop"
+{
+  "generated": "2026-09-04",
+  "note": "Offline snapshot used when the GitHub API is rate-limited or unreachable.",
+  "user": {
+    "public_repos": 45,
+    "followers": 4
   },
-  {
-    "name": "Employee-Management-system-",
-    "description": "2nd year Software develpment project ",
-    "languages": [
-      "C#",
-      "PowerShell"
-    ],
-    "topics": [],
-    "html_url": "https://github.com/Tanvir284/Employee-Management-system-"
-  },
-  {
-    "name": "THE_AVIATOR_3D_PLANE",
-    "description": "This OpenGL Game was build for  exploring the Computer graphics concepts learning purpose ",
-    "languages": [
-      "C++"
-    ],
-    "topics": [],
-    "html_url": "https://github.com/Tanvir284/THE_AVIATOR_3D_PLANE"
-  },
-  {
-    "name": "breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network",
-    "description": null,
-    "languages": [
-      "Jupyter Notebook"
-    ],
-    "topics": [],
-    "html_url": "https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network"
-  },
-  {
-    "name": "Hotel-Management-Sytem-With-C",
-    "description": "It's my University First Year Software  Project . It's basically a console application that made with C",
-    "languages": [
-      "C"
-    ],
-    "topics": [],
-    "html_url": "https://github.com/Tanvir284/Hotel-Management-Sytem-With-C"
-  }
-]
+  "repos": [
+    {
+      "name": "Portfolio",
+      "description": "build it for my digital portfolio",
+      "html_url": "https://github.com/Tanvir284/Portfolio",
+      "language": "HTML",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-09-04T04:25:10Z"
+    },
+    {
+      "name": "finpilot-bd",
+      "description": "A modern, secure, and highly-optimized personal finance application built with Next.js 15, Tailwind CSS, and PostgreSQL.",
+      "html_url": "https://github.com/Tanvir284/finpilot-bd",
+      "language": "TypeScript",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-08-24T04:14:42Z"
+    },
+    {
+      "name": "Dsa-house",
+      "description": "- Interactive DSA learning platform built with Next.js 16 — step-by-step visualizers, curated problems, quizzes, and daily challenges. - Learn data structures and algorithms hands-on: animated visualizers, quizzes, daily challenges, streaks, and XP-based progress tracking. ",
+      "html_url": "https://github.com/Tanvir284/Dsa-house",
+      "language": "TypeScript",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-08-14T15:52:04Z"
+    },
+    {
+      "name": "Tanvir284",
+      "description": "Config files for my GitHub profile.",
+      "html_url": "https://github.com/Tanvir284/Tanvir284",
+      "language": null,
+      "stargazers_count": 1,
+      "fork": false,
+      "pushed_at": "2026-07-31T04:54:36Z"
+    },
+    {
+      "name": "ecommerce-admin-dashboard",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/ecommerce-admin-dashboard",
+      "language": "TypeScript",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-07-31T04:24:30Z"
+    },
+    {
+      "name": "Matrix-Website",
+      "description": "Matrix trade  and engineering organization's website ",
+      "html_url": "https://github.com/Tanvir284/Matrix-Website",
+      "language": "PHP",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-07-30T12:56:06Z"
+    },
+    {
+      "name": "Tender-scraper",
+      "description": "build it for my company automation purpose",
+      "html_url": "https://github.com/Tanvir284/Tender-scraper",
+      "language": "Python",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-07-30T12:37:00Z"
+    },
+    {
+      "name": "Hotel-Management-Sytem-With-C",
+      "description": "It's my University First Year Software  Project . It's basically a console application that made with C",
+      "html_url": "https://github.com/Tanvir284/Hotel-Management-Sytem-With-C",
+      "language": "C++",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-07-13T11:38:43Z"
+    },
+    {
+      "name": "TaskFlow",
+      "description": "simple React web application ",
+      "html_url": "https://github.com/Tanvir284/TaskFlow",
+      "language": "JavaScript",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-05-14T03:53:17Z"
+    },
+    {
+      "name": "MedRemind",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/MedRemind",
+      "language": "Dart",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-05-01T01:40:46Z"
+    },
+    {
+      "name": "MangoCare-AI",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/MangoCare-AI",
+      "language": "HTML",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-04-27T21:12:42Z"
+    },
+    {
+      "name": "MuscleForge-",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/MuscleForge-",
+      "language": null,
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-04-09T08:34:03Z"
+    },
+    {
+      "name": "machine-Learning-project-",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/machine-Learning-project-",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-04-08T15:21:03Z"
+    },
+    {
+      "name": "Employee-Family-Registry-System",
+      "description": ".NET + React full stack proje",
+      "html_url": "https://github.com/Tanvir284/Employee-Family-Registry-System",
+      "language": "C#",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-04-08T08:55:05Z"
+    },
+    {
+      "name": "E-Commerce-Shop",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/E-Commerce-Shop",
+      "language": "PHP",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-03-08T19:13:46Z"
+    },
+    {
+      "name": "Employee-Management-system-",
+      "description": "2nd year Software develpment project ",
+      "html_url": "https://github.com/Tanvir284/Employee-Management-system-",
+      "language": "C#",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-02-21T16:47:24Z"
+    },
+    {
+      "name": "THE_AVIATOR_3D_PLANE",
+      "description": "This OpenGL Game was build for  exploring the Computer graphics concepts learning purpose ",
+      "html_url": "https://github.com/Tanvir284/THE_AVIATOR_3D_PLANE",
+      "language": "C++",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-01-21T17:24:31Z"
+    },
+    {
+      "name": "Cardiovascular-Disease-prediction-",
+      "description": "small Machine Learning project",
+      "html_url": "https://github.com/Tanvir284/Cardiovascular-Disease-prediction-",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2026-01-05T09:33:29Z"
+    },
+    {
+      "name": "breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-12-25T10:55:05Z"
+    },
+    {
+      "name": "Chicken-Disease-Detection-with-Transfer-Learning-",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/Chicken-Disease-Detection-with-Transfer-Learning-",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-12-25T10:18:18Z"
+    },
+    {
+      "name": "Cirrhosis_Multiclass_classification_with_ML",
+      "description": "Exploring Machine Learning Boosting Algorithms In University Ai competition ",
+      "html_url": "https://github.com/Tanvir284/Cirrhosis_Multiclass_classification_with_ML",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-12-23T09:36:28Z"
+    },
+    {
+      "name": "Pneumonia-Classification-with-YOLOv8",
+      "description": null,
+      "html_url": "https://github.com/Tanvir284/Pneumonia-Classification-with-YOLOv8",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-12-23T09:02:07Z"
+    },
+    {
+      "name": "100-days-of-Python-Coding-challenge-",
+      "description": "most necessary for journey i have started for my python journey from beginner to mastery ",
+      "html_url": "https://github.com/Tanvir284/100-days-of-Python-Coding-challenge-",
+      "language": "Python",
+      "stargazers_count": 1,
+      "fork": false,
+      "pushed_at": "2025-11-07T13:00:12Z"
+    },
+    {
+      "name": "Diabetes_prediction",
+      "description": "this data analysis i worked on my knowledge engineering lab ",
+      "html_url": "https://github.com/Tanvir284/Diabetes_prediction",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-10-26T04:26:45Z"
+    },
+    {
+      "name": "E-Commerce-app",
+      "description": "Software development project final year project",
+      "html_url": "https://github.com/Tanvir284/E-Commerce-app",
+      "language": "Dart",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-10-02T22:50:25Z"
+    },
+    {
+      "name": "Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms",
+      "description": "Data Mining Course project",
+      "html_url": "https://github.com/Tanvir284/Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-06-14T22:16:59Z"
+    },
+    {
+      "name": "Python-projects",
+      "description": "this repository i made for build up my python development skills",
+      "html_url": "https://github.com/Tanvir284/Python-projects",
+      "language": "Python",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-06-06T10:06:00Z"
+    },
+    {
+      "name": "My-Competitive-programming-journey",
+      "description": "Solved problems in Different Online Judges",
+      "html_url": "https://github.com/Tanvir284/My-Competitive-programming-journey",
+      "language": "C++",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-05-18T15:09:54Z"
+    },
+    {
+      "name": "Employee-Data-Record-System-In-C-s",
+      "description": "personal practice project ",
+      "html_url": "https://github.com/Tanvir284/Employee-Data-Record-System-In-C-s",
+      "language": "C#",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-05-18T13:52:51Z"
+    },
+    {
+      "name": "Computer-Graphics-Class-files",
+      "description": "Computer Graphics Lab Works",
+      "html_url": "https://github.com/Tanvir284/Computer-Graphics-Class-files",
+      "language": "C++",
+      "stargazers_count": 0,
+      "fork": false,
+      "pushed_at": "2025-05-18T13:46:44Z"
+    }
+  ]
+}

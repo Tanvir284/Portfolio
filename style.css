@@ -3176,3 +3176,12 @@ html.theme-switching *::before,
 html.theme-switching *::after {
     transition: none !important;
 }
+
+.gh-note {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-gray);
+    margin: -14px 0 22px;
+    min-height: 1em;
+}
