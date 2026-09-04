@@ -16,7 +16,7 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=13">
+    <link rel="stylesheet" href="style.css?v=41">
 
     <style>
         .error-section {
@@ -73,6 +73,30 @@
             cursor: pointer;
         }
     </style>
+    <script>
+        /* Applied before first paint: run after the page has rendered, the
+           theme swap sticks on any element with `transition: all`, and the
+           page visibly flashes dark before turning light. */
+        (function () {
+            try {
+                if (localStorage.getItem('theme') === 'light') {
+                    document.documentElement.classList.add('light-mode');
+                }
+                var accent = localStorage.getItem('accent');
+                var themes = {
+                    cyan: ['#00f3ff', '#b000ff', 'rgba(0, 243, 255, 0.4)'],
+                    emerald: ['#00ff9d', '#00b8ff', 'rgba(0, 255, 157, 0.4)'],
+                    crimson: ['#ff0055', '#ff9d00', 'rgba(255, 0, 85, 0.4)']
+                };
+                if (accent && themes[accent]) {
+                    var t = themes[accent], root = document.documentElement.style;
+                    root.setProperty('--primary', t[0]);
+                    root.setProperty('--secondary', t[1]);
+                    root.setProperty('--glow', '0 0 20px ' + t[2]);
+                }
+            } catch (e) { /* private mode */ }
+        })();
+    </script>
 </head>
 
 <body>
@@ -95,26 +119,6 @@
         <a href="index.html" class="btn home-btn"><i class="fas fa-home"></i> BACK TO BASE</a>
     </section>
 
-    <script>
-        // Match the light/dark preference chosen on the main site
-        try {
-            if (localStorage.getItem('theme') === 'light') {
-                document.documentElement.classList.add('light-mode');
-            }
-            var accent = localStorage.getItem('accent');
-            var themes = {
-                cyan: ['#00f3ff', '#b000ff', 'rgba(0, 243, 255, 0.4)'],
-                emerald: ['#00ff9d', '#00b8ff', 'rgba(0, 255, 157, 0.4)'],
-                crimson: ['#ff0055', '#ff9d00', 'rgba(255, 0, 85, 0.4)']
-            };
-            if (accent && themes[accent]) {
-                var t = themes[accent], root = document.documentElement.style;
-                root.setProperty('--primary', t[0]);
-                root.setProperty('--secondary', t[1]);
-                root.setProperty('--glow', '0 0 20px ' + t[2]);
-            }
-        } catch (e) { /* private mode */ }
-    </script>
 </body>
 
 </html>
