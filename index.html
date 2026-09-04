@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=25">
+    <link rel="stylesheet" href="style.css?v=26">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -248,7 +248,6 @@
             <a href="#skills">SKILLS</a>
             <a href="#experience">EXPERIENCE</a>
             <a href="#education">EDUCATION</a>
-            <a href="#webgl3d">3D</a>
             <a href="#work">WORK</a>
             <a href="#github">GITHUB</a>
             <a href="#credentials">CREDENTIALS</a>
@@ -402,25 +401,6 @@
     </section>
 
     <!-- INTERACTIVE glTF MODEL VIEWER (lazy-loaded WebGL) -->
-    <section id="webgl3d" class="section-container">
-        <div class="section-header">
-            <h2>REAL-TIME <span style="color:var(--primary)">3D</span></h2>
-            <p>// A glTF model streamed into a Three.js/WebGL scene &mdash; drag to rotate.</p>
-        </div>
-
-        <div class="brain-wrap">
-            <div id="brain-canvas" class="brain-canvas" role="img"
-                aria-label="Interactive three-dimensional mech figure rendered in WebGL">
-                <div class="brain-status" id="brain-status">
-                    <i class="fas fa-cube" aria-hidden="true"></i>
-                    <span>Loading the 3D scene&hellip;</span>
-                </div>
-            </div>
-            <div class="brain-hint" id="brain-hint" hidden>
-                <i class="fas fa-arrows-rotate" aria-hidden="true"></i> Drag to rotate &middot; scroll page to continue
-            </div>
-        </div>
-    </section>
 
     <!-- LIVE AI DEMO SECTION -->
     <section id="ai-demo" class="section-container" style="background: rgba(10, 10, 10, 0.8);">
@@ -1161,15 +1141,13 @@
 
     <!-- Three.js for 3D WebGL Background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- GLTFLoader matching the r128 build above (loads THREE.GLTFLoader) -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <!-- TensorFlow.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=25"></script>
+    <script src="script.js?v=26"></script>
 </body>
 
 </html>
