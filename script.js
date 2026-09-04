@@ -469,6 +469,9 @@ function addMessage(text, isUser = false) {
 }
 
 async function handleChat() {
+    // ai-ui.js takes over once the sentence-transformer is wired up; without
+    // this both handlers answer and every question gets two replies.
+    if (window.__aiAssistantActive) return;
     if (!chatInput || !chatMessages) return;
     const userText = chatInput.value.trim();
     if (!userText) return;
@@ -931,6 +934,12 @@ if (filterBtns.length > 0) {
             playSound('click');
         });
     });
+
+    // Semantic search (ai-ui.js) needs to restore the active filter after it
+    // clears its own ranking, rather than simply un-hiding every card.
+    window.__applyProjectFilter = applyFilter;
+    window.__activeProjectFilter = () =>
+        (document.querySelector('.filter-btn.active') || {}).dataset?.filter || 'all';
 
     const reset = document.querySelector('[data-filter-reset]');
     if (reset) reset.addEventListener('click', () => applyFilter('all'));
