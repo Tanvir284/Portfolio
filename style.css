@@ -3210,32 +3210,55 @@ html.theme-switching *::after {
     padding: 0;
 }
 
-.skill-chips li {
+.skill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     letter-spacing: 0.02em;
-    color: var(--text-gray);
+    color: var(--text);
+    /* --brand is tuned per theme at build time so near-black brand colours
+       (Next.js, Vercel, GitHub, Django, pandas, NumPy) stay visible. */
+    --c: var(--brand);
     background: rgba(255, 255, 255, 0.03);
+    background: color-mix(in srgb, var(--c) 13%, transparent);
     border: 1px solid var(--border);
+    border-color: color-mix(in srgb, var(--c) 42%, transparent);
     border-radius: 8px;
-    padding: 7px 13px;
-    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    padding: 7px 12px;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.skill-chips li:hover {
-    color: var(--text);
-    border-color: var(--primary);
+.skill-chip:hover {
     transform: translateY(-2px);
+    background: color-mix(in srgb, var(--c) 24%, transparent);
+    border-color: var(--c);
 }
 
-.skill-group-primary .skill-chips li {
+.skill-ico {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    color: var(--c);
+    fill: currentColor;
+    font-size: 14px;
+    text-align: center;
+}
+
+.skill-group-primary .skill-chip {
     font-size: 0.8rem;
-    padding: 8px 15px;
-    color: var(--text);
+    padding: 8px 14px;
 }
 
-:root.light-mode .skill-chips li {
-    background: rgba(0, 0, 0, 0.03);
+.skill-group-primary .skill-ico {
+    width: 17px;
+    height: 17px;
+    font-size: 15px;
+}
+
+:root.light-mode .skill-chip {
+    --c: var(--brand-lt);
 }
 
 .skill-grid {
