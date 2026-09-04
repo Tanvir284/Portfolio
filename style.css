@@ -313,6 +313,10 @@ nav {
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    /* With twelve nav items the flex row was squeezing the wordmark down to
+       "TA"; the logo must never be the thing that gives way. */
+    flex: 0 0 auto;
+    white-space: nowrap;
 }
 
 .logo::before {
@@ -337,7 +341,7 @@ nav {
 
 .nav-items {
     display: flex;
-    gap: 15px;
+    gap: 8px;
     align-items: center;
 }
 
@@ -345,10 +349,13 @@ nav {
     text-decoration: none;
     color: var(--text-gray);
     font-weight: 600;
-    font-size: 0.8rem;
+    /* Twelve items plus the wordmark have to clear 1440px without the last
+       link or the theme toggle falling off the right edge. */
+    font-size: 0.72rem;
     font-family: 'JetBrains Mono';
     text-transform: uppercase;
-    padding: 10px 20px;
+    white-space: nowrap;
+    padding: 9px 11px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.03);
@@ -388,15 +395,27 @@ nav {
 
 .menu-toggle {
     display: none;
+    /* Reset the user-agent button chrome: without this the default grey
+       background sits behind a white icon and the control is invisible. */
+    background: none;
+    border: none;
+    padding: 4px 6px;
+    font: inherit;
+    line-height: 1;
     font-size: 1.5rem;
     color: var(--text);
     cursor: pointer;
-    /* Change from cursor: none for mobile support */
-    transition: transform 0.3s;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.menu-toggle:hover {
+    color: var(--primary);
 }
 
 /* Mobile Nav Menu Integration */
-@media (max-width: 900px) {
+/* Raised from 900px: twelve nav items plus the wordmark need ~1250px, so the
+   hamburger has to take over before the last link falls off the edge. */
+@media (max-width: 1250px) {
     .menu-toggle {
         display: block;
     }
@@ -1254,6 +1273,7 @@ nav {
 .t-desc {
     color: var(--text-gray);
     font-size: 0.95rem;
+    max-width: 78ch;
 }
 
 /* --- 10. WORKS --- */
@@ -2636,7 +2656,7 @@ button:focus:not(:focus-visible),
    ========================================================================== */
 .cred-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
     gap: 20px;
 }
 
@@ -3284,4 +3304,26 @@ body.subpage {
 /* Soft skills are competencies, not brands, so they stay on the accent */
 .soft-chips .skill-chip {
     --c: var(--primary);
+}
+
+/* Accent gradient that follows the theme and the accent switcher, replacing a
+   hardcoded blue-to-green that matched neither. */
+.grad-accent {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--primary);
+}
+
+/* Soft skills sat almost flush against the domain cards above them */
+#research .skill-group {
+    margin-top: 56px;
+}
+
+/* The rotating hero ring is wider than a small phone viewport */
+@media (max-width: 600px) {
+    .circle-text {
+        transform: scale(0.78);
+    }
 }
