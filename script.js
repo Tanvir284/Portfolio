@@ -1101,10 +1101,26 @@ if (ghRepos) {
 
     // Committed snapshot, so the section always has real content to show even
     // when the API is rate-limited, blocked, or the visitor is offline.
-    const useSnapshot = () => fetch('repos.json')
-        .then(r => r.json())
-        .then(d => render(d.user, d.repos, false))
-        .catch(() => {
+    const useSnapshot = () => fetch('repos.json?v=2')   // versioned: a cached copy
+        .then(r => r.json())                            // of the older shape broke this
+        .then(d => {
+            // Tolerate both the current {user, repos} shape and the bare array
+            // the file used to hold, so a stale cached copy still renders.
+            const repos = Array.isArray(d) ? d : (d && d.repos);
+            if (!Array.isArray(repos)) throw new Error('snapshot has no repo list');
+            const user = Array.isArray(d) ? null : (d && d.user);
+            render(user, repos.map(r => ({
+                name: r.name,
+                description: r.description,
+                html_url: r.html_url,
+                language: r.language || (Array.isArray(r.languages) ? r.languages[0] : null),
+                stargazers_count: r.stargazers_count || 0,
+                fork: !!r.fork,
+                pushed_at: r.pushed_at || new Date().toISOString()
+            })), false);
+        })
+        .catch((err) => {
+            console.error('Repository snapshot failed to render:', err);
             ghRepos.innerHTML =
                 '<p class="gh-loading">Could not load repositories. ' +
                 '<a href="https://github.com/Tanvir284" target="_blank" rel="noopener noreferrer">' +
