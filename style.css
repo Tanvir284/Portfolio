@@ -3112,3 +3112,176 @@ html.theme-switching *::after {
 .project-card.is-hidden {
     display: none !important;
 }
+
+/* ==========================================================================
+   SUB-PAGES (about / ai-projects / hire)
+   Reuse the site's tokens and components; only new pieces are defined here.
+   ========================================================================== */
+body.subpage {
+    padding-top: 90px;
+}
+
+.eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--primary);
+    margin: 0 0 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 0 var(--primary);
+    animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.55); }
+    70%  { box-shadow: 0 0 0 9px rgba(0, 243, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+}
+
+.nav-items a.is-current {
+    color: var(--primary);
+}
+
+.logo a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Long-form copy */
+.prose {
+    max-width: 760px;
+    color: var(--text-gray);
+    line-height: 1.75;
+    font-size: 0.97rem;
+}
+
+.prose p { margin: 0 0 18px; }
+.prose strong { color: var(--text); }
+
+.prose a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.prose h2 {
+    color: var(--text);
+    font-size: 1.35rem;
+    margin: 38px 0 14px;
+}
+
+/* Count-up stat row */
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin: 8px 0 44px;
+}
+
+.stat-cell {
+    text-align: center;
+    padding: 24px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+.stat-num {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.3rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--primary);
+}
+
+.stat-label {
+    display: block;
+    margin-top: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text-gray);
+}
+
+/* Numbered AI project index */
+.ai-index {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.ai-row {
+    display: grid;
+    grid-template-columns: 78px 1fr;
+    gap: 8px;
+    align-items: start;
+    padding: 24px 24px 22px 0;
+    border-top: 1px solid var(--border);
+    transition: border-color 0.25s ease;
+}
+
+.ai-row:hover {
+    border-top-color: var(--primary);
+}
+
+.ai-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--border);
+    line-height: 1.2;
+    transition: color 0.25s ease;
+}
+
+.ai-row:hover .ai-num {
+    color: var(--primary);
+}
+
+.ai-body { display: flex; flex-direction: column; gap: 10px; }
+.ai-body .p-desc { max-width: 70ch; }
+
+.hire-tags { margin-bottom: 40px; }
+
+@media (max-width: 600px) {
+    body.subpage { padding-top: 76px; }
+
+    .ai-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .stat-num { font-size: 1.9rem; }
+}
+
+/* Stats strip on the home page */
+.stats-strip {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.stats-strip .stat-row {
+    margin: 0 0 8px;
+}
+
+.domain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+/* Soft skills are competencies, not brands, so they stay on the accent */
+.soft-chips .skill-chip {
+    --c: var(--primary);
+}

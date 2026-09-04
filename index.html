@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=29">
+    <link rel="stylesheet" href="style.css?v=30">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -251,6 +251,9 @@
             <a href="#work">WORK</a>
             <a href="#github">GITHUB</a>
             <a href="#credentials">CREDENTIALS</a>
+            <a href="about.html">ABOUT ME</a>
+            <a href="ai-projects.html">AI PROJECTS</a>
+            <a href="hire.html">HIRE ME</a>
             <a href="#contact">CONTACT</a>
             <button id="mode-toggle" class="mode-toggle" aria-label="Toggle Light/Dark Mode">
                 <i class="fas fa-moon"></i>
@@ -301,6 +304,16 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="section-container stats-strip" aria-label="Portfolio statistics">
+        <div class="stat-row">
+            <div class="stat-cell"><span class="stat-num" data-count="18">0</span><span class="stat-label">Shipped projects</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="45">0</span><span class="stat-label">Public repositories</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="4">0</span><span class="stat-label">Live deployments</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="3">0</span><span class="stat-label">Certifications</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="91" data-suffix="%">0</span><span class="stat-label">Best Dice score</span></div>
         </div>
     </section>
 
@@ -536,6 +549,57 @@
                 <li class="skill-chip" style="--brand:#5e5e5e;--brand-lt:#000000"><svg class="skill-ico" aria-hidden="true" focusable="false"><use href="#si-vercel"></use></svg><span>Vercel</span></li>
             </ul>
         </div>
+        </div>
+    </section>
+
+    <section id="research" class="section-container">
+        <div class="section-header">
+            <h2>RESEARCH <span style="color:var(--primary)">DOMAINS</span></h2>
+            <p>// The problem areas my work keeps returning to.</p>
+        </div>
+        <div class="about-cards domain-grid">
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-microscope a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Medical Imaging AI</h3>
+                </div>
+                <p class="a-card-desc">Segmentation and classification on ultrasound and X-ray data &mdash; U-Net, ResNet-50 and YOLOv8.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-seedling a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Agricultural AI</h3>
+                </div>
+                <p class="a-card-desc">Crop and livestock disease detection with transfer learning, deployed as usable diagnostic tools.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-comment-dots a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">NLP &amp; Transformers</h3>
+                </div>
+                <p class="a-card-desc">Transformer-based work through Hugging Face, including LLM and NLP experimentation during research.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-chart-line a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Predictive Modelling</h3>
+                </div>
+                <p class="a-card-desc">Regression and multiclass pipelines with gradient boosting, ensembling and probability calibration.</p>
+            </div>
+        </div>
+
+        <div class="skill-group" style="margin-top:44px">
+            <h3 class="skill-cat">Soft Skills &amp; Ways of Working<span class="skill-count">8</span></h3>
+            <ul class="skill-chips soft-chips">
+                <li class="skill-chip" style="--dc-d:#00f3ff">Problem Solving</li>
+                <li class="skill-chip" style="--dc-d:#00f3ff">Critical Thinking</li>
+                <li class="skill-chip" style="--dc-d:#00f3ff">Fast Learner</li>
+                <li class="skill-chip" style="--dc-d:#00f3ff">Teamwork</li>
+                <li class="skill-chip" style="--dc-d:#00f3ff">Research &amp; Literature Review</li>
+                <li class="skill-chip" style="--dc-d:#00f3ff">Technical Writing</li>
+                <li class="skill-chip" style="--dc-d:#00f3ff">Analytical Thinking</li>
+                <li class="skill-chip" style="--dc-d:#00f3ff">Collaboration</li>
+            </ul>
         </div>
     </section>
 
@@ -1135,7 +1199,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=28"></script>
+    <script src="script.js?v=32"></script>
 </body>
 
 </html>

@@ -850,6 +850,48 @@ if (backToTopBtn) {
     });
 }
 
+/* --- COUNT-UP STATISTICS --- */
+const statNums = document.querySelectorAll('.stat-num[data-count]');
+if (statNums.length) {
+    const runCount = (el) => {
+        const target = parseFloat(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        if (prefersReducedMotion) { el.textContent = target + suffix; return; }
+        const started = performance.now();
+        const step = (now) => {
+            const t = Math.min((now - started) / 1100, 1);
+            el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3))) + suffix;
+            if (t < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+        // Guarantee the real number lands even where rAF is throttled or never
+        // runs (background tabs, non-painting contexts). Showing 0 is worse
+        // than showing it without the animation.
+        setTimeout(() => { el.textContent = target + suffix; }, 1250);
+    };
+
+    // Plain scroll/rect check rather than IntersectionObserver: the counters
+    // must never be left showing 0 if the observer does not report.
+    const pending = new Set(statNums);
+    const viewportH = () => window.innerHeight || document.documentElement.clientHeight || 0;
+    const sweep = () => {
+        const h = viewportH();
+        pending.forEach(el => {
+            const r = el.getBoundingClientRect();
+            // If the viewport height is unavailable, do not gate on it: a stat
+            // left reading 0 is far worse than one that counted early.
+            if (h === 0 || (r.top < h * 0.92 && r.bottom > 0)) {
+                pending.delete(el);
+                runCount(el);
+            }
+        });
+        if (!pending.size) window.removeEventListener('scroll', sweep);
+    };
+    window.addEventListener('scroll', sweep, { passive: true });
+    window.addEventListener('resize', sweep, { passive: true });
+    sweep();
+}
+
 /* --- PROJECT FILTERING --- */
 const filterBtns = document.querySelectorAll('.filter-btn');
 const filterCount = document.querySelector('.filter-count');

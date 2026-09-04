@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Md Tanvir Islam</title>
+    <meta name="description" content="How Md Tanvir Islam went from asking how machines learn to shipping AI systems end to end.">
+    <meta name="theme-color" content="#050505">
+    <link rel="canonical" href="https://tanvir284.github.io/Portfolio/about.html">
+
+    <meta property="og:title" content="About | Md Tanvir Islam">
+    <meta property="og:description" content="How Md Tanvir Islam went from asking how machines learn to shipping AI systems end to end.">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://tanvir284.github.io/Portfolio/about.html">
+    <meta property="og:image" content="https://tanvir284.github.io/Portfolio/og-image.png">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=30">
+</head>
+
+<body class="subpage">
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="noise-overlay"></div>
+    <div class="grid-overlay"></div>
+    <div class="cursor-outer"></div>
+    <div class="cursor-inner"></div>
+
+    <nav>
+        <div class="logo"><a href="index.html">TANVIR<span>.DEV</span></a></div>
+        <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Toggle navigation menu"
+            aria-expanded="false" aria-controls="nav-items"><i class="fas fa-bars" aria-hidden="true"></i></button>
+        <div class="nav-items" id="nav-items">
+            <a href="index.html">HOME</a>
+            <a href="about.html" class="is-current" aria-current="page">ABOUT</a>
+            <a href="ai-projects.html">AI PROJECTS</a>
+            <a href="index.html#work">WORK</a>
+            <a href="resume.html">RESUME</a>
+            <a href="hire.html">HIRE ME</a>
+            <button id="mode-toggle" class="mode-toggle" aria-label="Toggle Light/Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="section-container">
+        <div class="section-header">
+            <p class="eyebrow">WHO I AM</p>
+            <h1>ABOUT <span style="color:var(--primary)">ME</span></h1>
+            <p>// The longer version &mdash; how I got here and what I care about.</p>
+        </div>
+
+        <div class="prose">
+            <p>I'm <strong>Md Tanvir Islam</strong>, a Computer Science graduate from Bangladesh University of
+                Business and Technology, specialising in Artificial Intelligence. I work at the point where machine
+                learning meets software that people actually use &mdash; training the model is only half the job, and
+                the half nobody sees is getting it to run reliably behind a real interface.</p>
+
+            <h2>My story</h2>
+            <p>It started with one question: how does a machine actually learn? Chasing that answer led me through
+                neural networks, the mathematics underneath them, and a lot of late nights working out why a model
+                that looked correct on paper refused to converge.</p>
+            <p>Somewhere in my undergrad I realised that understanding the theory was not enough for me. I wanted to
+                build things people could open and use. That pulled me into full-stack development &mdash; PHP and
+                MySQL first, then C# and .NET, then React, Next.js and FastAPI &mdash; so that a trained model could
+                become a product instead of a notebook.</p>
+            <p>Today I build across the whole path: dataset preprocessing, training and evaluation, then the API,
+                the interface and the deployment. <a href="index.html#work">MangoCare AI</a> is the clearest example
+                &mdash; a fine-tuned DenseNet-121 wrapped in a Flask service, containerised with Docker and shipped
+                as something you can point a camera at.</p>
+
+            <h2>Research</h2>
+            <p>My strongest research work is in medical imaging. I built a segmentation and classification pipeline
+                for breast lesions in ultrasound images using U-Net with a ResNet-50 backbone, reaching a
+                <strong>91% Dice coefficient</strong> &mdash; seven percentage points above the baseline CNN. I have
+                since worked on pneumonia classification from chest X-rays with YOLOv8, and on survival prediction
+                using calibrated gradient-boosting ensembles.</p>
+            <p>In early 2026 I worked as a Research Assistant at InsightEdu across ML, deep learning, NLP and
+                Transformer projects &mdash; reproducing state-of-the-art baselines and drafting the methodology and
+                experimental-results sections of research papers.</p>
+        </div>
+    </section>
+
+    <section class="section-container" style="background:#080808">
+        <div class="section-header">
+            <p class="eyebrow">WHAT I DO</p>
+            <h2>FOUR <span style="color:var(--primary)">THINGS</span></h2>
+        </div>
+        <div class="about-cards">
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-brain a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">AI &amp; Computer Vision</h3>
+                </div>
+                <p class="a-card-desc">Deep learning for images: segmentation and classification with U-Net, ResNet, DenseNet and YOLOv8. Medical imaging and agricultural disease detection, evaluated on real metrics rather than accuracy alone.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-layer-group a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Full-Stack Engineering</h3>
+                </div>
+                <p class="a-card-desc">End-to-end applications with React, Next.js, NestJS, Django, Flask, FastAPI and .NET, over PostgreSQL, MySQL, SQL Server and MongoDB. Authentication, role-based access, REST APIs and deployment included.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-chart-line a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Applied Machine Learning</h3>
+                </div>
+                <p class="a-card-desc">Regression and multiclass problems solved with Scikit-learn, XGBoost, LightGBM and CatBoost &mdash; feature engineering, ensembling and probability calibration, comparing models rather than settling for the first one that runs.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-cubes a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Shipping &amp; Automation</h3>
+                </div>
+                <p class="a-card-desc">Docker, GitHub Actions, Jenkins and Terraform. Automation with Django and Selenium that replaces genuinely tedious manual work, such as scraping procurement portals into finished Excel reports.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="section-header">
+            <p class="eyebrow">WHAT DRIVES ME</p>
+            <h2>HOW I <span style="color:var(--primary)">WORK</span></h2>
+        </div>
+        <div class="about-cards">
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-magnifying-glass a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Measure, then claim</h3>
+                </div>
+                <p class="a-card-desc">A model is only as good as the number you can defend. I report Dice, RMSE and per-class metrics, including the runs that did not work, because a portfolio without numbers is just a list of nouns.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-screwdriver-wrench a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Finish the last mile</h3>
+                </div>
+                <p class="a-card-desc">A notebook that only runs on my machine is not a project. It counts once it has an interface, an API and somewhere to live.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-book-open a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Learn in public</h3>
+                </div>
+                <p class="a-card-desc">Currently working through Generative AI, MLOps and cloud architecture. Every repository I push is part of that record, including the rough ones.</p>
+            </div>
+            <div class="a-card">
+                <div class="a-card-header">
+                    <i class="fas fa-people-group a-card-icon" aria-hidden="true"></i>
+                    <h3 class="a-card-title">Explain the work</h3>
+                </div>
+                <p class="a-card-desc">Drafting research methodology taught me that unexplained work has no value. If I cannot describe why an architecture was chosen, I do not understand it yet.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" style="background:#080808">
+        <div class="section-header">
+            <p class="eyebrow">BEYOND THE SCREEN</p>
+            <h2>OFF <span style="color:var(--primary)">HOURS</span></h2>
+        </div>
+        <div class="prose">
+            <p>Away from the terminal I follow AI research for enjoyment rather than obligation, play games, and
+                travel when I can. I am currently open to opportunities in software engineering, AI and machine
+                learning, and data analytics &mdash; if you are building something in that space,
+                <a href="hire.html">let's talk</a>.</p>
+        </div>
+    </section>
+
+
+    <footer>
+        <p>&copy; <span id="year"></span> <span>Md Tanvir Islam</span> &middot; <a href="index.html">Back to
+            portfolio</a></p>
+    </footer>
+
+    <div id="backToTop" class="back-to-top" role="button" tabindex="0" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="subpage.js?v=32"></script>
+</body>
+
+</html>

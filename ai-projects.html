@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI &amp; ML Projects | Md Tanvir Islam</title>
+    <meta name="description" content="Eight machine learning and deep learning projects by Md Tanvir Islam, across medical imaging, agriculture and applied ML.">
+    <meta name="theme-color" content="#050505">
+    <link rel="canonical" href="https://tanvir284.github.io/Portfolio/ai-projects.html">
+
+    <meta property="og:title" content="AI &amp; ML Projects | Md Tanvir Islam">
+    <meta property="og:description" content="Eight machine learning and deep learning projects by Md Tanvir Islam, across medical imaging, agriculture and applied ML.">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://tanvir284.github.io/Portfolio/ai-projects.html">
+    <meta property="og:image" content="https://tanvir284.github.io/Portfolio/og-image.png">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=30">
+</head>
+
+<body class="subpage">
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="noise-overlay"></div>
+    <div class="grid-overlay"></div>
+    <div class="cursor-outer"></div>
+    <div class="cursor-inner"></div>
+
+    <nav>
+        <div class="logo"><a href="index.html">TANVIR<span>.DEV</span></a></div>
+        <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Toggle navigation menu"
+            aria-expanded="false" aria-controls="nav-items"><i class="fas fa-bars" aria-hidden="true"></i></button>
+        <div class="nav-items" id="nav-items">
+            <a href="index.html">HOME</a>
+            <a href="about.html">ABOUT</a>
+            <a href="ai-projects.html" class="is-current" aria-current="page">AI PROJECTS</a>
+            <a href="index.html#work">WORK</a>
+            <a href="resume.html">RESUME</a>
+            <a href="hire.html">HIRE ME</a>
+            <button id="mode-toggle" class="mode-toggle" aria-label="Toggle Light/Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="section-container">
+        <div class="section-header">
+            <p class="eyebrow">AI &amp; MACHINE LEARNING</p>
+            <h1>NEURAL <span style="color:var(--primary)">WORK</span></h1>
+            <p>// 8 models and pipelines &mdash; medical imaging, agriculture and applied ML.</p>
+        </div>
+
+        <div class="stat-row">
+            <div class="stat-cell"><span class="stat-num" data-count="8">0</span><span class="stat-label">AI / ML projects</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="91" data-suffix="%">0</span><span class="stat-label">Best Dice score</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="4">0</span><span class="stat-label">Medical &amp; agri models</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="1">0</span><span class="stat-label">Deployed to production</span></div>
+        </div>
+
+        <div class="ai-index">
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">01</div>
+                <div class="ai-body">
+                    <p class="p-cat">COMPUTER VISION &bull; DEPLOYED</p>
+                    <h3 class="p-title">MangoCare AI</h3>
+                    <p class="p-desc">A full-stack diagnostic app classifying 8 mango leaf disease categories from a fine-tuned DenseNet-121. Secure authentication, a dashboard showing confidence scores and treatment recommendations, and a REST API. Containerised with Docker and deployed to Hugging Face Spaces.</p>
+                <ul class="p-metrics"><li><span class="m-val">8</span><span class="m-key">classes</span></li></ul>
+                    <div class="p-tags"><span>PyTorch</span><span>DenseNet-121</span><span>Flask</span><span>Docker</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/MangoCare-AI" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">02</div>
+                <div class="ai-body">
+                    <p class="p-cat">MEDICAL IMAGING &bull; RESEARCH</p>
+                    <h3 class="p-title">Breast Lesion Segmentation</h3>
+                    <p class="p-desc">An encoder-decoder pipeline segmenting and classifying breast lesions in ultrasound images, using U-Net with a ResNet-50 backbone and transfer learning. My strongest research result to date.</p>
+                <ul class="p-metrics"><li><span class="m-val">91%</span><span class="m-key">Dice</span></li><li><span class="m-val">+7pp</span><span class="m-key">vs baseline</span></li></ul>
+                    <div class="p-tags"><span>TensorFlow</span><span>U-Net</span><span>ResNet-50</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">03</div>
+                <div class="ai-body">
+                    <p class="p-cat">MEDICAL IMAGING &bull; DETECTION</p>
+                    <h3 class="p-title">Pneumonia Classification</h3>
+                    <p class="p-desc">Chest X-ray classification separating normal from pneumonia-affected scans with YOLOv8, tracked on precision, recall, F1 and mAP across a 70/15/15 split with augmentation.</p>
+                <ul class="p-metrics"><li><span class="m-val">95%+</span><span class="m-key">accuracy</span></li></ul>
+                    <div class="p-tags"><span>YOLOv8</span><span>PyTorch</span><span>Ultralytics</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/Pneumonia-Classification-with-YOLOv8" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">04</div>
+                <div class="ai-body">
+                    <p class="p-cat">TRANSFER LEARNING &bull; AGRICULTURE</p>
+                    <h3 class="p-title">Chicken Disease Detection</h3>
+                    <p class="p-desc">Poultry disease detection from images using transfer learning on a pre-trained convolutional backbone, developed and published as a public Kaggle notebook.</p>
+                    <div class="p-tags"><span>TensorFlow</span><span>Transfer Learning</span><span>Kaggle</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/Chicken-Disease-Detection-with-Transfer-Learning-" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">05</div>
+                <div class="ai-body">
+                    <p class="p-cat">ENSEMBLES &bull; CALIBRATION</p>
+                    <h3 class="p-title">Cirrhosis Survival Classification</h3>
+                    <p class="p-desc">Multiclass prediction of patient survival status, combining stacking with weighted blending and applying temperature scaling so the predicted probabilities mean what they claim. Trained on a synthetic dataset.</p>
+                    <div class="p-tags"><span>XGBoost</span><span>LightGBM</span><span>CatBoost</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/Cirrhosis_Multiclass_classification_with_ML" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">06</div>
+                <div class="ai-body">
+                    <p class="p-cat">REGRESSION &bull; MODEL COMPARISON</p>
+                    <h3 class="p-title">Concrete Strength Prediction</h3>
+                    <p class="p-desc">Five regression models built and compared to predict concrete compressive strength, with the water-cement ratio identified as the dominant predictor.</p>
+                <ul class="p-metrics"><li><span class="m-val">4.2</span><span class="m-key">MPa RMSE</span></li><li><span class="m-val">5</span><span class="m-key">models</span></li></ul>
+                    <div class="p-tags"><span>Scikit-learn</span><span>XGBoost</span><span>Pandas</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">07</div>
+                <div class="ai-body">
+                    <p class="p-cat">CLASSIFICATION &bull; HEALTH DATA</p>
+                    <h3 class="p-title">Cardiovascular Risk Prediction</h3>
+                    <p class="p-desc">Predicting cardiovascular disease from medical examination records, working through preprocessing, feature handling and model comparison on the Kaggle cardiovascular dataset.</p>
+                    <div class="p-tags"><span>Scikit-learn</span><span>Pandas</span><span>NumPy</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/Cardiovascular-Disease-prediction-" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+            <article class="ai-row">
+                <div class="ai-num" aria-hidden="true">08</div>
+                <div class="ai-body">
+                    <p class="p-cat">CLASSIFICATION &bull; ANALYSIS</p>
+                    <h3 class="p-title">Diabetes Prediction</h3>
+                    <p class="p-desc">An exploratory data analysis and prediction study built during knowledge engineering coursework.</p>
+                    <div class="p-tags"><span>Python</span><span>Pandas</span><span>Scikit-learn</span></div>
+                    <div class="p-actions">
+                        <a href="https://github.com/Tanvir284/Diabetes_prediction" target="_blank" rel="noopener noreferrer"
+                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="prose" style="margin-top:48px">
+            <p>Every model above lives in a public repository. For the full engineering side &mdash; APIs,
+                dashboards and deployments &mdash; see <a href="index.html#work">all 18 projects</a>.</p>
+        </div>
+    </section>
+
+
+    <footer>
+        <p>&copy; <span id="year"></span> <span>Md Tanvir Islam</span> &middot; <a href="index.html">Back to
+            portfolio</a></p>
+    </footer>
+
+    <div id="backToTop" class="back-to-top" role="button" tabindex="0" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="subpage.js?v=32"></script>
+</body>
+
+</html>
