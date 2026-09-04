@@ -38,11 +38,22 @@ if (modeToggleBtn) {
     // Check local storage for preference
     if (storage.get('theme') === 'light') {
         document.documentElement.classList.add('light-mode');
+        // applied before paint, so no transition to suppress
         modeIcon.classList.replace('fa-moon', 'fa-sun');
     }
 
+    // Swap themes with transitions suppressed (see .theme-switching in CSS)
+    const swapTheme = (fn) => {
+        const root = document.documentElement;
+        root.classList.add('theme-switching');
+        fn();
+        void root.offsetWidth;                       // force the new values to apply
+        requestAnimationFrame(() => requestAnimationFrame(
+            () => root.classList.remove('theme-switching')));
+    };
+
     modeToggleBtn.addEventListener('click', () => {
-        document.documentElement.classList.toggle('light-mode');
+        swapTheme(() => document.documentElement.classList.toggle('light-mode'));
         if (document.documentElement.classList.contains('light-mode')) {
             storage.set('theme', 'light');
             modeIcon.classList.replace('fa-moon', 'fa-sun');
@@ -978,6 +989,8 @@ const filterCount = document.querySelector('.filter-count');
 
 if (filterBtns.length > 0) {
     const cards = Array.from(document.querySelectorAll('.project-card'));
+    const noResults = document.querySelector('.no-results');
+    const tiers = Array.from(document.querySelectorAll('.project-grid'));
 
     const applyFilter = (filter) => {
         let shown = 0;
@@ -987,6 +1000,18 @@ if (filterBtns.length > 0) {
             if (match) shown++;
         });
 
+        // Hide a tier (and its heading) when the filter empties it, so the page
+        // never shows "Featured" above nothing.
+        tiers.forEach(grid => {
+            const anyVisible = Array.from(grid.children)
+                .some(c => !c.classList.contains('is-hidden'));
+            grid.classList.toggle('is-hidden', !anyVisible);
+            const heading = grid.previousElementSibling;
+            if (heading && heading.classList.contains('tier-label')) {
+                heading.classList.toggle('is-hidden', !anyVisible);
+            }
+        });
+
         filterBtns.forEach(b => {
             const on = b.dataset.filter === filter;
             b.classList.toggle('active', on);
@@ -994,12 +1019,13 @@ if (filterBtns.length > 0) {
         });
 
         if (filterCount) {
-            filterCount.textContent = filter === 'all'
-                ? `${shown} projects`
+            filterCount.textContent = shown === cards.length
+                ? `${cards.length} projects`
                 : `${shown} of ${cards.length} projects`;
         }
+        if (noResults) noResults.hidden = shown > 0;
 
-        // Cards changing visibility shifts everything below them
+        // Cards appearing and disappearing moves everything below them
         if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
     };
 
@@ -1010,111 +1036,10 @@ if (filterBtns.length > 0) {
         });
     });
 
+    const reset = document.querySelector('[data-filter-reset]');
+    if (reset) reset.addEventListener('click', () => applyFilter('all'));
+
     applyFilter('all');
-}
-
-/* --- LIVE GITHUB ACTIVITY --- */
-const ghRepos = document.getElementById('gh-repos');
-
-if (ghRepos) {
-    const GH_USER = 'Tanvir284';
-    const CACHE_KEY = 'gh-cache-v1';
-    const CACHE_TTL = 60 * 60 * 1000; // 1 hour -- the API allows 60 calls/hr unauthenticated
-
-    const esc = (str) => String(str).replace(/[&<>"']/g,
-        c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-    const setStat = (key, value) => {
-        const el = document.querySelector(`[data-gh="${key}"]`);
-        if (el) el.textContent = value;
-    };
-
-    const render = (user, repos) => {
-        // Skip forks and this portfolio itself; show the most recently pushed work
-        // Skip forks, this portfolio, and the profile-README repo
-        const skip = new Set(['portfolio', GH_USER.toLowerCase()]);
-        const own = repos
-            .filter(r => !r.fork && !skip.has(r.name.toLowerCase()))
-            .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
-            .slice(0, 6);
-
-        const stars = repos.reduce((n, r) => n + (r.stargazers_count || 0), 0);
-        const langs = new Set(repos.map(r => r.language).filter(Boolean));
-
-        setStat('repos', user ? user.public_repos : repos.length);
-        setStat('stars', stars);
-        setStat('followers', user ? user.followers : '—');
-        setStat('languages', langs.size);
-
-        ghRepos.innerHTML = own.map(r => `
-            <a class="gh-card" href="${esc(r.html_url)}" target="_blank" rel="noopener noreferrer">
-                <span class="gh-name"><i class="fas fa-code-branch" aria-hidden="true"></i> ${esc(r.name)}</span>
-                <span class="gh-desc">${esc(r.description || 'No description provided.')}</span>
-                <span class="gh-meta">
-                    ${r.language ? `<span class="gh-lang">${esc(r.language)}</span>` : ''}
-                    ${r.stargazers_count ? `<span><i class="fas fa-star" aria-hidden="true"></i> ${r.stargazers_count}</span>` : ''}
-                    <span class="gh-when">updated ${timeAgo(r.pushed_at)}</span>
-                </span>
-            </a>`).join('');
-    };
-
-    function timeAgo(iso) {
-        const days = Math.floor((Date.now() - new Date(iso)) / 86400000);
-        if (days <= 0) return 'today';
-        if (days === 1) return 'yesterday';
-        if (days < 30) return `${days} days ago`;
-        const months = Math.floor(days / 30);
-        if (months < 12) return `${months} month${months > 1 ? 's' : ''} ago`;
-        const years = Math.floor(months / 12);
-        return `${years} year${years > 1 ? 's' : ''} ago`;
-    }
-
-    const cached = (() => {
-        try {
-            const raw = localStorage.getItem(CACHE_KEY);
-            if (!raw) return null;
-            const obj = JSON.parse(raw);
-            return (Date.now() - obj.at < CACHE_TTL) ? obj : null;
-        } catch (e) { return null; }
-    })();
-
-    if (cached) {
-        render(cached.user, cached.repos);
-    } else {
-        Promise.all([
-            fetch(`https://api.github.com/users/${GH_USER}`).then(r => r.ok ? r.json() : null),
-            fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`)
-                .then(r => r.ok ? r.json() : Promise.reject(new Error('repos ' + r.status)))
-        ])
-            .then(([user, repos]) => {
-                if (!Array.isArray(repos)) throw new Error('unexpected payload');
-                render(user, repos);
-                try {
-                    localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), user, repos }));
-                } catch (e) { /* quota or private mode */ }
-            })
-            .catch(err => {
-                // Rate-limited or offline: fall back to the snapshot committed in the repo
-                console.warn('GitHub API unavailable, using local snapshot:', err);
-                fetch('repos.json')
-                    .then(r => r.json())
-                    .then(list => render(null, list.map(r => ({
-                        name: r.name,
-                        description: r.description,
-                        html_url: r.html_url,
-                        language: (r.languages && r.languages[0]) || null,
-                        stargazers_count: 0,
-                        fork: false,
-                        pushed_at: new Date().toISOString()
-                    }))))
-                    .catch(() => {
-                        ghRepos.innerHTML =
-                            '<p class="gh-loading">Could not load repositories right now. ' +
-                            '<a href="https://github.com/Tanvir284" target="_blank" rel="noopener noreferrer">' +
-                            'Browse them on GitHub</a>.</p>';
-                    });
-            });
-    }
 }
 
 /* --- CONTACT FORM HANDLING --- */
