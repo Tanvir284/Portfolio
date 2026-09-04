@@ -1090,21 +1090,7 @@ nav {
     flex-wrap: wrap;
 }
 
-.tech-badge {
-    height: 45px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1));
-    transition: filter 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.3s;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-}
 
-.tech-badge:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 15px var(--primary));
-    z-index: 10;
-}
 
 /* Staggered animation handled by AOS in HTML or JS */
 
@@ -1753,10 +1739,6 @@ nav {
         /* Smaller title for phones */
     }
 
-    .tech-badge {
-        transform: scale(0.9);
-    }
-
     .section-header h2 {
         font-size: 2rem;
     }
@@ -2233,27 +2215,8 @@ footer {
 }
 
 /* --- INFINITE SCROLLING TECH MARQUEE --- */
-.tech-stack-marquee {
-    overflow: hidden;
-    white-space: nowrap;
-    position: relative;
-    width: 100%;
-    display: flex;
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-    padding: 20px 0;
-}
 
-.marquee-track {
-    display: inline-flex;
-    gap: 30px;
-    padding-right: 30px;
-    animation: scroll-left 25s linear infinite;
-}
 
-.tech-stack-marquee:hover .marquee-track {
-    animation-play-state: paused;
-}
 
 @keyframes scroll-left {
     from {
@@ -2561,9 +2524,8 @@ button:focus:not(:focus-visible),
         scroll-behavior: auto;
     }
 
-    /* Stop the infinite marquees outright */
-    .marquee-content,
-    .marquee-track {
+    /* Stop the infinite marquee outright */
+    .marquee-content {
         animation: none !important;
         transform: none !important;
     }
@@ -3184,4 +3146,111 @@ html.theme-switching *::after {
     color: var(--text-gray);
     margin: -14px 0 22px;
     min-height: 1em;
+}
+
+/* ==========================================================================
+   TECHNICAL ARSENAL — grouped, everything visible at once
+   Replaces a marquee that showed ~6 of 28 badges at a time and made the
+   visitor wait for the rest to scroll past.
+   ========================================================================== */
+.skill-group {
+    margin-bottom: 32px;
+}
+
+.skill-group-primary {
+    border-left: 2px solid var(--primary);
+    padding: 22px 24px 24px;
+    border-radius: 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+}
+
+.skill-cat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 0 0 16px;
+}
+
+.skill-count {
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--text-gray);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 1px 8px;
+    letter-spacing: 0.05em;
+}
+
+.skill-note {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--bg);
+    background: var(--primary);
+    border-radius: 999px;
+    padding: 3px 10px;
+}
+
+.skill-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.skill-chips li {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--text-gray);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 13px;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.skill-chips li:hover {
+    color: var(--text);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.skill-group-primary .skill-chips li {
+    font-size: 0.8rem;
+    padding: 8px 15px;
+    color: var(--text);
+}
+
+:root.light-mode .skill-chips li {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px 32px;
+}
+
+@media (max-width: 600px) {
+    .skill-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .skill-group-primary {
+        padding: 18px 18px 20px;
+    }
 }
