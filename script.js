@@ -857,7 +857,6 @@ const filterCount = document.querySelector('.filter-count');
 if (filterBtns.length > 0) {
     const cards = Array.from(document.querySelectorAll('.project-card'));
     const noResults = document.querySelector('.no-results');
-    const tiers = Array.from(document.querySelectorAll('.project-grid'));
 
     const applyFilter = (filter) => {
         let shown = 0;
@@ -865,18 +864,6 @@ if (filterBtns.length > 0) {
             const match = filter === 'all' || card.dataset.domain === filter;
             card.classList.toggle('is-hidden', !match);
             if (match) shown++;
-        });
-
-        // Hide a tier (and its heading) when the filter empties it, so the page
-        // never shows "Featured" above nothing.
-        tiers.forEach(grid => {
-            const anyVisible = Array.from(grid.children)
-                .some(c => !c.classList.contains('is-hidden'));
-            grid.classList.toggle('is-hidden', !anyVisible);
-            const heading = grid.previousElementSibling;
-            if (heading && heading.classList.contains('tier-label')) {
-                heading.classList.toggle('is-hidden', !anyVisible);
-            }
         });
 
         filterBtns.forEach(b => {
@@ -892,7 +879,7 @@ if (filterBtns.length > 0) {
         }
         if (noResults) noResults.hidden = shown > 0;
 
-        // Cards appearing and disappearing moves everything below them
+        // Cards leaving the flow moves everything below them
         if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
     };
 

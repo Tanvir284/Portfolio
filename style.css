@@ -2595,10 +2595,6 @@ button:focus:not(:focus-visible),
     min-height: 1em;
 }
 
-.project-card.is-hidden {
-    display: none;
-}
-
 /* ==========================================================================
    PROJECT METRICS
    ========================================================================== */
@@ -2633,11 +2629,6 @@ button:focus:not(:focus-visible),
     font-size: 0.68rem;
     color: var(--text-gray);
     letter-spacing: 0.04em;
-}
-
-.project-card.featured {
-    border-color: var(--primary);
-    box-shadow: var(--glow);
 }
 
 /* ==========================================================================
@@ -2837,194 +2828,6 @@ button:focus:not(:focus-visible),
 @media (max-width: 600px) {
 }
 
-/* ==========================================================================
-   SELECTED WORKS — two-tier layout
-   A uniform grid of identical cards gives the eye nowhere to land. Three
-   featured projects carry the section; the rest are compact and text-forward.
-   ========================================================================== */
-.tier-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-gray);
-    margin: 48px 0 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-}
-
-.tier-label:first-of-type {
-    margin-top: 8px;
-}
-
-/* --- Featured: first card spans the full width, the other two share a row --- */
-.featured-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-}
-
-.featured-grid > :first-child {
-    grid-column: 1 / -1;
-}
-
-.project-card.featured {
-    display: grid;
-    grid-template-columns: 1fr;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: var(--surface);
-    overflow: hidden;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.featured-grid > :first-child.project-card.featured {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    align-items: stretch;
-}
-
-.project-card.featured:hover {
-    transform: translateY(-4px);
-    border-color: var(--primary);
-    box-shadow: 0 0 0 1px var(--primary), 0 18px 40px -24px rgba(0, 0, 0, 0.9);
-}
-
-.project-card.featured .project-visual {
-    position: relative;
-    overflow: hidden;
-    min-height: 220px;
-    background: #05070a;
-}
-
-.project-card.featured .project-visual img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.project-card.featured .content-wrapper {
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* --- Compact: text-forward, no imagery --- */
-.compact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-}
-
-.project-card.compact {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 24px 24px 24px 26px;
-    border: 1px solid var(--border);
-    border-left: 2px solid var(--border);
-    border-radius: 12px;
-    background: var(--surface);
-    transition: transform 0.25s ease, border-color 0.25s ease, border-left-color 0.25s ease;
-}
-
-.project-card.compact:hover {
-    transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, 0.22);
-    border-left-color: var(--primary);
-}
-
-/* --- Shared card typography --- */
-.p-cat {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.66rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: var(--primary);
-    margin: 0;
-}
-
-.project-card.featured .p-title {
-    font-size: 1.7rem;
-    line-height: 1.15;
-    margin: 0;
-}
-
-.project-card.compact .p-title {
-    font-size: 1.18rem;
-    line-height: 1.2;
-    margin: 0;
-}
-
-.project-card .p-desc {
-    color: var(--text-gray);
-    line-height: 1.6;
-    margin: 0;
-    font-size: 0.92rem;
-}
-
-.project-card.compact .p-desc {
-    font-size: 0.87rem;
-}
-
-.p-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 20px;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 14px;
-}
-
-.p-link {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--text);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
-}
-
-.p-link i {
-    font-size: 0.8em;
-    margin-left: 6px;
-}
-
-.p-link:hover {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
-}
-
-.p-link-live {
-    color: var(--primary);
-}
-
-.p-link-live:hover {
-    color: var(--text);
-    border-bottom-color: var(--text);
-}
-
-.p-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-}
-
-.p-tags span {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.64rem;
-    letter-spacing: 0.04em;
-    color: var(--text-gray);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 4px 11px;
-}
-
-/* --- No-results state --- */
 .no-results {
     text-align: center;
     font-family: 'JetBrains Mono', monospace;
@@ -3047,34 +2850,8 @@ button:focus:not(:focus-visible),
     padding: 0;
 }
 
-@media (max-width: 900px) {
-    .featured-grid {
-        grid-template-columns: 1fr;
-    }
 
-    .featured-grid > :first-child.project-card.featured {
-        grid-template-columns: 1fr;
-    }
-}
 
-@media (max-width: 600px) {
-    .compact-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .project-card.featured .content-wrapper {
-        padding: 22px;
-    }
-
-    .project-card.featured .p-title {
-        font-size: 1.4rem;
-    }
-}
-
-.project-grid.is-hidden,
-.tier-label.is-hidden {
-    display: none;
-}
 
 /* Transitioning a property whose value comes from a custom property leaves it
    stuck when the theme swaps. Suppress transitions for the swap itself, so
@@ -3222,4 +2999,116 @@ html.theme-switching *::after {
     .skill-group-primary {
         padding: 18px 18px 20px;
     }
+}
+
+/* ==========================================================================
+   SELECTED WORKS — one uniform grid
+   Every card is the same size: grid-auto-rows:1fr equalises the rows and the
+   description is clamped, so a long write-up cannot stretch its own card.
+   Each card takes a watermark glyph and accent from its domain (--dc).
+   ========================================================================== */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 20px;
+}
+
+.project-card {
+    /* --dc is resolved here, never set inline: an inline custom property wins
+       over any stylesheet rule, which stopped the light theme from swapping. */
+    --dc: var(--dc-d, var(--primary));
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    padding: 24px 24px 22px 26px;
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--dc, var(--primary));
+    border-radius: 12px;
+    background: var(--surface);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--dc, var(--primary));
+    box-shadow: 0 14px 34px -22px rgba(0, 0, 0, 0.9);
+}
+
+/* Type marker: large, faint, and clear of the text */
+.p-watermark {
+    position: absolute;
+    top: -14px;
+    right: -10px;
+    font-size: 96px;
+    line-height: 1;
+    color: var(--dc, var(--primary));
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.project-card:hover .p-watermark {
+    opacity: 0.14;
+}
+
+.project-card .p-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    color: var(--dc, var(--primary));
+    margin: 0;
+    position: relative;
+}
+
+.project-card .p-title {
+    font-size: 1.16rem;
+    line-height: 1.25;
+    margin: 0;
+    position: relative;
+}
+
+.project-card .p-desc {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0;
+    position: relative;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.project-card .p-tags {
+    position: relative;
+}
+
+.project-card .p-actions {
+    position: relative;
+    margin-top: auto;
+}
+
+@media (max-width: 600px) {
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Domain accents are pre-fitted per theme: the raw brand-ish hues fail 4.5:1
+   on one side or the other (#00F3FF is 1.31 on white, #B000FF is 4.16 on
+   black), so each card ships both and the light theme swaps. */
+:root.light-mode .project-card {
+    --dc: var(--dc-lt, var(--primary));
+}
+
+/* Filtering. Declared last on purpose: the previous rule sat above
+   .project-card.featured{display:grid} and .project-card.compact{display:flex},
+   which have equal specificity, so those won and nothing ever hid. */
+.project-card.is-hidden {
+    display: none !important;
 }
