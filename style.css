@@ -3775,3 +3775,146 @@ footer a:hover {
     border-color: var(--text);
     color: var(--bg);
 }
+
+/* ==========================================================================
+   REFINEMENT PASS
+   No structural change: tighter typography, a consistent motion curve, and
+   depth built from surface lightness and hairlines rather than glow.
+   ========================================================================== */
+
+:root {
+    --ease: cubic-bezier(0.33, 1, 0.68, 1);
+    --dur: 200ms;
+    --hairline: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+/* --- Section rhythm ---------------------------------------------------- */
+/* Every section began at exactly the same weight with no marker, so the page
+   read as one long column. A short accent rule gives each start a beat. */
+.section-header::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 999px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.section-header h2 {
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+}
+
+.section-header p {
+    max-width: 52ch;
+    line-height: 1.6;
+}
+
+/* A hairline between sections that share a background, so the eye gets a
+   resting point without another heavy divider. */
+.section-container + .section-container:not([data-alt-bg]) {
+    border-top: var(--hairline);
+}
+
+/* --- Display type ------------------------------------------------------ */
+.hero h1 {
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+}
+
+.hero h2 {
+    letter-spacing: -0.01em;
+}
+
+.hero-desc {
+    max-width: 46ch;
+    line-height: 1.7;
+}
+
+/* --- Depth: surface + hairline, not shadow ----------------------------- */
+.project-card,
+.a-card,
+.cred-card,
+.skill-group-primary,
+.stat-cell,
+.gh-card {
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+.project-card:hover,
+.a-card:hover,
+.cred-card:hover,
+.gh-card:hover {
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--text) 12%, transparent),
+        0 12px 28px -20px rgba(0, 0, 0, 0.85);
+}
+
+/* --- Motion: one curve, one duration ----------------------------------- */
+.project-card,
+.a-card,
+.cred-card,
+.gh-card,
+.skill-chip,
+.stat-cell,
+.btn,
+.p-link,
+.filter-btn,
+.nav-items a,
+.social-btn {
+    transition-timing-function: var(--ease);
+    transition-duration: var(--dur);
+}
+
+/* --- Buttons ----------------------------------------------------------- */
+.btn {
+    letter-spacing: 0.06em;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 40%, transparent),
+                0 8px 24px -14px var(--primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px var(--primary),
+                0 12px 30px -12px var(--primary);
+}
+
+/* --- The availability pill --------------------------------------------- */
+.tagline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.16em;
+    border-radius: 999px;
+}
+
+.tagline::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+    flex: 0 0 auto;
+}
+
+/* --- Quieter texture --------------------------------------------------- */
+/* The grid and noise layers were competing with the content they sat behind. */
+.grid-overlay {
+    opacity: 0.35;
+}
+
+.noise-overlay {
+    opacity: 0.025;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-primary:hover {
+        transform: none;
+    }
+}
