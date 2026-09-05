@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=52">
+    <link rel="stylesheet" href="style.css?v=53">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -156,6 +156,11 @@
             try {
                 var t = localStorage.getItem('theme');
                 if (t === 'light') document.documentElement.classList.add('light-mode');
+                /* Splash shows once per visit. Decided here, before the
+                   preloader paints, so a skipped one never flashes. */
+                if (sessionStorage.getItem('seen-intro')) {
+                    document.documentElement.classList.add('preloader-skip');
+                }
                 var a = localStorage.getItem('accent');
                 if (a) document.documentElement.setAttribute('data-accent', a);
             } catch (e) { /* private mode */ }
@@ -1237,7 +1242,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=35"></script>
+    <script src="script.js?v=36"></script>
     <script type="module" src="ai-ui.js?v=2"></script>
 </body>
 

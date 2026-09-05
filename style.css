@@ -3930,3 +3930,9 @@ footer a:hover {
 .logo a:hover {
     opacity: 0.85;
 }
+
+/* Splash already seen this session: hide it before it can paint. The class is
+   set in the head script, so there is no flash between paint and JS. */
+html.preloader-skip #preloader {
+    display: none !important;
+}

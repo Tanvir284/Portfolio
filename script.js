@@ -1204,12 +1204,23 @@ const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 /* --- PRELOADER LOGIC --- */
+/* Runs once per visit. The head script has already added .preloader-skip when
+   this session has seen it, so a return to the home page from a sub-page has
+   no splash and, more importantly, no flash of one. */
 const startPreloader = () => {
     const preloader = document.getElementById('preloader');
     const percentageElement = document.querySelector('.loader-progress');
     let percentage = 0;
 
     if (!preloader || !percentageElement) return;
+
+    if (document.documentElement.classList.contains('preloader-skip')) {
+        preloader.remove();
+        document.body.style.overflow = '';
+        return;
+    }
+
+    try { sessionStorage.setItem('seen-intro', '1'); } catch (e) { /* private mode */ }
 
     // Disable scrolling while loading
     document.body.style.overflow = 'hidden';
