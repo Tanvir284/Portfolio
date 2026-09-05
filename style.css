@@ -3918,3 +3918,15 @@ footer a:hover {
         transform: none;
     }
 }
+
+/* The logo is the conventional way back to the top; on the home page it was
+   plain text with no affordance at all. */
+.logo a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.logo a:hover {
+    opacity: 0.85;
+}
