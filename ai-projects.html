@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=41">
+    <link rel="stylesheet" href="style.css?v=50">
     <script>
         /* Applied before first paint: set on <html> after the page has already
            rendered, the theme swap gets stuck on any element with
@@ -33,11 +33,7 @@
                 var t = localStorage.getItem('theme');
                 if (t === 'light') document.documentElement.classList.add('light-mode');
                 var a = localStorage.getItem('accent');
-                var m = { cyan: ['#00f3ff', '#b000ff'], emerald: ['#00ff9d', '#00b8ff'], crimson: ['#ff0055', '#ff9d00'] };
-                if (a && m[a]) {
-                    document.documentElement.style.setProperty('--primary', m[a][0]);
-                    document.documentElement.style.setProperty('--secondary', m[a][1]);
-                }
+                if (a) document.documentElement.setAttribute('data-accent', a);
             } catch (e) { /* private mode */ }
         })();
     </script>
@@ -57,12 +53,13 @@
         <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Toggle navigation menu"
             aria-expanded="false" aria-controls="nav-items"><i class="fas fa-bars" aria-hidden="true"></i></button>
         <div class="nav-items" id="nav-items">
-            <a href="index.html">HOME</a>
-            <a href="about.html">ABOUT</a>
-            <a href="ai-projects.html" class="is-current" aria-current="page">AI PROJECTS</a>
             <a href="index.html#work">WORK</a>
+            <a href="ai-projects.html" class="is-current" aria-current="page">AI PROJECTS</a>
+            <a href="index.html#skills">SKILLS</a>
+            <a href="about.html">ABOUT</a>
+            <a href="index.html#github">GITHUB</a>
             <a href="resume.html">RESUME</a>
-            <a href="hire.html">HIRE ME</a>
+            <a href="hire.html" class="nav-cta">HIRE ME</a>
             <button id="mode-toggle" class="mode-toggle" aria-label="Toggle Light/Dark Mode">
                 <i class="fas fa-moon"></i>
             </button>
@@ -211,7 +208,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="subpage.js?v=32"></script>
+    <script src="subpage.js?v=33"></script>
 </body>
 
 </html>

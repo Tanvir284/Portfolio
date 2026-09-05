@@ -312,11 +312,7 @@
                 var t = localStorage.getItem('theme');
                 if (t === 'light') document.documentElement.classList.add('light-mode');
                 var a = localStorage.getItem('accent');
-                var m = { cyan: ['#00f3ff', '#b000ff'], emerald: ['#00ff9d', '#00b8ff'], crimson: ['#ff0055', '#ff9d00'] };
-                if (a && m[a]) {
-                    document.documentElement.style.setProperty('--primary', m[a][0]);
-                    document.documentElement.style.setProperty('--secondary', m[a][1]);
-                }
+                if (a) document.documentElement.setAttribute('data-accent', a);
             } catch (e) { /* private mode */ }
         })();
     </script>

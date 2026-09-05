@@ -37,10 +37,7 @@ const accents = {
     crimson: { primary: '#ff0055', secondary: '#ff9d00', glow: 'rgba(255, 0, 85, 0.4)' }
 };
 if (savedAccent && accents[savedAccent]) {
-    const t = accents[savedAccent];
-    document.documentElement.style.setProperty('--primary', t.primary);
-    document.documentElement.style.setProperty('--secondary', t.secondary);
-    document.documentElement.style.setProperty('--glow', '0 0 20px ' + t.glow);
+    document.documentElement.setAttribute('data-accent', savedAccent);
 }
 
 /* --- Mobile menu (nav markup is shared, so this must be too) --- */

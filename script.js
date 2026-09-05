@@ -1156,8 +1156,7 @@ const themes = {
 const themeBtns = document.querySelectorAll('.theme-btn');
 
 function applyAccent(name) {
-    const theme = themes[name];
-    if (!theme) return;
+    if (!themes[name]) return;
 
     themeBtns.forEach(b => {
         const isActive = b.getAttribute('data-theme') === name;
@@ -1165,13 +1164,15 @@ function applyAccent(name) {
         b.setAttribute('aria-pressed', String(isActive));
     });
 
-    document.documentElement.style.setProperty('--primary', theme.primary);
-    document.documentElement.style.setProperty('--secondary', theme.secondary);
-    document.documentElement.style.setProperty('--glow', `0 0 20px ${theme.glow}`);
+    // Set an attribute rather than inline custom properties: inline values beat
+    // :root.light-mode, which left the neon dark accent on the light theme.
+    document.documentElement.setAttribute('data-accent', name);
 
-    // Update Three.js Particles
+    // The particle field is canvas, so it needs the resolved value
     if (particlesMesh && particlesMesh.material) {
-        particlesMesh.material.color.set(theme.primary);
+        const resolved = getComputedStyle(document.documentElement)
+            .getPropertyValue('--primary').trim();
+        if (resolved) particlesMesh.material.color.set(resolved);
     }
 }
 
