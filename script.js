@@ -151,78 +151,184 @@ if (circleText) {
 }
 
 
-/* --- 3D WEBGL NEURAL SPHERE (THREE.JS) --- */
+/* --- 3D DEEP SPACE STARFIELD + WARP-SPEED + SHOOTING STARS (THREE.JS) --- */
 const container = document.getElementById('webgl-container');
 let scene, camera, renderer, particlesMesh, coreMesh;
+let farGeo, nearGeo, farCount = 1100, nearCount = 260;
+let shootingStars = [];
+let warpSpeed = 0;
+let lastScrollYSpace = window.scrollY || 0;
+
+function makeStarSprite() {
+    const c = document.createElement('canvas');
+    c.width = 64;
+    c.height = 64;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    g.addColorStop(0.22, 'rgba(225, 238, 255, 0.92)');
+    g.addColorStop(0.52, 'rgba(130, 165, 255, 0.32)');
+    g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(c);
+}
+
+function populateStarColors(geo, count, isLight) {
+    const cols = new Float32Array(count * 3);
+    const paletteDark = [
+        [0.95, 0.97, 1.0],   // crisp starlight white
+        [0.52, 0.68, 1.0],   // sapphire blue
+        [0.72, 0.60, 1.0],   // cosmic violet
+        [1.0, 0.90, 0.68]    // warm gold giant
+    ];
+    const paletteLight = [
+        [0.12, 0.24, 0.68],  // deep royal blue
+        [0.26, 0.22, 0.78],  // cosmic indigo
+        [0.42, 0.16, 0.85],  // deep violet
+        [0.15, 0.38, 0.82]   // sapphire
+    ];
+    const pal = isLight ? paletteLight : paletteDark;
+    for (let i = 0; i < count; i++) {
+        const c = pal[i % pal.length];
+        cols[i * 3] = c[0];
+        cols[i * 3 + 1] = c[1];
+        cols[i * 3 + 2] = c[2];
+    }
+    geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+}
 
 function syncThreeColors() {
-    const rootStyle = getComputedStyle(document.documentElement);
-    const primary = rootStyle.getPropertyValue('--primary').trim();
-    const secondary = rootStyle.getPropertyValue('--secondary').trim();
-    if (particlesMesh && particlesMesh.material && primary) {
-        particlesMesh.material.color.set(primary);
+    const isLight = document.documentElement.classList.contains('light-mode');
+    const blend = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+
+    if (farGeo) populateStarColors(farGeo, farCount, isLight);
+    if (nearGeo) populateStarColors(nearGeo, nearCount, isLight);
+
+    if (particlesMesh && particlesMesh.material) {
+        particlesMesh.material.blending = blend;
+        particlesMesh.material.opacity = isLight ? 0.72 : 0.88;
+        particlesMesh.material.needsUpdate = true;
     }
-    if (coreMesh && coreMesh.material && (secondary || primary)) {
-        coreMesh.material.color.set(secondary || primary);
+    if (coreMesh && coreMesh.material) {
+        coreMesh.material.blending = blend;
+        coreMesh.material.opacity = isLight ? 0.82 : 0.95;
+        coreMesh.material.needsUpdate = true;
     }
+    shootingStars.forEach(s => {
+        if (s.line && s.line.material) {
+            s.line.material.color.set(isLight ? 0x2563eb : 0xa5f3fc);
+            s.line.material.blending = blend;
+        }
+    });
+}
+
+function resetShootingStar(s, initialDelay = false) {
+    s.active = false;
+    s.wait = initialDelay ? (0.6 + Math.random() * 2.5) : (1.5 + Math.random() * 3.5);
+    s.elapsed = 0;
+    s.duration = 0.65 + Math.random() * 0.45;
+    const fromLeft = Math.random() > 0.45;
+    s.x = fromLeft ? (-24 - Math.random() * 12) : (12 + Math.random() * 18);
+    s.y = 10 + Math.random() * 12;
+    s.z = -12 - Math.random() * 18;
+    const dir = fromLeft ? 1 : -1;
+    s.vx = dir * (28 + Math.random() * 16);
+    s.vy = -(14 + Math.random() * 10);
+    s.vz = 4 + Math.random() * 6;
+    s.tailLen = 3.2 + Math.random() * 1.8;
+    if (s.line) s.line.material.opacity = 0;
 }
 
 function initThreeJS() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 15;
+    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 120);
+    camera.position.z = 14;
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(1);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     container.appendChild(renderer.domElement);
 
-    // Create Particle Sphere
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1200;
-    const posArray = new Float32Array(particlesCount * 3);
+    const starSprite = makeStarSprite();
+    const isLight = document.documentElement.classList.contains('light-mode');
 
-    for (let i = 0; i < particlesCount * 3; i += 3) {
-        // Spherical distribution
-        const radius = 10;
-        const theta = Math.random() * 2 * Math.PI;
-        const phi = Math.acos((Math.random() * 2) - 1);
-
-        posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
-        posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-        posArray[i + 2] = radius * Math.cos(phi);
+    // Layer 1: Deep Space Far Starfield
+    farGeo = new THREE.BufferGeometry();
+    const farPos = new Float32Array(farCount * 3);
+    for (let i = 0; i < farCount * 3; i += 3) {
+        farPos[i] = (Math.random() - 0.5) * 95;
+        farPos[i + 1] = (Math.random() - 0.5) * 60;
+        farPos[i + 2] = -58 + Math.random() * 70;
     }
+    farGeo.setAttribute('position', new THREE.BufferAttribute(farPos, 3));
+    populateStarColors(farGeo, farCount, isLight);
 
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-    const material = new THREE.PointsMaterial({
-        size: 0.045,
-        color: 0x6384ff,
+    const farMat = new THREE.PointsMaterial({
+        size: 0.34,
+        map: starSprite,
+        vertexColors: true,
         transparent: true,
-        opacity: 0.65,
+        opacity: 0.88,
+        depthWrite: false,
         blending: THREE.AdditiveBlending
     });
-
-    particlesMesh = new THREE.Points(particlesGeometry, material);
+    particlesMesh = new THREE.Points(farGeo, farMat);
     scene.add(particlesMesh);
 
-    // Inner Neural Lattice Core (counter-rotating wireframe geodesic sphere)
-    const coreGeo = new THREE.IcosahedronGeometry(5.2, 2);
-    const coreMat = new THREE.MeshBasicMaterial({
-        color: 0xa78bfa,
-        wireframe: true,
+    // Layer 2: Foreground Bright Twinkling Stars (faster warp parallax)
+    nearGeo = new THREE.BufferGeometry();
+    const nearPos = new Float32Array(nearCount * 3);
+    for (let i = 0; i < nearCount * 3; i += 3) {
+        nearPos[i] = (Math.random() - 0.5) * 70;
+        nearPos[i + 1] = (Math.random() - 0.5) * 44;
+        nearPos[i + 2] = -45 + Math.random() * 58;
+    }
+    nearGeo.setAttribute('position', new THREE.BufferAttribute(nearPos, 3));
+    populateStarColors(nearGeo, nearCount, isLight);
+
+    const nearMat = new THREE.PointsMaterial({
+        size: 0.62,
+        map: starSprite,
+        vertexColors: true,
         transparent: true,
-        opacity: 0.1
+        opacity: 0.95,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
     });
-    coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    coreMesh = new THREE.Points(nearGeo, nearMat);
     scene.add(coreMesh);
+
+    // Layer 3: Shooting Stars / Meteors (2 pooled streaks)
+    shootingStars = [];
+    for (let k = 0; k < 2; k++) {
+        const lineGeo = new THREE.BufferGeometry();
+        const linePos = new Float32Array(6);
+        lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
+        const lineMat = new THREE.LineBasicMaterial({
+            color: 0xa5f3fc,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending
+        });
+        const line = new THREE.Line(lineGeo, lineMat);
+        scene.add(line);
+        const sObj = { line, geo: lineGeo };
+        resetShootingStar(sObj, true);
+        sObj.wait += k * 2.2;
+        shootingStars.push(sObj);
+    }
 
     syncThreeColors();
 
     window.addEventListener('resize', onWindowResize, { passive: true });
-
-    // Mouse Interaction
     document.addEventListener('mousemove', onDocumentMouseMove, { passive: true });
+    window.addEventListener('scroll', () => {
+        const cur = window.scrollY || 0;
+        const delta = Math.abs(cur - lastScrollYSpace);
+        lastScrollYSpace = cur;
+        warpSpeed = Math.min(0.55, warpSpeed + delta * 0.0022);
+    }, { passive: true });
 
     animateThreeJS();
 }
@@ -231,8 +337,8 @@ let mouseX3D = 0;
 let mouseY3D = 0;
 
 function onDocumentMouseMove(event) {
-    mouseX3D = (event.clientX - window.innerWidth / 2) * 0.001;
-    mouseY3D = (event.clientY - window.innerHeight / 2) * 0.001;
+    mouseX3D = (event.clientX - window.innerWidth / 2) * 0.0022;
+    mouseY3D = (event.clientY - window.innerHeight / 2) * 0.0022;
 }
 
 function onWindowResize() {
@@ -242,7 +348,7 @@ function onWindowResize() {
 }
 
 let clock = new THREE.Clock();
-let threeFrameSkip = false;
+let prevTimeSpace = 0;
 
 function animateThreeJS() {
     if (prefersReducedMotion) {
@@ -251,22 +357,72 @@ function animateThreeJS() {
     }
 
     requestAnimationFrame(animateThreeJS);
-
     if (document.hidden) return;
-    threeFrameSkip = !threeFrameSkip;
-    if (threeFrameSkip) return; // 30fps cap for slow-moving ambient background
 
     const elapsedTime = clock.getElapsedTime();
+    const dt = Math.min(0.05, elapsedTime - prevTimeSpace || 0.016);
+    prevTimeSpace = elapsedTime;
 
-    const targetX = mouseY3D * 0.5;
-    const targetY = mouseX3D * 0.5 + (elapsedTime * 0.1);
-    particlesMesh.rotation.x += (targetX - particlesMesh.rotation.x) * 0.08;
-    particlesMesh.rotation.y += (targetY - particlesMesh.rotation.y) * 0.08;
-    particlesMesh.rotation.z = elapsedTime * 0.05;
+    // Decay scroll warp speed smoothly
+    warpSpeed *= 0.92;
+    const stepFar = (0.018 + warpSpeed * 0.65);
+    const stepNear = (0.036 + warpSpeed * 1.15);
 
-    if (coreMesh) {
-        coreMesh.rotation.y = -elapsedTime * 0.07;
-        coreMesh.rotation.x = elapsedTime * 0.04;
+    // Stream Far Stars toward camera
+    const fArr = farGeo.attributes.position.array;
+    for (let i = 2; i < fArr.length; i += 3) {
+        fArr[i] += stepFar;
+        if (fArr[i] > 14) fArr[i] = -58;
+    }
+    farGeo.attributes.position.needsUpdate = true;
+
+    // Stream Near Bright Stars toward camera
+    const nArr = nearGeo.attributes.position.array;
+    for (let i = 2; i < nArr.length; i += 3) {
+        nArr[i] += stepNear;
+        if (nArr[i] > 14) nArr[i] = -45;
+    }
+    nearGeo.attributes.position.needsUpdate = true;
+
+    // Subtle twinkle on foreground stars
+    if (coreMesh && coreMesh.material) {
+        coreMesh.material.size = 0.58 + Math.sin(elapsedTime * 2.4) * 0.08;
+    }
+
+    // Smooth camera parallax with mouse
+    camera.position.x += (mouseX3D - camera.position.x) * 0.05;
+    camera.position.y += (-mouseY3D - camera.position.y) * 0.05;
+    camera.rotation.z = Math.sin(elapsedTime * 0.12) * 0.025;
+
+    // Update Shooting Stars / Meteors
+    for (let k = 0; k < shootingStars.length; k++) {
+        const s = shootingStars[k];
+        if (!s.active) {
+            s.wait -= dt;
+            if (s.wait <= 0) {
+                s.active = true;
+                s.elapsed = 0;
+            }
+        } else {
+            s.elapsed += dt;
+            const t = s.elapsed / s.duration;
+            if (t >= 1) {
+                resetShootingStar(s, false);
+            } else {
+                s.x += s.vx * dt;
+                s.y += s.vy * dt;
+                s.z += s.vz * dt;
+                const p = s.geo.attributes.position.array;
+                const spd = Math.hypot(s.vx, s.vy, s.vz) || 1;
+                const tx = s.x - (s.vx / spd) * s.tailLen;
+                const ty = s.y - (s.vy / spd) * s.tailLen;
+                const tz = s.z - (s.vz / spd) * s.tailLen;
+                p[0] = s.x; p[1] = s.y; p[2] = s.z;
+                p[3] = tx;  p[4] = ty;  p[5] = tz;
+                s.geo.attributes.position.needsUpdate = true;
+                s.line.material.opacity = Math.sin(t * Math.PI) * 0.92;
+            }
+        }
     }
 
     renderer.render(scene, camera);
