@@ -263,13 +263,8 @@ function initThreeJS() {
             void main() {
                 vec2 p = vUv - vec2(0.5, 0.56);
                 float dist = length(p);
-                float glow = pow(max(0.0, 1.0 - dist * 2.1), 2.2) * 0.24;
-                // Subtle 3D radar/halo rings behind the bust
-                float ring1 = smoothstep(0.004, 0.0, abs(dist - 0.24)) * 0.22;
-                float ring2 = smoothstep(0.004, 0.0, abs(dist - 0.33)) * 0.15;
-                float ring3 = smoothstep(0.003, 0.0, abs(dist - 0.42)) * 0.10;
-                float alpha = glow + ring1 + ring2 + ring3;
-                gl_FragColor = vec4(uGlowColor, alpha);
+                float glow = pow(max(0.0, 1.0 - dist * 2.15), 2.2) * 0.24;
+                gl_FragColor = vec4(uGlowColor, glow);
             }
         `,
         transparent: true,
@@ -299,7 +294,7 @@ function initThreeJS() {
     depthTex.minFilter = THREE.LinearFilter;
     depthTex.magFilter = THREE.LinearFilter;
 
-    const bustGeo = new THREE.PlaneGeometry(12.6, 18.93, 180, 270);
+    const bustGeo = new THREE.PlaneGeometry(12.6, 18.78, 180, 270);
     const bustMat = new THREE.ShaderMaterial({
         uniforms: {
             uColorMap: { value: colorTex },
@@ -348,7 +343,7 @@ function initThreeJS() {
                 if (tex.a < 0.02) discard;
 
                 // Reconstruct 3D surface normal N from the 3D height/depth field
-                vec2 eps = vec2(1.0 / 852.0, 1.0 / 1280.0) * 2.2;
+                vec2 eps = vec2(1.0 / 848.0, 1.0 / 1264.0) * 2.2;
                 float dL = texture2D(uDepthMap, vUv - vec2(eps.x, 0.0)).r;
                 float dR = texture2D(uDepthMap, vUv + vec2(eps.x, 0.0)).r;
                 float dD = texture2D(uDepthMap, vUv - vec2(0.0, eps.y)).r;
@@ -356,7 +351,7 @@ function initThreeJS() {
                 vec3 N = normalize(vec3((dL - dR) * 4.2, (dD - dU) * 4.2, 1.0));
                 vec3 V = normalize(vViewPos);
 
-                // Face protection mask: keep the user's real facial features 100% natural & true-to-life
+                // Face protection mask: keep the user's real facial features natural & true-to-life
                 vec2 faceEll = (vUv - vec2(0.50, 0.72)) / vec2(0.16, 0.14);
                 float isFace = 1.0 - smoothstep(0.65, 1.15, length(faceEll));
 
@@ -364,25 +359,20 @@ function initThreeJS() {
                 vec3 L_key = normalize(vec3(0.42, 0.52, 0.88));
                 vec3 H_key = normalize(L_key + V);
                 float diff = max(dot(N, L_key), 0.0);
-                float spec = pow(max(dot(N, H_key), 0.0), 28.0);
+                float spec = pow(max(dot(N, H_key), 0.0), 30.0);
 
                 // 3D Fresnel Rim Shading on shoulders, black blazer, and hair contour
-                float fresnel = pow(1.0 - max(N.z, 0.0), 2.4);
+                float fresnel = pow(1.0 - max(N.z, 0.0), 2.6);
                 float bodyZone = 1.0 - isFace * 0.85;
 
-                // Apply 3D PBR shading: natural studio fidelity on face, strong 3D CGI sculptural lighting on blazer & torso
+                // Apply 3D PBR shading: studio fidelity on face, rich 3D CGI sculptural lighting on blazer & torso
                 vec3 baseCol = tex.rgb;
-                vec3 litCol = baseCol * mix(0.88 + 0.24 * diff, 1.0, isFace * 0.82);
-                litCol += vec3(0.85, 0.90, 1.0) * spec * 0.18 * bodyZone;
-                litCol += uRimColor * fresnel * 0.45 * bodyZone;
-
-                // Subtle 3D topographic depth contour lines across lower black blazer (vUv.y < 0.52)
-                float blazerLower = 1.0 - smoothstep(0.38, 0.56, vUv.y);
-                float contour = smoothstep(0.92, 0.99, abs(sin(vDepth * 52.0)));
-                litCol += uRimColor * contour * blazerLower * 0.22;
+                vec3 litCol = baseCol * mix(0.92 + 0.18 * diff, 1.0, isFace * 0.85);
+                litCol += vec3(0.85, 0.90, 1.0) * spec * 0.15 * bodyZone;
+                litCol += uRimColor * fresnel * 0.38 * bodyZone;
 
                 float bottomFade = smoothstep(0.02, 0.16, vUv.y);
-                gl_FragColor = vec4(litCol, tex.a * bottomFade * 0.94);
+                gl_FragColor = vec4(litCol, tex.a * bottomFade * 0.93);
             }
         `,
         transparent: true,
@@ -393,9 +383,8 @@ function initThreeJS() {
     portraitMesh.position.set(0, 0, 0);
     masterStageGroup.add(portraitMesh);
 
-    // 3. Real 3D Computer-Graphics Polygon Wireframe Overlay on the Black Blazer Torso
-    // (100% masked out on the face/head so the face stays crystal clear, visible on the 3D jacket/arms)
-    const wireGeo = new THREE.PlaneGeometry(12.6, 18.93, 68, 102);
+    // 3. Subtle 3D Fresnel Rim-Edge Polygon Mesh on Outer Shoulders/Sleeves Only
+    const wireGeo = new THREE.PlaneGeometry(12.6, 18.78, 72, 108);
     const wireMat = new THREE.ShaderMaterial({
         uniforms: {
             uColorMap: { value: colorTex },
@@ -413,7 +402,7 @@ function initThreeJS() {
                 float d = texture2D(uDepthMap, uv).r;
                 vDepth = d;
                 vec3 pos = position;
-                pos.z += d * 1.45 + 0.03;
+                pos.z += d * 1.45 + 0.02;
 
                 vec4 worldBefore = modelMatrix * vec4(position, 1.0);
                 vec4 worldAfter  = modelMatrix * vec4(pos, 1.0);
@@ -431,10 +420,12 @@ function initThreeJS() {
             void main() {
                 vec4 tex = texture2D(uColorMap, vUv);
                 if (tex.a < 0.15) discard;
-                // Only show 3D wireframe mesh on the black blazer torso/shoulders (vUv.y < 0.56), zero on face/head
-                float torsoMask = (1.0 - smoothstep(0.42, 0.58, vUv.y)) * smoothstep(0.04, 0.18, vUv.y);
-                if (torsoMask < 0.01) discard;
-                gl_FragColor = vec4(uWireColor, torsoMask * 0.24);
+                // Only show subtle 3D mesh along the outer 3D rim/edges of the lower blazer (where depth < 0.38)
+                float torsoMask = (1.0 - smoothstep(0.32, 0.48, vUv.y)) * smoothstep(0.04, 0.16, vUv.y);
+                float rimOnly = 1.0 - smoothstep(0.15, 0.42, vDepth);
+                float alpha = torsoMask * rimOnly * 0.14;
+                if (alpha < 0.01) discard;
+                gl_FragColor = vec4(uWireColor, alpha);
             }
         `,
         wireframe: true,
