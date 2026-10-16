@@ -194,10 +194,11 @@ if (circleText) {
 }
 
 
-/* --- 3D WEBGL BLACK-BLAZER SCULPTED MODEL & HOLOGRAPHIC RELIEF (THREE.JS) --- */
+/* --- HIGH-LEVEL THREE.JS COMPUTER GRAPHICS 3D MODEL (CENTERED ACROSS WHOLE BACKGROUND) --- */
 const container = document.getElementById('webgl-container');
 let scene, camera, renderer;
-let avatarGroup, avatarMesh, wireframeMesh, pedestalGroup, ambientMotes;
+let masterStageGroup, avatarGroup, cgMannequinGroup, avatarMesh, wireframeMesh, lidarPointsMesh, bgParticlesMesh, orbitalRingsGroup;
+let keyLight, rimLightLeft, rimLightRight, cursorPointLight;
 let avatarUniforms = null;
 
 function syncThreeColors() {
@@ -211,64 +212,275 @@ function syncThreeColors() {
     if (wireframeMesh && wireframeMesh.material && wireframeMesh.material.uniforms) {
         wireframeMesh.material.uniforms.uWireColor.value.set(primary);
     }
-    if (ambientMotes && ambientMotes.material) {
-        ambientMotes.material.color.set(primary);
+    if (lidarPointsMesh && lidarPointsMesh.material && lidarPointsMesh.material.uniforms) {
+        lidarPointsMesh.material.uniforms.uPointColor.value.set(primary);
     }
-    if (pedestalGroup) {
-        pedestalGroup.children.forEach((ring, idx) => {
+    if (bgParticlesMesh && bgParticlesMesh.material) {
+        bgParticlesMesh.material.color.set(primary);
+    }
+    if (rimLightLeft) rimLightLeft.color.set(primary);
+    if (rimLightRight) rimLightRight.color.set(secondary);
+    if (cursorPointLight) cursorPointLight.color.set(primary);
+    if (orbitalRingsGroup) {
+        orbitalRingsGroup.children.forEach((ring, idx) => {
             if (ring.material) ring.material.color.set(idx % 2 === 0 ? primary : secondary);
         });
     }
 }
 
 function updateAvatarStagePosition() {
-    if (!avatarGroup || !camera) return;
-    const isDesktop = window.innerWidth > 980;
+    if (!masterStageGroup || !camera) return;
     const scrollY = window.scrollY || window.pageYOffset || 0;
     const vh = Math.max(window.innerHeight, 600);
-    const scrollProgress = Math.min(1, scrollY / (vh * 0.85));
+    const scrollProgress = Math.min(1, scrollY / (vh * 1.2));
 
-    if (isDesktop) {
-        // In Hero: sits cleanly on the right stage (where .hero-visual is); scrolls smoothly into background
-        const heroX = Math.min(5.2, Math.max(3.6, (window.innerWidth / window.innerHeight) * 2.65));
-        avatarGroup.position.x = heroX * (1 - scrollProgress * 0.15);
-        avatarGroup.position.y = -0.35 + scrollProgress * 0.55;
-        const s = 1.0 - scrollProgress * 0.08;
-        avatarGroup.scale.set(s, s, s);
-        if (avatarUniforms) {
-            avatarUniforms.uOpacity.value = 1.0 - scrollProgress * 0.58;
-        }
-    } else {
-        // On tablet/mobile: subtle background 3D model centered behind content
-        avatarGroup.position.x = 0;
-        avatarGroup.position.y = -0.5 + scrollProgress * 0.4;
-        avatarGroup.scale.set(0.84, 0.84, 0.84);
-        if (avatarUniforms) {
-            avatarUniforms.uOpacity.value = 0.28 - scrollProgress * 0.12;
-        }
+    // Centered in the MIDDLE of the whole background (x = 0) across the entire viewport
+    masterStageGroup.position.x = 0;
+    masterStageGroup.position.y = -0.35 + scrollProgress * 0.45;
+
+    const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
+    const baseScale = aspect < 0.85 ? 0.86 : 1.08;
+    const s = baseScale * (1.0 - scrollProgress * 0.06);
+    masterStageGroup.scale.set(s, s, s);
+
+    if (avatarUniforms) {
+        avatarUniforms.uOpacity.value = 0.88 - scrollProgress * 0.22;
     }
+}
+
+/* Build Procedural 3D Computer Graphics Character (Black Blazer, Crossed Arms, Glasses, Watch, Belt) */
+function buildProcedural3DBlackBlazerCharacter() {
+    const group = new THREE.Group();
+
+    // PBR Materials for Jet-Black Tailored Blazer, Inner Black Shirt, Skin, Hair, Glasses & Silver Watch
+    const blackBlazerMat = new THREE.MeshStandardMaterial({
+        color: 0x090b10,
+        roughness: 0.34,
+        metalness: 0.28
+    });
+    const satinLapelMat = new THREE.MeshStandardMaterial({
+        color: 0x0d1018,
+        roughness: 0.22,
+        metalness: 0.42
+    });
+    const blackShirtMat = new THREE.MeshStandardMaterial({
+        color: 0x050609,
+        roughness: 0.55,
+        metalness: 0.12
+    });
+    const skinMat = new THREE.MeshStandardMaterial({
+        color: 0xc68b65,
+        roughness: 0.48,
+        metalness: 0.06
+    });
+    const hairBeardMat = new THREE.MeshStandardMaterial({
+        color: 0x08090d,
+        roughness: 0.42,
+        metalness: 0.18
+    });
+    const silverMetalMat = new THREE.MeshStandardMaterial({
+        color: 0xe2e8f0,
+        roughness: 0.14,
+        metalness: 0.92
+    });
+    const glassLensMat = new THREE.MeshStandardMaterial({
+        color: 0x6384ff,
+        roughness: 0.08,
+        metalness: 0.85,
+        transparent: true,
+        opacity: 0.26
+    });
+
+    // 1. 3D Sculpted Head, Neck & Ears
+    const headGeo = new THREE.SphereGeometry(1.32, 40, 40);
+    headGeo.scale(0.92, 1.14, 0.96);
+    const headMesh = new THREE.Mesh(headGeo, skinMat);
+    headMesh.position.set(0, 3.65, 0.35);
+    group.add(headMesh);
+
+    const neckGeo = new THREE.CylinderGeometry(0.62, 0.72, 1.25, 28);
+    const neckMesh = new THREE.Mesh(neckGeo, skinMat);
+    neckMesh.position.set(0, 2.15, 0.22);
+    group.add(neckMesh);
+
+    // Left & Right 3D Ears
+    [-1.22, 1.22].forEach(xPos => {
+        const earGeo = new THREE.SphereGeometry(0.26, 20, 20);
+        earGeo.scale(0.45, 1.15, 0.7);
+        const ear = new THREE.Mesh(earGeo, skinMat);
+        ear.position.set(xPos, 3.55, 0.25);
+        group.add(ear);
+    });
+
+    // 2. 3D Swept-Back Volumetric Hairstyle & Contoured Beard / Mustache
+    const hairTopGeo = new THREE.SphereGeometry(1.42, 36, 36);
+    hairTopGeo.scale(0.98, 0.86, 1.02);
+    const hairTop = new THREE.Mesh(hairTopGeo, hairBeardMat);
+    hairTop.position.set(0.04, 4.35, 0.38);
+    hairTop.rotation.z = -0.06;
+    group.add(hairTop);
+
+    const beardGeo = new THREE.SphereGeometry(1.26, 32, 32, 0, Math.PI * 2, Math.PI * 0.48, Math.PI * 0.52);
+    beardGeo.scale(0.95, 1.08, 1.02);
+    const beardMesh = new THREE.Mesh(beardGeo, hairBeardMat);
+    beardMesh.position.set(0, 3.48, 0.42);
+    group.add(beardMesh);
+
+    // 3. 3D Metallic Eyeglasses (Left/Right Frames + Bridge + Lenses)
+    const glassesGroup = new THREE.Group();
+    glassesGroup.position.set(0, 3.72, 1.56);
+    [-0.52, 0.52].forEach(gx => {
+        const rimGeo = new THREE.TorusGeometry(0.36, 0.028, 16, 36);
+        rimGeo.scale(1.18, 0.88, 1.0);
+        const rim = new THREE.Mesh(rimGeo, silverMetalMat);
+        rim.position.set(gx, 0, 0);
+        glassesGroup.add(rim);
+
+        const lensGeo = new THREE.CircleGeometry(0.35, 28);
+        lensGeo.scale(1.16, 0.86, 1.0);
+        const lens = new THREE.Mesh(lensGeo, glassLensMat);
+        lens.position.set(gx, 0, 0.01);
+        glassesGroup.add(lens);
+    });
+    const bridgeGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.24, 12);
+    bridgeGeo.rotateZ(Math.PI / 2);
+    const bridge = new THREE.Mesh(bridgeGeo, silverMetalMat);
+    bridge.position.set(0, 0.05, 0);
+    glassesGroup.add(bridge);
+    group.add(glassesGroup);
+
+    // 4. 3D Tailored Jet-Black Blazer Torso, Shoulders, Notched Lapels & Black Dress Shirt
+    const torsoGeo = new THREE.CylinderGeometry(2.65, 2.05, 6.2, 44, 16);
+    torsoGeo.scale(1.08, 1.0, 0.62);
+    const torsoMesh = new THREE.Mesh(torsoGeo, blackBlazerMat);
+    torsoMesh.position.set(0, -1.25, 0.0);
+    group.add(torsoMesh);
+
+    // Inner Black Shirt Chest Panel & Buttons
+    const shirtGeo = new THREE.CylinderGeometry(1.15, 0.55, 3.8, 24);
+    shirtGeo.scale(0.9, 1.0, 0.68);
+    const shirtMesh = new THREE.Mesh(shirtGeo, blackShirtMat);
+    shirtMesh.position.set(0, 0.15, 0.16);
+    group.add(shirtMesh);
+
+    // Sculpted Left & Right Jet-Black Satin Blazer Lapels
+    [-1, 1].forEach(dir => {
+        const lapelGeo = new THREE.BoxGeometry(0.58, 3.45, 0.18);
+        const lapel = new THREE.Mesh(lapelGeo, satinLapelMat);
+        lapel.position.set(dir * 0.72, 0.15, 1.18);
+        lapel.rotation.z = dir * 0.24;
+        lapel.rotation.y = -dir * 0.18;
+        group.add(lapel);
+    });
+
+    // 5. 3D Upper Sleeves & Crossed Forearms in Jet-Black Blazer + Silver Chronograph Watch
+    [-1, 1].forEach(dir => {
+        // Tailored Shoulder Cap
+        const shoulderGeo = new THREE.SphereGeometry(0.86, 28, 28);
+        shoulderGeo.scale(1.0, 1.1, 0.88);
+        const shoulder = new THREE.Mesh(shoulderGeo, blackBlazerMat);
+        shoulder.position.set(dir * 2.68, 1.05, 0.15);
+        group.add(shoulder);
+
+        // Upper Arm Sleeve angling down to elbows
+        const upperArmGeo = new THREE.CylinderGeometry(0.76, 0.66, 3.6, 32);
+        const upperArm = new THREE.Mesh(upperArmGeo, blackBlazerMat);
+        upperArm.position.set(dir * 2.82, -0.55, 0.35);
+        upperArm.rotation.z = -dir * 0.14;
+        upperArm.rotation.x = 0.22;
+        group.add(upperArm);
+    });
+
+    // Crossed Forearm 1 (Right-over-Left front forearm in Black Blazer sleeve)
+    const forearmFrontGeo = new THREE.CylinderGeometry(0.58, 0.66, 4.35, 32);
+    forearmFrontGeo.rotateZ(Math.PI / 2);
+    const forearmFront = new THREE.Mesh(forearmFrontGeo, blackBlazerMat);
+    forearmFront.position.set(-0.15, -2.05, 1.48);
+    forearmFront.rotation.z = 0.11;
+    forearmFront.rotation.y = 0.12;
+    group.add(forearmFront);
+
+    // Crossed Forearm 2 (Tucked forearm with Silver Wristwatch)
+    const forearmBackGeo = new THREE.CylinderGeometry(0.55, 0.64, 4.15, 32);
+    forearmBackGeo.rotateZ(Math.PI / 2);
+    const forearmBack = new THREE.Mesh(forearmBackGeo, blackBlazerMat);
+    forearmBack.position.set(0.22, -1.65, 1.28);
+    forearmBack.rotation.z = -0.14;
+    group.add(forearmBack);
+
+    // 3D Silver Chronograph Wristwatch on Left Side of Crossed Arms
+    const watchGroup = new THREE.Group();
+    watchGroup.position.set(-1.35, -1.78, 1.78);
+    watchGroup.rotation.set(0.25, -0.2, 0.15);
+    const watchBandGeo = new THREE.CylinderGeometry(0.56, 0.56, 0.26, 28);
+    watchBandGeo.rotateZ(Math.PI / 2);
+    const watchBand = new THREE.Mesh(watchBandGeo, silverMetalMat);
+    watchGroup.add(watchBand);
+    const watchCaseGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.12, 28);
+    watchCaseGeo.rotateX(Math.PI / 2);
+    const watchCase = new THREE.Mesh(watchCaseGeo, silverMetalMat);
+    watchCase.position.set(0, 0.08, 0.52);
+    watchGroup.add(watchCase);
+    group.add(watchGroup);
+
+    // 6. 3D Silver Belt Buckle at Lower Waist
+    const buckleGeo = new THREE.BoxGeometry(0.76, 0.44, 0.14);
+    const buckleMesh = new THREE.Mesh(buckleGeo, silverMetalMat);
+    buckleMesh.position.set(-0.12, -4.15, 1.25);
+    group.add(buckleMesh);
+
+    return group;
 }
 
 function initThreeJS() {
     if (!container) return;
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 19.5;
+    camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 18.2);
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    avatarGroup = new THREE.Group();
-    scene.add(avatarGroup);
+    // 3D Studio PBR Lighting Rig for the Computer Graphics Model
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+    scene.add(ambientLight);
 
+    keyLight = new THREE.DirectionalLight(0xffffff, 1.35);
+    keyLight.position.set(4, 8, 12);
+    scene.add(keyLight);
+
+    rimLightLeft = new THREE.PointLight(0x6384ff, 3.2, 32);
+    rimLightLeft.position.set(-9, 5, 5);
+    scene.add(rimLightLeft);
+
+    rimLightRight = new THREE.PointLight(0xa78bfa, 2.8, 32);
+    rimLightRight.position.set(9, 4, 5);
+    scene.add(rimLightRight);
+
+    cursorPointLight = new THREE.PointLight(0x6384ff, 2.2, 25);
+    cursorPointLight.position.set(0, 2, 8);
+    scene.add(cursorPointLight);
+
+    // Master Group centered at (0, 0, 0) in the middle of the whole background
+    masterStageGroup = new THREE.Group();
+    scene.add(masterStageGroup);
+
+    avatarGroup = new THREE.Group();
+    masterStageGroup.add(avatarGroup);
+
+    // Layer 1: Procedural 3D Computer Graphics Black-Blazer Character Core
+    cgMannequinGroup = buildProcedural3DBlackBlazerCharacter();
+    cgMannequinGroup.position.set(0, -0.25, -0.55);
+    avatarGroup.add(cgMannequinGroup);
+
+    // Layer 2: High-Resolution 3D Depth-Extruded Volumetric Sculpture & PBR Normal Shader
     const loader = new THREE.TextureLoader();
     const colorSrc = window.TANVIR_3D_COLOR_URI || 'tanvir-3d-cutout.webp';
     const depthSrc = window.TANVIR_3D_DEPTH_URI || 'tanvir-3d-depth.png';
 
     const colorTex = loader.load(colorSrc, () => {
-        document.documentElement.classList.add('webgl-3d-active');
         renderer.render(scene, camera);
     });
     const depthTex = loader.load(depthSrc, () => {
@@ -287,12 +499,11 @@ function initThreeJS() {
         uMouse: { value: new THREE.Vector2(0, 0) },
         uPrimaryColor: { value: new THREE.Color(0x6384ff) },
         uSecondaryColor: { value: new THREE.Color(0xa78bfa) },
-        uMode: { value: 0.0 },
-        uOpacity: { value: 1.0 }
+        uOpacity: { value: 0.88 }
     };
 
-    // High-density 3D sculpted relief geometry (41,600 vertices)
-    const bustGeo = new THREE.PlaneGeometry(9.8, 14.7, 160, 240);
+    // 46,800-vertex 3D Sculpted Bust Geometry in the center of the background
+    const bustGeo = new THREE.PlaneGeometry(11.4, 17.1, 180, 260);
 
     const vertexShader = `
         uniform sampler2D uDepthMap;
@@ -309,14 +520,13 @@ function initThreeJS() {
             vDepth = d;
 
             vec3 pos = position;
-            // True 3D Z-extrusion sculpted from Tanvir's facial & black-blazer depth map
+            // True 3D volumetric Z-extrusion for head, glasses, crossed arms & black blazer
             float mask = smoothstep(0.02, 0.25, a);
-            pos.z += d * 2.65 * mask;
+            pos.z += d * 3.15 * mask;
 
-            // Subtle organic 3D breathing & posture micro-motion
-            float breath = sin(uTime * 1.6) * 0.07 * d;
-            pos.y += breath;
-            pos.z += cos(uTime * 1.6) * 0.05 * d;
+            // Organic 3D breathing & chest elevation
+            pos.y += sin(uTime * 1.5) * 0.08 * d;
+            pos.z += cos(uTime * 1.5) * 0.06 * d;
 
             vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
             vViewPos = -mvPosition.xyz;
@@ -331,7 +541,6 @@ function initThreeJS() {
         uniform vec2 uMouse;
         uniform vec3 uPrimaryColor;
         uniform vec3 uSecondaryColor;
-        uniform float uMode;
         uniform float uOpacity;
         varying vec2 vUv;
         varying float vDepth;
@@ -339,54 +548,34 @@ function initThreeJS() {
 
         void main() {
             vec4 tex = texture2D(uColorMap, vUv);
-            if (tex.a < 0.03) discard;
+            if (tex.a < 0.04) discard;
 
-            // Compute 3D surface normal from depth gradients for studio lighting on black blazer & glasses
+            // Compute real-time 3D surface normals from depth heightfield
             vec2 eps = vec2(1.0 / 270.0, 1.0 / 405.0);
             float dL = texture2D(uDepthMap, vUv - vec2(eps.x, 0.0)).r;
             float dR = texture2D(uDepthMap, vUv + vec2(eps.x, 0.0)).r;
             float dD = texture2D(uDepthMap, vUv - vec2(0.0, eps.y)).r;
             float dU = texture2D(uDepthMap, vUv + vec2(0.0, eps.y)).r;
-            vec3 N = normalize(vec3((dL - dR) * 7.5, (dD - dU) * 7.5, 1.0));
+            vec3 N = normalize(vec3((dL - dR) * 8.2, (dD - dU) * 8.2, 1.0));
 
-            // Cursor-interactive 3D studio key light + rim light
-            vec3 L = normalize(vec3(uMouse.x * 1.8 + sin(uTime * 0.7) * 0.35, -uMouse.y * 1.5 + 0.5, 1.15));
+            // Dynamic 3D studio key light + dual rim lights
+            vec3 L = normalize(vec3(uMouse.x * 2.0 + sin(uTime * 0.65) * 0.4, -uMouse.y * 1.6 + 0.55, 1.15));
             vec3 V = normalize(vViewPos);
             vec3 H = normalize(L + V);
 
             float diff = max(dot(N, L), 0.0);
-            float spec = pow(max(dot(N, H), 0.0), 28.0);
-            float fresnel = pow(1.0 - max(dot(N, vec3(0.0, 0.0, 1.0)), 0.0), 2.1);
+            float spec = pow(max(dot(N, H), 0.0), 32.0);
+            float fresnel = pow(1.0 - max(dot(N, vec3(0.0, 0.0, 1.0)), 0.0), 2.0);
 
-            // Base studio 3D shaded black-blazer portrait
-            vec3 studioCol = tex.rgb * (0.86 + diff * 0.24);
-            studioCol += uPrimaryColor * (fresnel * 0.55 + spec * 0.26);
-            studioCol += uSecondaryColor * (pow(fresnel, 3.0) * 0.32);
+            // Subtle 3D topological contour shimmer across the jet-black blazer
+            float contour = smoothstep(0.46, 0.5, abs(fract(vDepth * 12.0 - uTime * 0.25) - 0.5));
 
-            // Mode 1: 3D Hologram X-Ray projection
-            float scanline = 0.5 + 0.5 * sin(vUv.y * 260.0 - uTime * 5.0);
-            float contour = smoothstep(0.42, 0.5, abs(fract(vDepth * 14.0 - uTime * 0.35) - 0.5));
-            float luma = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
-            vec3 holoCol = mix(uPrimaryColor, uSecondaryColor, vUv.y) * (luma * 1.15 + fresnel * 0.95 + 0.18);
-            holoCol += uPrimaryColor * contour * 0.55;
-            holoCol *= (0.78 + scanline * 0.28);
+            vec3 col = tex.rgb * (0.88 + diff * 0.28);
+            col += uPrimaryColor * (fresnel * 0.62 + spec * 0.30 + contour * 0.08);
+            col += uSecondaryColor * (pow(fresnel, 3.0) * 0.38);
 
-            // Mode 2: 3D Wireframe + Topological Studio Hybrid
-            float gridX = smoothstep(0.93, 0.99, cos(vUv.x * 190.0));
-            float gridY = smoothstep(0.93, 0.99, cos(vUv.y * 280.0));
-            float wireMask = max(gridX, gridY);
-            vec3 wireHybrid = mix(studioCol * 0.72, uPrimaryColor * 1.35, wireMask * 0.78 + contour * 0.35);
-
-            vec3 finalCol = studioCol;
-            if (uMode > 0.5 && uMode < 1.5) {
-                finalCol = mix(studioCol, holoCol, clamp(uMode, 0.0, 1.0));
-            } else if (uMode >= 1.5) {
-                finalCol = wireHybrid;
-            }
-
-            // Smooth bottom pedestal fade
-            float bottomFade = smoothstep(0.01, 0.15, vUv.y);
-            gl_FragColor = vec4(finalCol, tex.a * bottomFade * uOpacity);
+            float bottomFade = smoothstep(0.01, 0.14, vUv.y);
+            gl_FragColor = vec4(col, tex.a * bottomFade * uOpacity);
         }
     `;
 
@@ -401,15 +590,14 @@ function initThreeJS() {
     avatarMesh = new THREE.Mesh(bustGeo, avatarMat);
     avatarGroup.add(avatarMesh);
 
-    // Secondary 3D Displaced Wireframe Lattice hugging Tanvir's 3D contour
-    const wireGeo = new THREE.PlaneGeometry(9.8, 14.7, 44, 66);
+    // Layer 3: 3D Computer Graphics Wireframe Exoskeleton hugging the 3D Black-Blazer Model
+    const wireGeo = new THREE.PlaneGeometry(11.4, 17.1, 52, 78);
     const wireMat = new THREE.ShaderMaterial({
         uniforms: {
             uDepthMap: { value: depthTex },
             uColorMap: { value: colorTex },
             uTime: avatarUniforms.uTime,
             uWireColor: { value: new THREE.Color(0x6384ff) },
-            uMode: avatarUniforms.uMode,
             uOpacity: avatarUniforms.uOpacity
         },
         vertexShader: `
@@ -423,22 +611,20 @@ function initThreeJS() {
                 float d = texture2D(uDepthMap, uv).r;
                 vAlpha = texture2D(uColorMap, uv).a;
                 vec3 pos = position;
-                pos.z += d * 2.75 * smoothstep(0.05, 0.3, vAlpha) - 0.08;
-                pos.y += sin(uTime * 1.6) * 0.07 * d;
+                pos.z += d * 3.22 * smoothstep(0.05, 0.3, vAlpha) + 0.03;
+                pos.y += sin(uTime * 1.5) * 0.08 * d;
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
             }
         `,
         fragmentShader: `
             uniform vec3 uWireColor;
-            uniform float uMode;
             uniform float uOpacity;
             varying vec2 vUv;
             varying float vAlpha;
             void main() {
                 if (vAlpha < 0.12) discard;
-                float baseAlpha = (uMode > 1.5) ? 0.36 : (uMode > 0.5 ? 0.24 : 0.07);
                 float fade = smoothstep(0.04, 0.2, vUv.y);
-                gl_FragColor = vec4(uWireColor, baseAlpha * fade * uOpacity);
+                gl_FragColor = vec4(uWireColor, 0.11 * fade * uOpacity);
             }
         `,
         wireframe: true,
@@ -448,46 +634,95 @@ function initThreeJS() {
     wireframeMesh = new THREE.Mesh(wireGeo, wireMat);
     avatarGroup.add(wireframeMesh);
 
-    // Sleek Horizontal 3D Holographic Pedestal Rings beneath the 3D Bust (NO globe!)
-    pedestalGroup = new THREE.Group();
-    pedestalGroup.position.set(0, -6.35, 0.4);
-    pedestalGroup.rotation.x = Math.PI * 0.44;
-
-    const ringRadii = [3.6, 4.6, 5.5];
-    ringRadii.forEach((r, idx) => {
-        const rGeo = new THREE.RingGeometry(r, r + 0.045, 72);
-        const rMat = new THREE.MeshBasicMaterial({
-            color: idx % 2 === 0 ? 0x6384ff : 0xa78bfa,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.28 - idx * 0.06
-        });
-        const rMesh = new THREE.Mesh(rGeo, rMat);
-        pedestalGroup.add(rMesh);
-    });
-    avatarGroup.add(pedestalGroup);
-
-    // Subtle rising studio light motes around the 3D model
-    const motesGeo = new THREE.BufferGeometry();
-    const motesCount = 140;
-    const motesPos = new Float32Array(motesCount * 3);
-    for (let i = 0; i < motesCount * 3; i += 3) {
-        const angle = Math.random() * Math.PI * 2;
-        const rad = 2.8 + Math.random() * 4.2;
-        motesPos[i] = Math.cos(angle) * rad;
-        motesPos[i + 1] = (Math.random() - 0.5) * 13.0;
-        motesPos[i + 2] = Math.sin(angle) * 1.8;
-    }
-    motesGeo.setAttribute('position', new THREE.BufferAttribute(motesPos, 3));
-    const motesMat = new THREE.PointsMaterial({
-        size: 0.065,
-        color: 0x6384ff,
+    // Layer 4: 3D Volumetric LiDAR Point-Cloud Cyber-Twin around the 3D Model
+    const lidarGeo = new THREE.PlaneGeometry(11.4, 17.1, 90, 135);
+    const lidarMat = new THREE.ShaderMaterial({
+        uniforms: {
+            uDepthMap: { value: depthTex },
+            uColorMap: { value: colorTex },
+            uTime: avatarUniforms.uTime,
+            uPointColor: { value: new THREE.Color(0x6384ff) },
+            uOpacity: avatarUniforms.uOpacity
+        },
+        vertexShader: `
+            uniform sampler2D uDepthMap;
+            uniform sampler2D uColorMap;
+            uniform float uTime;
+            varying float vAlpha;
+            varying float vDepth;
+            void main() {
+                float d = texture2D(uDepthMap, uv).r;
+                vAlpha = texture2D(uColorMap, uv).a;
+                vDepth = d;
+                vec3 pos = position;
+                pos.z += d * 3.30 * smoothstep(0.05, 0.3, vAlpha) + 0.08;
+                pos.y += sin(uTime * 1.5) * 0.08 * d;
+                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                gl_PointSize = (2.2 + d * 2.0) * (16.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `,
+        fragmentShader: `
+            uniform vec3 uPointColor;
+            uniform float uOpacity;
+            varying float vAlpha;
+            varying float vDepth;
+            void main() {
+                if (vAlpha < 0.18 || vDepth < 0.12) discard;
+                vec2 c = gl_PointCoord - vec2(0.5);
+                if (dot(c, c) > 0.25) discard;
+                gl_FragColor = vec4(uPointColor, 0.26 * uOpacity);
+            }
+        `,
         transparent: true,
-        opacity: 0.45,
+        depthWrite: false,
         blending: THREE.AdditiveBlending
     });
-    ambientMotes = new THREE.Points(motesGeo, motesMat);
-    avatarGroup.add(ambientMotes);
+    lidarPointsMesh = new THREE.Points(lidarGeo, lidarMat);
+    avatarGroup.add(lidarPointsMesh);
+
+    // Layer 5: Whole-Background 3D Orbital Cyber-Rings & Full-Viewport Neural Particle Field (NO globe!)
+    orbitalRingsGroup = new THREE.Group();
+    orbitalRingsGroup.position.set(0, -1.2, -2.2);
+
+    const ringConfigs = [
+        { r: 6.8, tube: 0.028, rx: 1.18, ry: 0.18, op: 0.26 },
+        { r: 9.6, tube: 0.024, rx: 1.26, ry: -0.22, op: 0.20 },
+        { r: 12.8, tube: 0.020, rx: 1.12, ry: 0.08, op: 0.15 }
+    ];
+    ringConfigs.forEach((cfg, idx) => {
+        const torusGeo = new THREE.TorusGeometry(cfg.r, cfg.tube, 16, 120);
+        const torusMat = new THREE.MeshBasicMaterial({
+            color: idx % 2 === 0 ? 0x6384ff : 0xa78bfa,
+            transparent: true,
+            opacity: cfg.op
+        });
+        const torus = new THREE.Mesh(torusGeo, torusMat);
+        torus.rotation.x = cfg.rx;
+        torus.rotation.y = cfg.ry;
+        orbitalRingsGroup.add(torus);
+    });
+    masterStageGroup.add(orbitalRingsGroup);
+
+    // Full-Viewport 3D Background Neural Particle Field spanning the whole screen
+    const bgGeo = new THREE.BufferGeometry();
+    const bgCount = 1800;
+    const bgPos = new Float32Array(bgCount * 3);
+    for (let i = 0; i < bgCount * 3; i += 3) {
+        bgPos[i] = (Math.random() - 0.5) * 44.0;
+        bgPos[i + 1] = (Math.random() - 0.5) * 28.0;
+        bgPos[i + 2] = (Math.random() - 0.5) * 18.0 - 3.0;
+    }
+    bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+    const bgMat = new THREE.PointsMaterial({
+        size: 0.055,
+        color: 0x6384ff,
+        transparent: true,
+        opacity: 0.48,
+        blending: THREE.AdditiveBlending
+    });
+    bgParticlesMesh = new THREE.Points(bgGeo, bgMat);
+    scene.add(bgParticlesMesh);
 
     syncThreeColors();
     updateAvatarStagePosition();
@@ -495,21 +730,6 @@ function initThreeJS() {
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('scroll', updateAvatarStagePosition, { passive: true });
     document.addEventListener('mousemove', onDocumentMouseMove);
-
-    // Wire up Hero 3D Mode Switcher buttons (3D STUDIO | HOLOGRAM | WIREFRAME)
-    document.querySelectorAll('.hero-3d-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.hero-3d-btn').forEach(b => b.classList.toggle('active', b === btn));
-            const targetMode = parseFloat(btn.getAttribute('data-3d-mode') || '0');
-            if (avatarUniforms) {
-                if (typeof gsap !== 'undefined') {
-                    gsap.to(avatarUniforms.uMode, { value: targetMode, duration: 0.45, ease: 'power2.out' });
-                } else {
-                    avatarUniforms.uMode.value = targetMode;
-                }
-            }
-        });
-    });
 
     animateThreeJS();
 }
@@ -522,6 +742,9 @@ function onDocumentMouseMove(event) {
     mouseY3D = (event.clientY / window.innerHeight - 0.5) * 2.0;
     if (avatarUniforms) {
         avatarUniforms.uMouse.value.set(mouseX3D, mouseY3D);
+    }
+    if (cursorPointLight) {
+        cursorPointLight.position.set(mouseX3D * 9.0, -mouseY3D * 6.0 + 2.0, 9.0);
     }
 }
 
@@ -550,19 +773,22 @@ function animateThreeJS() {
     }
 
     if (avatarGroup) {
-        // Interactive 3D turn towards cursor + gentle idle 3D oscillation
-        const targetRotY = mouseX3D * 0.34 + Math.sin(elapsedTime * 0.65) * 0.07;
-        const targetRotX = -mouseY3D * 0.18 + Math.cos(elapsedTime * 0.5) * 0.03;
+        // Smooth 3D rotation of the centered Black-Blazer 3D Model following the cursor + idle 3D motion
+        const targetRotY = mouseX3D * 0.42 + Math.sin(elapsedTime * 0.6) * 0.12;
+        const targetRotX = -mouseY3D * 0.22 + Math.cos(elapsedTime * 0.45) * 0.04;
         avatarGroup.rotation.y += (targetRotY - avatarGroup.rotation.y) * 0.06;
         avatarGroup.rotation.x += (targetRotX - avatarGroup.rotation.x) * 0.06;
     }
 
-    if (pedestalGroup) {
-        pedestalGroup.rotation.z = elapsedTime * 0.25;
+    if (orbitalRingsGroup) {
+        orbitalRingsGroup.children.forEach((ring, idx) => {
+            ring.rotation.z = elapsedTime * (idx % 2 === 0 ? 0.14 : -0.11);
+        });
     }
 
-    if (ambientMotes) {
-        ambientMotes.rotation.y = -elapsedTime * 0.08;
+    if (bgParticlesMesh) {
+        bgParticlesMesh.rotation.y = elapsedTime * 0.03 + mouseX3D * 0.08;
+        bgParticlesMesh.rotation.x = mouseY3D * 0.05;
     }
 
     renderer.render(scene, camera);
