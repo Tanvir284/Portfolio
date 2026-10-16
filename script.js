@@ -36,7 +36,7 @@ if (modeToggleBtn) {
     const modeIcon = modeToggleBtn.querySelector('i') || document.createElement('i');
 
     // Check local storage for preference
-    if (storage.get('theme') === 'light') {
+    if (storage.get('theme') === 'light' || location.search.includes('theme=light')) {
         document.documentElement.classList.add('light-mode');
         // applied before paint, so no transition to suppress
         modeIcon.classList.replace('fa-moon', 'fa-sun');
@@ -203,7 +203,12 @@ let currentProgress = 0;
 let targetProgress = 0;
 
 function syncThreeColors() {
-    // Colors are driven directly by the chiaroscuro silver-monochrome + warm amber rim signal shader
+    if (!signalMaterial || !signalMaterial.uniforms) return;
+    const isLight = document.documentElement.classList.contains('light-mode') ? 1.0 : 0.0;
+    signalMaterial.uniforms.uLightMode.value = isLight;
+    if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+    }
 }
 
 function updateStageLayout() {
@@ -245,12 +250,14 @@ function initThreeJS() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
+    const isLightInit = document.documentElement.classList.contains('light-mode') ? 1.0 : 0.0;
     signalMaterial = new THREE.ShaderMaterial({
         uniforms: {
             uTime: { value: 0 },
             uProgress: { value: 0 },
             uScale: { value: 3.55 },
-            uDpr: { value: dpr }
+            uDpr: { value: dpr },
+            uLightMode: { value: isLightInit }
         },
         vertexShader: `
             attribute vec3 aColor;
@@ -280,13 +287,18 @@ function initThreeJS() {
             }
         `,
         fragmentShader: `
+            uniform float uLightMode;
             varying vec3 vColor;
             varying float vAlpha;
             void main() {
                 float d = length(gl_PointCoord - 0.5);
                 float alpha = smoothstep(0.5, 0.27, d) * vAlpha;
                 if (alpha < 0.025) discard;
-                gl_FragColor = vec4(vColor * 1.25, alpha);
+                vec3 darkCol = vColor * 1.25;
+                float isWarm = clamp((vColor.r - vColor.b) * 2.2, 0.0, 1.0);
+                vec3 lightCol = mix(vec3(0.18, 0.21, 0.28) + vColor * 0.32, vec3(0.86, 0.36, 0.06), isWarm * 0.85);
+                float finalAlpha = alpha * mix(1.0, 0.72, uLightMode);
+                gl_FragColor = vec4(mix(darkCol, lightCol, uLightMode), finalAlpha);
             }
         `,
         transparent: true,
@@ -1416,7 +1428,7 @@ const startPreloader = () => {
 
     if (!preloader || !percentageElement) return;
 
-    if (document.documentElement.classList.contains('preloader-skip')) {
+    if (document.documentElement.classList.contains('preloader-skip') || location.search.includes('skip_intro=1')) {
         preloader.remove();
         document.body.style.overflow = '';
         return;
