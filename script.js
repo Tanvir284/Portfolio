@@ -7,28 +7,25 @@ const storage = {
     set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* private mode */ } }
 };
 
-// Initialize Lenis Smooth Scrolling
-const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
-    direction: 'vertical',
-    gestureDirection: 'vertical',
-    smooth: !prefersReducedMotion,
-    mouseMultiplier: 1,
-    smoothTouch: false,
-    touchMultiplier: 2,
-    infinite: false,
-})
-
-// Integrate Lenis with GSAP ScrollTrigger
-// Only needed if using advanced pin/sync, but good for base sync
-lenis.on('scroll', ScrollTrigger.update)
-
-gsap.ticker.add((time) => {
-    lenis.raf(time * 1000)
-})
-
-gsap.ticker.lagSmoothing(0)
+// Native Hardware-Accelerated Smooth Scrolling (replaces JS wheel-hijacking for zero-lag 120Hz/144Hz scroll)
+const lenis = {
+    scrollTo(target, opts = {}) {
+        const offset = opts.offset || 0;
+        if (typeof target === 'number') {
+            window.scrollTo({ top: target + offset, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+            return;
+        }
+        const el = typeof target === 'string' ? document.querySelector(target) : target;
+        if (el) {
+            const y = el.getBoundingClientRect().top + window.scrollY + offset;
+            window.scrollTo({ top: y, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        }
+    },
+    stop() {},
+    start() {},
+    on() {},
+    raf() {}
+};
 
 // --- Light/Dark Mode Toggle ---
 const modeToggleBtn = document.getElementById('mode-toggle');
@@ -84,51 +81,16 @@ function toggleMenu() {
     }
 }
 
-// Close menu and cinematic transition when clicking a link
+// Instant smooth scroll when clicking an anchor link (no 600ms black screen lock)
 document.querySelectorAll('.nav-items a, a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
         const targetId = link.getAttribute('href');
 
-        // Ensure it's an internal anchor link
         if (targetId && targetId.startsWith('#') && targetId.length > 1) {
-            e.preventDefault(); // Stop native jump
-
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                if (prefersReducedMotion || typeof gsap === 'undefined') {
-                    // Skip the cinematic wipe entirely
-                    lenis.scrollTo(targetElement, { offset: -80 });
-                } else {
-                // Cinematic TV Transition
-                const tl = gsap.timeline();
-
-                // Hide scrollbar & block clicks during transition
-                document.body.style.overflow = 'hidden';
-
-                tl.to('.transition-bars', {
-                    duration: 0.2, // Faster
-                    scaleY: 1,
-                    transformOrigin: "bottom left",
-                    stagger: 0.05, // Snappier stagger
-                    ease: "power2.inOut"
-                })
-                    .call(() => {
-                        // Instantly snap to the section while screen is blacked out
-                        lenis.scrollTo(targetElement, {
-                            offset: -80,
-                            duration: 0.001 // instantaneous leap since we are hidden
-                        });
-                    })
-                    .to('.transition-bars', {
-                        duration: 0.2, // Faster
-                        scaleY: 0,
-                        transformOrigin: "top left",
-                        stagger: 0.05,
-                        ease: "power2.inOut",
-                        delay: 0.05 // Brief pause
-                    })
-                    .call(() => document.body.style.overflow = ''); // Restore scroll
-                }
+                e.preventDefault();
+                lenis.scrollTo(targetElement, { offset: -80 });
             }
         }
 
@@ -212,12 +174,12 @@ function initThreeJS() {
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(1);
     container.appendChild(renderer.domElement);
 
     // Create Particle Sphere
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1600;
+    const particlesCount = 1200;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i += 3) {
@@ -280,10 +242,9 @@ function onWindowResize() {
 }
 
 let clock = new THREE.Clock();
+let threeFrameSkip = false;
 
 function animateThreeJS() {
-    // A slowly rotating particle field is decorative motion; draw it once
-    // and stop when the visitor has asked for reduced motion.
     if (prefersReducedMotion) {
         renderer.render(scene, camera);
         return;
@@ -292,14 +253,15 @@ function animateThreeJS() {
     requestAnimationFrame(animateThreeJS);
 
     if (document.hidden) return;
+    threeFrameSkip = !threeFrameSkip;
+    if (threeFrameSkip) return; // 30fps cap for slow-moving ambient background
 
     const elapsedTime = clock.getElapsedTime();
 
-    // Zero-allocation smooth damping (replaces per-frame gsap.to leak)
     const targetX = mouseY3D * 0.5;
     const targetY = mouseX3D * 0.5 + (elapsedTime * 0.1);
-    particlesMesh.rotation.x += (targetX - particlesMesh.rotation.x) * 0.06;
-    particlesMesh.rotation.y += (targetY - particlesMesh.rotation.y) * 0.06;
+    particlesMesh.rotation.x += (targetX - particlesMesh.rotation.x) * 0.08;
+    particlesMesh.rotation.y += (targetY - particlesMesh.rotation.y) * 0.08;
     particlesMesh.rotation.z = elapsedTime * 0.05;
 
     if (coreMesh) {
@@ -790,57 +752,7 @@ if (!prefersReducedMotion) window.addEventListener('load', () => {
     });
 });
 
-/* --- 3D TILT & BENTO SPOTLIGHT FOR CARDS (rAF-throttled) --- */
-document.querySelectorAll('.project-card, .a-card, .cred-card, .stat-cell, .gh-card').forEach(card => {
-    let rafId = 0;
-    card.addEventListener('mousemove', e => {
-        if (rafId) return;
-        const cx = e.clientX;
-        const cy = e.clientY;
-        rafId = requestAnimationFrame(() => {
-            rafId = 0;
-            const rect = card.getBoundingClientRect();
-            const x = cx - rect.left;
-            const y = cy - rect.top;
-
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
-
-            if (!prefersReducedMotion && card.classList.contains('project-card')) {
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -4;
-                const rotateY = ((x - centerX) / centerX) * 4;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
-            }
-        });
-    }, { passive: true });
-
-    card.addEventListener('mouseleave', () => {
-        if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
-        if (card.classList.contains('project-card')) {
-            card.style.transform = '';
-        }
-    }, { passive: true });
-});
-
-if (!prefersReducedMotion) {
-
-    /* --- MAGNETIC BUTTONS --- */
-    document.querySelectorAll('[data-magnetic]').forEach(btn => {
-        btn.addEventListener('mousemove', e => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-
-            btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-        });
-
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transform = '';
-        });
-    });
-}
+/* --- CARD HOVER IS HANDLED VIA GPU-ACCELERATED CSS TRANSFORMS --- */
 
 /* --- SOUND FX SYSTEM (Web Audio API) --- */
 // Created lazily on the first real user gesture: building it at page load
@@ -2942,14 +2854,7 @@ if (openCalBtn && calModal) {
     }
 }
 
-// Add spotlight tracking to interactive cards
-document.querySelectorAll('.dsa-card, .case-card, .testi-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-    });
-});
+
 
 /* ==========================================================================
    7 NEXT-GEN GOOGLE-GRADE FEATURES (XAI, MATH, MLOPS, JD MATCHER, ⌘K, TOUR)
