@@ -155,7 +155,7 @@ if (cursorOuter) hoverElements.forEach(el => {
 });
 
 // Circle Text
-const text = "SOFTWARE ENGINEER • AI ENGINEER • DATA SCIENTIST • MACHINE LEARNING • DEEP LEARNING • ";
+const text = "FORWARD DEPLOYED ENGINEER • AI ENGINEER • MACHINE LEARNING • DEEP LEARNING • ";
 const circleText = document.getElementById('circleText');
 if (circleText) {
     circleText.innerHTML = text.split("").map(
@@ -1071,7 +1071,7 @@ const CHAT_API = null; // e.g. 'https://tanvir-assistant.your-name.workers.dev'
 
 // Conversation History for LLM Context
 let chatHistory = [
-    { role: 'system', content: "You are T.A.N.V.I.R., an elite AI assistant integrated into Md Tanvir Islam's portfolio. You are intelligent, professional, and slightly futuristic. Tanvir is an AI Architect and Software Engineer (B.Sc. CSE graduate from BUBT, CGPA 3.36/4.00) proficient in Deep Learning, Computer Vision, and Full-Stack development. His 18 shipped projects include MangoCare AI (DenseNet-121 + Flask + Docker), Breast Lesion AI (U-Net + ResNet-50, 91% Dice), Pneumonia Classification (YOLOv8, 95%+ accuracy), DSA House (Next.js 16 + React 19), and Ecommerce Admin Dashboard (NestJS + PostgreSQL). Keep your answers concise, helpful, and tailored to a portfolio visitor." }
+    { role: 'system', content: "You are T.A.N.V.I.R., an elite AI assistant integrated into Md Tanvir Islam's portfolio. You are intelligent, professional, and slightly futuristic. Tanvir is a Forward Deployed Engineer and AI Engineer (B.Sc. CSE graduate from BUBT, CGPA 3.36/4.00) proficient in End-to-End AI Delivery, Deep Learning, Computer Vision, RAG & Vector Search, and Full-Stack Production Systems. His 24 shipped projects (6 live deployments) include AtlasRec (FAISS + 6 ML models + Next.js 15 + FastAPI), Scopewise (Node 24 Serverless + Neon PostgreSQL), MangoCare AI (DenseNet-121 + Flask + Docker), Breast Lesion AI (U-Net + ResNet-50, 91% Dice), Pneumonia Classification (YOLOv8, 95%+ accuracy), DSA House (Next.js 16 + React 19), and Ecommerce Admin Dashboard (NestJS + PostgreSQL). Keep your answers concise, helpful, and tailored to a portfolio visitor." }
 ];
 
 function addMessage(text, isUser = false) {
@@ -1127,19 +1127,19 @@ async function handleChat() {
                 response: "Greetings. I am Tanvir's virtual proxy, T.A.N.V.I.R. How may I assist you today?"
             },
             {
-                intents: ["who", "what", "name", "ai", "identity", "yourself", "are you"],
+                intents: ["who", "what", "name", "ai", "identity", "yourself", "are you", "fde", "forward", "deployed"],
                 points: 4,
-                response: "I am T.A.N.V.I.R., an artificial intelligence designed by Md Tanvir Islam to guide you through his portfolio and technical work."
+                response: "I am T.A.N.V.I.R., an artificial intelligence designed by Md Tanvir Islam (Forward Deployed Engineer & AI Engineer) to guide you through his portfolio, live deployments, and technical work."
             },
             {
                 intents: ["skills", "tech", "stack", "languages", "proficient", "know", "tools", "frameworks", "technologies"],
                 points: 5,
-                response: "Tanvir works across 57 tools and technologies: PyTorch, TensorFlow, Scikit-learn, Hugging Face, YOLOv8, OpenCV, XGBoost/LightGBM/CatBoost, Python, TypeScript, C++, C#, React, Next.js, NestJS, Django, Flask, FastAPI, PostgreSQL, and Docker."
+                response: "Tanvir works across 71 tools and capabilities as a Forward Deployed Engineer & AI Engineer: PyTorch, TensorFlow, Scikit-learn, Hugging Face, YOLOv8, OpenCV, RAG & LangChain, FAISS Vector Search, ONNX Runtime, Solution Architecture, Client Discovery & Scoping, Python, TypeScript, C++, C#, React, Next.js, FastAPI, NestJS, Django, Flask, PostgreSQL, Playwright E2E, and Docker."
             },
             {
                 intents: ["experience", "background", "work", "job", "career", "history", "research"],
                 points: 5,
-                response: "Tanvir served as a Research Assistant at InsightEdu (Jan–Feb 2026) working across ML, DL, NLP, and Transformer baselines, alongside extensive deep learning research in medical imaging and full-stack engineering."
+                response: "Tanvir operates as a Forward Deployed Engineer & AI Engineer, and served as a Research Assistant at InsightEdu (Jan–Feb 2026) working across ML, DL, NLP, and Transformer baselines alongside shipping 24 end-to-end AI & full-stack systems."
             },
             {
                 intents: ["education", "school", "degree", "university", "study", "college", "cgpa", "graduated"],
@@ -2452,7 +2452,7 @@ if (modalOverlay && projectCards.length > 0) {
     </div>
     <div class="author">
       <strong>Md Tanvir Islam</strong><br>
-      AI Architect &amp; Full-Stack Engineer<br>
+      Forward Deployed Engineer &amp; AI Engineer<br>
       ruhittanvir14@gmail.com &middot; github.com/Tanvir284
     </div>
   </div>
@@ -3014,13 +3014,30 @@ if (skillChips.length > 0 && smName && smProjects) {
         'PyTorch': { pct: 95, level: 'Production & Research', desc: 'Fine-tuned DenseNet-121 & YOLOv8 architectures, FAISS neural recommenders, custom training loops, and Dockerized serving.', projects: ['AtlasRec', 'MangoCare AI', 'Pneumonia Classification'] },
         'TensorFlow': { pct: 93, level: 'Deep Learning & Edge AI', desc: 'Built encoder-decoder U-Net + ResNet-50 medical segmentation pipelines and browser-native TensorFlow.js vision demos.', projects: ['Breast Lesion AI', 'Chicken Disease Detection'] },
         'Scikit-learn': { pct: 94, level: 'Classical ML & Benchmarking', desc: 'Stratified k-fold cross-validation, permutation feature importance, and multi-model regression/classification pipelines.', projects: ['EduPredict ML', 'Concrete Strength Prediction', 'Cardiovascular Risk Prediction', 'Diabetes Prediction', 'Cirrhosis Survival Classification'] },
+        'Hugging Face': { pct: 92, level: 'Transformers & Model Hub', desc: 'Deployed Dockerized FastAPI & Flask ML inference containers on Hugging Face Spaces and ran browser-native sentence-transformer embeddings.', projects: ['AtlasRec', 'MangoCare AI'] },
         'YOLOv8': { pct: 92, level: 'Real-Time Computer Vision', desc: 'Adapted Ultralytics YOLOv8 classification & detection heads for high-sensitivity medical radiograph screening.', projects: ['Pneumonia Classification'] },
         'XGBoost': { pct: 94, level: 'Gradient Boosted Ensembles', desc: 'Regularized tree ensembles, hyperparameter tuning, and stacked out-of-fold probability calibration.', projects: ['Concrete Strength Prediction', 'Cirrhosis Survival Classification', 'Cardiovascular Risk Prediction'] },
         'LightGBM': { pct: 91, level: 'Tabular Ensemble Modeling', desc: 'Leaf-wise gradient boosting integrated into weighted clinical survival and cardiovascular risk stacks.', projects: ['Cirrhosis Survival Classification', 'Cardiovascular Risk Prediction'] },
         'CatBoost': { pct: 91, level: 'Categorical Gradient Boosting', desc: 'Ordered boosting over clinical biomarkers and student performance features with post-hoc temperature scaling.', projects: ['EduPredict ML', 'Cirrhosis Survival Classification'] },
         'OpenCV': { pct: 92, level: 'Image Preprocessing & CLAHE', desc: 'Contrast-limited adaptive histogram equalization (CLAHE), morphological filtering, and real-time frame pipelines.', projects: ['Pneumonia Classification', 'MangoCare AI', 'Breast Lesion AI'] },
+        'RAG & Agentic AI': { pct: 92, level: 'Retrieval & Autonomous Workflows', desc: 'Semantic vector retrieval, grounded context injection, counterfactual reasoning sandboxes, and multi-step tool orchestration.', projects: ['AtlasRec', 'Scopewise'] },
+        'LangChain': { pct: 90, level: 'LLM Orchestration & Chains', desc: 'Structured prompt pipelines, document chunking, vector store retrievers, and deterministic schema output parsing.', projects: ['AtlasRec'] },
+        'FAISS Search': { pct: 94, level: 'High-Speed Vector Similarity', desc: 'Sub-20ms approximate nearest-neighbor (ANN) vector search across 20,500+ product embeddings and 6 hybrid recommendation engines.', projects: ['AtlasRec'] },
+        'ONNX Runtime': { pct: 90, level: 'Low-Latency Production Inference', desc: 'Graph-optimized CPU/GPU model serialization and quantized edge inference for sub-15ms real-time predictions.', projects: ['MangoCare AI', 'Breast Lesion AI'] },
+        'Grad-CAM & SHAP': { pct: 93, level: 'Explainable AI (XAI)', desc: 'Spatial activation heatmaps for clinical ultrasound/leaf diagnostics and 4-pillar Match DNA counterfactual attribution.', projects: ['AtlasRec', 'Breast Lesion AI', 'MangoCare AI', 'Concrete Strength Prediction'] },
+        'Prompt Engineering': { pct: 92, level: 'Grounded LLM Systems', desc: 'Zero/few-shot system prompts, retrieval-grounded guardrails, and structured JSON evaluation rubrics.', projects: ['AtlasRec', 'DSA House'] },
+        'Solution Architecture': { pct: 94, level: 'Forward Deployed System Design', desc: 'Translating ambiguous domain bottlenecks into end-to-end AI + full-stack architectures with clear data flow and security boundaries.', projects: ['AtlasRec', 'Scopewise', 'Ecommerce Admin Dashboard', 'MangoCare AI'] },
+        'Client Discovery & Scoping': { pct: 93, level: 'Forward Deployed Operations', desc: 'Rapid operational requirement discovery, scope-change impact rules, acceptance criteria modeling, and stakeholder alignment.', projects: ['Scopewise', 'AtlasRec', 'FinPilot BD'] },
+        'Rapid Prototyping': { pct: 95, level: '0-to-1 Production Delivery', desc: 'Going from raw dataset or ambiguous spec to an interactive, deployed full-stack AI product in days rather than months.', projects: ['AtlasRec', 'Scopewise', 'MangoCare AI', 'DSA House'] },
+        'System Integration': { pct: 92, level: 'APIs, Webhooks & Pipelines', desc: 'Connecting ML inference microservices, serverless PostgreSQL backends, authentication guards, and automated data pipelines.', projects: ['AtlasRec', 'Scopewise', 'Ecommerce Admin Dashboard', 'Tender Scraper'] },
+        'Playwright E2E': { pct: 91, level: 'Automated End-to-End Verification', desc: 'Browser-level E2E test suites verifying critical user journeys, RBAC flows, and live API contracts before production release.', projects: ['AtlasRec', 'Scopewise'] },
+        'API Contract Design': { pct: 93, level: 'REST, OpenAPI & Typed Schemas', desc: 'Pydantic / TypeScript / Swagger-documented API contracts ensuring zero-drift communication between AI services and React/Next.js UIs.', projects: ['AtlasRec', 'Ecommerce Admin Dashboard', 'Scopewise'] },
+        'SLA & Telemetry': { pct: 90, level: 'Production Observability', desc: 'Tracking p95 inference latency, memory footprints, health-check endpoints, and model confidence drift in deployed environments.', projects: ['AtlasRec', 'MangoCare AI', 'Scopewise'] },
+        'Technical Specs & Docs': { pct: 93, level: 'Architecture & Research Writing', desc: 'Authoring reproducible engineering datasheets, trade-off analyses, API specs, and academic methodology sections.', projects: ['Breast Lesion AI', 'AtlasRec', 'Scopewise', 'DSA House'] },
+        'FastAPI': { pct: 93, level: 'High-Throughput Async AI APIs', desc: 'Async Python inference microservices serving FAISS vector search and multi-model ML rankings with Pydantic validation.', projects: ['AtlasRec'] },
         'Next.js': { pct: 94, level: 'Full-Stack App Router', desc: 'Server Actions, SSR/ISR rendering, counterfactual Taste Studio recommenders, and deterministic state engines.', projects: ['AtlasRec', 'DSA House', 'FinPilot BD'] },
         'React': { pct: 94, level: 'Interactive UI Architecture', desc: 'Component-driven dashboards, 60fps algorithm visualisers, and state-synchronized enterprise frontends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard', 'TaskFlow', 'Employee & Family Registry'] },
+        'React.js': { pct: 94, level: 'Interactive UI Architecture', desc: 'Component-driven dashboards, 60fps algorithm visualisers, and state-synchronized enterprise frontends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard', 'TaskFlow', 'Employee & Family Registry'] },
         'TypeScript': { pct: 92, level: 'Strongly Typed Systems', desc: 'End-to-end type safety across Next.js 16 frontends, FastAPI/RecSys clients, and 9-module NestJS 10 backends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard'] },
         'NestJS': { pct: 90, level: 'Enterprise Backend Architecture', desc: 'Modular dependency injection, custom RBAC metadata decorators, global JWT guards, and OpenAPI specs.', projects: ['Ecommerce Admin Dashboard'] },
         'PostgreSQL': { pct: 92, level: 'Relational ACID Database', desc: 'Neon serverless Postgres, indexed relational schemas, ACID ledger transactions, and role-permission join optimization.', projects: ['Scopewise', 'Ecommerce Admin Dashboard', 'FinPilot BD'] },
@@ -3399,7 +3416,7 @@ if (openCalBtn && calModal) {
             const end = new Date(start.getTime() + 15 * 60000);
             const fmt = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
             const title = encodeURIComponent(`15-Min Intro Chat: ${topic} — Md Tanvir Islam`);
-            const details = encodeURIComponent(`Technical / hiring discussion with Md Tanvir Islam (AI Architect & Full-Stack Engineer).\nPortfolio: https://tanvir284.github.io/Portfolio/\nEmail: ruhittanvir14@gmail.com`);
+            const details = encodeURIComponent(`Technical / hiring discussion with Md Tanvir Islam (Forward Deployed Engineer & AI Engineer).\nPortfolio: https://tanvir284.github.io/Portfolio/\nEmail: ruhittanvir14@gmail.com`);
             const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(start)}/${fmt(end)}&details=${details}&add=ruhittanvir14@gmail.com`;
             window.open(gcalUrl, '_blank', 'noopener,noreferrer');
             closeCal();
@@ -3752,30 +3769,30 @@ const jdMatchedProjects = document.getElementById('jd-matched-projects');
 
 const ROLE_PRESETS = {
     google_ml: {
-        title: 'Google / DeepMind Machine Learning Engineer',
+        title: 'AI / Machine Learning Engineer',
         score: '97%',
-        jdText: 'Looking for a Machine Learning Engineer experienced in PyTorch, TensorFlow, FAISS Vector Search, Explainable AI, Computer Vision, Model Ablation & Benchmarking, Python, C++, Docker, and scalable production inference.',
-        summary: 'Strong alignment across Deep Learning (PyTorch, TensorFlow), Explainable & Counterfactual RecSys (AtlasRec with FAISS over 20.5k items), Empirical Ablation Studies (91% Dice, +7pp over baseline), and Algorithmic Rigor (600+ problems in DSA House).',
-        skills: ['PyTorch', 'TensorFlow', 'FAISS Vector Search', 'Explainable AI', 'Python', 'C++', 'Model Ablation', 'Docker', 'Algorithms & DSA'],
+        jdText: 'Looking for an AI / Machine Learning Engineer experienced in PyTorch, TensorFlow, RAG & Agentic AI, FAISS Vector Search, Explainable AI, Computer Vision, Model Ablation & Benchmarking, Python, FastAPI, and Dockerized production inference.',
+        summary: 'Strong alignment across Deep Learning (PyTorch, TensorFlow), Explainable & Counterfactual RecSys (AtlasRec with FAISS over 20.5k items), Empirical Ablation Studies (91% Dice, +7pp over baseline), and Production Docker/ONNX Deployment.',
+        skills: ['PyTorch', 'TensorFlow', 'FAISS Vector Search', 'RAG & Agentic AI', 'Explainable AI', 'Python', 'FastAPI', 'Docker', 'ONNX Runtime'],
         projects: ['AtlasRec', 'Breast Lesion AI', 'MangoCare AI', 'Pneumonia Classification', 'DSA House', 'Cirrhosis Survival Classification'],
         cvFocus: 'ai'
     },
     cv_med: {
-        title: 'Computer Vision & Medical Imaging AI Researcher',
+        title: 'Computer Vision & Medical Imaging AI Engineer',
         score: '98%',
-        jdText: 'Seeking a Computer Vision & Medical Imaging Researcher skilled in U-Net segmentation, ResNet backbones, YOLOv8, OpenCV, CLAHE preprocessing, Dice/IoU evaluation, and transfer learning.',
-        summary: 'Direct research & publication alignment: shipped U-Net + ResNet-50 ultrasound segmentation (91.0% Dice), YOLOv8 chest X-ray triage (95.4% Acc), and DenseNet-121 pathology pipelines.',
+        jdText: 'Seeking a Computer Vision & Medical Imaging AI Engineer skilled in U-Net segmentation, ResNet backbones, YOLOv8, OpenCV, CLAHE preprocessing, Dice/IoU evaluation, and transfer learning.',
+        summary: 'Direct research & production alignment: shipped U-Net + ResNet-50 ultrasound segmentation (91.0% Dice), YOLOv8 chest X-ray triage (95.4% Acc), and DenseNet-121 pathology pipelines.',
         skills: ['U-Net Segmentation', 'ResNet-50', 'YOLOv8', 'OpenCV & CLAHE', 'PyTorch', 'TensorFlow', 'Medical Imaging', 'Grad-CAM XAI'],
         projects: ['Breast Lesion AI', 'Pneumonia Classification', 'MangoCare AI', 'Chicken Disease Detection', 'Cardiovascular Risk Prediction'],
         cvFocus: 'ai'
     },
     fullstack: {
-        title: 'Senior Full-Stack Engineer (Next.js / NestJS / TypeScript)',
-        score: '96%',
-        jdText: 'Hiring a Full-Stack Engineer with strong experience in Next.js, React 19, TypeScript, FastAPI, NestJS, PostgreSQL, REST APIs, JWT/RBAC authentication, automated testing (Playwright/Vitest), and cloud deployment.',
-        summary: 'Production full-stack track record: shipped AtlasRec (Next.js 15 + FastAPI), Scopewise (Node 24 Serverless + Neon PostgreSQL), 9-module NestJS 10 RBAC backend, Next.js 16 DSA platform, and FinPilot BD.',
-        skills: ['Next.js 16', 'React 19', 'TypeScript', 'FastAPI', 'NestJS 10', 'PostgreSQL', 'Argon2id + RBAC', 'Playwright & Vitest'],
-        projects: ['AtlasRec', 'Scopewise', 'Ecommerce Admin Dashboard', 'DSA House', 'FinPilot BD', 'TaskFlow'],
+        title: 'Forward Deployed Engineer (AI + Full-Stack Systems)',
+        score: '98%',
+        jdText: 'Hiring a Forward Deployed Engineer to embed into complex real-world domains, scope ambiguous client requirements, rapidly prototype AI + Full-Stack architectures (Next.js, React 19, TypeScript, FastAPI, NestJS, PostgreSQL, FAISS), and ship production systems with Playwright E2E and Docker.',
+        summary: 'Direct Forward Deployed Engineering track record: shipped 6 live production systems including AtlasRec (Next.js 15 + FastAPI + FAISS), Scopewise (rule-based agency scope & delivery workspace on Neon PostgreSQL), 9-module NestJS 10 RBAC backend, and MangoCare AI.',
+        skills: ['Forward Deployed Execution', 'Solution Architecture', 'Client Discovery & Scoping', 'Next.js 16 & React 19', 'FastAPI & NestJS 10', 'PostgreSQL & FAISS', 'Playwright E2E', 'Docker & SLA Telemetry'],
+        projects: ['AtlasRec', 'Scopewise', 'MangoCare AI', 'Ecommerce Admin Dashboard', 'DSA House', 'FinPilot BD'],
         cvFocus: 'fullstack'
     },
     data_ml: {
@@ -3796,8 +3813,8 @@ const generateTailoredCvPdf = (spec) => {
     if (!win) return;
     const isFullStack = spec.cvFocus === 'fullstack';
     const headline = isFullStack
-        ? 'Full-Stack Software Engineer & AI Systems Architect (Next.js · NestJS · TypeScript · PostgreSQL)'
-        : 'AI Architect & Machine Learning Research Engineer (PyTorch · TensorFlow · Computer Vision · MLOps)';
+        ? 'Forward Deployed Engineer & AI Systems Engineer (Solution Scoping · Next.js · FastAPI · NestJS · PostgreSQL · Docker)'
+        : 'AI Engineer & Forward Deployed ML Engineer (PyTorch · TensorFlow · FAISS · Computer Vision · MLOps)';
 
     win.document.write(`<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Md Tanvir Islam — Tailored CV (${spec.title})</title>
@@ -3835,6 +3852,10 @@ const generateTailoredCvPdf = (spec) => {
   <div class="chips">${spec.skills.map(s => `<span class="chip">${s}</span>`).join('')}</div>
   <div class="sec">Selected Flagship Engineering Projects</div>
   <div class="item">
+    <div class="item-head"><span>AtlasRec (Explainable FAISS + 6-Model RecSys) &amp; Scopewise Workspace</span><span>Next.js 15 · FastAPI · FAISS · Neon PostgreSQL</span></div>
+    <div class="item-sub">Architected explainable counterfactual recommendations across 20.5k items and a multi-agency scope-change &amp; delivery management workspace with Playwright E2E tests.</div>
+  </div>
+  <div class="item">
     <div class="item-head"><span>Breast Lesion Ultrasound AI (U-Net + ResNet-50)</span><span>91.0% Dice · +7.0pp vs Baseline</span></div>
     <div class="item-sub">Engineered transfer-learned ResNet-50 encoder stages with U-Net skip connections to segment breast lesions under heavy acoustic speckle noise.</div>
   </div>
@@ -3845,10 +3866,6 @@ const generateTailoredCvPdf = (spec) => {
   <div class="item">
     <div class="item-head"><span>DSA House &amp; 9-Module Enterprise Ecommerce Admin</span><span>Next.js 16 · NestJS 10 · PostgreSQL · RBAC</span></div>
     <div class="item-sub">Built 16 interactive 60fps algorithm visualisers (600 problems) in Next.js 16 and a 9-module NestJS 10 backend with global O(1) JWT + RBAC guards.</div>
-  </div>
-  <div class="item">
-    <div class="item-head"><span>Concrete Strength XGBoost &amp; Cirrhosis Survival Stacking</span><span>4.20 MPa RMSE · Calibrated Ensembles</span></div>
-    <div class="item-sub">Benchmarked 5 regression families and stacked XGBoost + LightGBM + CatBoost with post-hoc temperature scaling calibration.</div>
   </div>
   <div class="sec">Experience, Education &amp; Honours</div>
   <div class="item">
@@ -3915,13 +3932,15 @@ if (jdPresetBtns.length > 0 && jdMatchedSkills && jdMatchedProjects) {
                 return;
             }
             const KEYWORD_CATALOG = [
-                { kw: ['pytorch', 'densenet', 'torch'], skill: 'PyTorch', proj: 'MangoCare AI' },
+                { kw: ['forward deployed', 'fde', 'client', 'scoping', 'discovery', 'solution', 'prototype'], skill: 'Forward Deployed Execution & Scoping', proj: 'Scopewise' },
+                { kw: ['rag', 'langchain', 'faiss', 'vector', 'recommend', 'llm', 'agent'], skill: 'RAG, LangChain & FAISS Search', proj: 'AtlasRec' },
+                { kw: ['pytorch', 'densenet', 'torch', 'fastapi'], skill: 'PyTorch & FastAPI', proj: 'MangoCare AI' },
                 { kw: ['tensorflow', 'keras', 'u-net', 'unet', 'ultrasound', 'segmentation'], skill: 'TensorFlow & U-Net', proj: 'Breast Lesion AI' },
                 { kw: ['yolo', 'opencv', 'vision', 'x-ray', 'image'], skill: 'YOLOv8 & OpenCV', proj: 'Pneumonia Classification' },
                 { kw: ['xgboost', 'lightgbm', 'catboost', 'scikit', 'regression', 'tabular'], skill: 'XGBoost & Ensembles', proj: 'Concrete Strength Prediction' },
                 { kw: ['next', 'react', 'typescript', 'tailwind', 'frontend'], skill: 'Next.js 16 & React 19', proj: 'DSA House' },
                 { kw: ['nest', 'rbac', 'jwt', 'postgres', 'sql', 'backend', 'api'], skill: 'NestJS 10 & PostgreSQL', proj: 'Ecommerce Admin Dashboard' },
-                { kw: ['docker', 'mlops', 'deploy', 'cloud', 'ci/cd'], skill: 'Docker & MLOps', proj: 'MangoCare AI' },
+                { kw: ['docker', 'mlops', 'deploy', 'cloud', 'ci/cd', 'onnx', 'playwright'], skill: 'Docker, ONNX & Playwright E2E', proj: 'AtlasRec' },
                 { kw: ['c++', 'c#', '.net', 'algorithm', 'dsa'], skill: 'C++ & Algorithms', proj: 'DSA House' }
             ];
             const matchedSkills = [];
@@ -3933,8 +3952,8 @@ if (jdPresetBtns.length > 0 && jdMatchedSkills && jdMatchedProjects) {
                 }
             });
             if (matchedSkills.length === 0) {
-                matchedSkills.push('PyTorch', 'TensorFlow', 'Next.js 16', 'TypeScript', 'PostgreSQL', 'Docker');
-                matchedProjs.add('Breast Lesion AI').add('MangoCare AI').add('DSA House');
+                matchedSkills.push('Forward Deployed Execution', 'PyTorch', 'TensorFlow', 'Next.js 16', 'FastAPI', 'PostgreSQL', 'Docker');
+                matchedProjs.add('AtlasRec').add('Scopewise').add('Breast Lesion AI').add('MangoCare AI');
             }
             const scorePct = Math.min(99, 89 + matchedSkills.length * 2);
             renderJdResult({
@@ -3944,7 +3963,7 @@ if (jdPresetBtns.length > 0 && jdMatchedSkills && jdMatchedProjects) {
                 summary: `Matched ${matchedSkills.length} core technical competencies and ${matchedProjs.size} production projects directly against your pasted job description.`,
                 skills: matchedSkills,
                 projects: Array.from(matchedProjs),
-                cvFocus: raw.includes('nest') || raw.includes('react') ? 'fullstack' : 'ai'
+                cvFocus: raw.includes('forward') || raw.includes('fde') || raw.includes('nest') || raw.includes('react') ? 'fullstack' : 'ai'
             });
             playSound('click');
         });
