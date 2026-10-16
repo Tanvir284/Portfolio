@@ -37,7 +37,7 @@ const status = (el, msg) => { if (el) el.textContent = msg; };
         const thinking = bubble('<span class="typing-indicator">Loading the model…</span>', false);
 
         try {
-            const ai = await import('./ai.js');
+            const ai = await import('./ai.js?v=4');
             const res = await ai.ask(q, pct => {
                 thinking.innerHTML = `<span class="typing-indicator">Downloading model… ${pct}%</span>`;
             });
@@ -61,8 +61,7 @@ const status = (el, msg) => { if (el) el.textContent = msg; };
         } catch (err) {
             console.warn('Assistant model unavailable, falling back:', err);
             thinking.innerHTML =
-                'The language model could not load, so I cannot search the page right now. ' +
-                'Everything is still reachable from the navigation above.';
+                'Md Tanvir Islam is a Forward Deployed Engineer &amp; AI Engineer with 24 shipped projects (including AtlasRec, Scopewise, MangoCare AI, Breast Lesion AI, and DSA House) and 71 technical skills across AI/ML and Full-Stack systems. Use the navigation or ⌘K Command Palette above to explore!';
         } finally {
             busy = false;
             messages.scrollTop = messages.scrollHeight;
@@ -86,7 +85,8 @@ const status = (el, msg) => { if (el) el.textContent = msg; };
     const box = document.getElementById('project-search');
     document.addEventListener('keydown', e => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-            if (!box) return;
+            // Do not hijack Ctrl+K / Cmd+K when the global Command Palette (#cmdk-modal) is present
+            if (document.getElementById('cmdk-modal') || !box) return;
             e.preventDefault();
             box.scrollIntoView({ behavior: 'smooth', block: 'center' });
             box.focus({ preventScroll: true });
@@ -116,7 +116,7 @@ const status = (el, msg) => { if (el) el.textContent = msg; };
     const run = async (q) => {
         status(note, 'Loading the model…');
         try {
-            const ai = await import('./ai.js');
+            const ai = await import('./ai.js?v=4');
             const ranked = await ai.rankProjects(q, pct => status(note, `Downloading model… ${pct}%`));
             const strong = ranked.filter(r => r.score > 0.18);
             const shown = strong.length ? strong : ranked.slice(0, 3);
@@ -198,7 +198,7 @@ const status = (el, msg) => { if (el) el.textContent = msg; };
         out.innerHTML = '';
         status(note, 'Loading the model…');
         try {
-            const ai = await import('./ai.js');
+            const ai = await import('./ai.js?v=4');
             const res = await ai.classify(f, pct => status(note, `Downloading model… ${pct}%`));
             render(res);
             status(note, 'Classified in your browser — the image never left this device.');

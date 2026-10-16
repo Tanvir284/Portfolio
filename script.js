@@ -1154,7 +1154,7 @@ async function handleChat() {
             {
                 intents: ["projects", "portfolio", "built", "made", "created", "showcase", "work", "website"],
                 points: 6, // Highest priority: "Can you build a website?"
-                response: "Tanvir has shipped 18 projects, including MangoCare AI (DenseNet-121 + Flask + Docker), Breast Lesion Segmentation (91% Dice with U-Net + ResNet-50), Pneumonia Classification (YOLOv8, 95%+ accuracy), DSA House (Next.js 16 + React 19), and an Ecommerce Admin Dashboard (NestJS + PostgreSQL)."
+                response: "Tanvir has shipped 24 projects (with 6 live production deployments), including AtlasRec (FAISS + 6 ML models + Next.js 15 + FastAPI), Scopewise (Node 24 Serverless + Neon PostgreSQL), MangoCare AI (DenseNet-121 + Flask + Docker), Breast Lesion AI (91% Dice with U-Net + ResNet-50), Pneumonia Classification (YOLOv8, 95%+ accuracy), DSA House (Next.js 16 + React 19), and an Ecommerce Admin Dashboard (NestJS + PostgreSQL)."
             },
             {
                 intents: ["thank", "thanks", "appreciate", "cool", "awesome", "amazing", "great", "nice"],
@@ -1980,6 +1980,34 @@ const PROJECT_ARCH_DATA = {
     'Cirrhosis Survival Classification': {
         arch: ['Clinical Features', 'XGBoost + LightGBM + CatBoost', 'Weighted Stack Blender', 'Temperature Calibration'],
         tradeoff: 'Applied post-hoc temperature scaling on top of stacked gradient-boosted ensembles so multi-class survival probability outputs are genuinely calibrated for clinical risk ranking.'
+    },
+    'Chicken Disease Detection': {
+        arch: ['Poultry Image Input', 'Geometric & Color Augment', 'Pretrained CNN Backbone', 'Multi-Class Softmax Head'],
+        tradeoff: 'Fine-tuned upper convolutional blocks with targeted color/rotation augmentations to achieve 94.8% accuracy on small agricultural field datasets without overfitting.'
+    },
+    'Matrix Trade & Engineering': {
+        arch: ['Bootstrap Responsive UI', 'PHP Admin Controller', 'JSON Content Engine', 'Apache Server Cache'],
+        tradeoff: 'Designed a flat-file JSON content engine with authenticated PHP admin mutations instead of a heavy database server, delivering near-zero query latency on shared corporate hosting.'
+    },
+    'E-Commerce Shop': {
+        arch: ['Storefront & Cart UI', 'PHP Session & Auth Layer', 'Indexed MySQL Queries', 'Order & Admin Dashboard'],
+        tradeoff: 'Refactored product catalog and order history SQL joins with composite indexes across 200+ SKUs, cutting average page load time by 35%.'
+    },
+    'Employee Management': {
+        arch: ['WinForms Desktop UI', 'C# .NET 6 Service Layer', 'Entity Framework Core ORM', 'SQL Server Persistence'],
+        tradeoff: 'Used EF Core change-tracking and parameterized LINQ queries inside a .NET 6 WinForms architecture to guarantee responsive desktop CRUD operations.'
+    },
+    'E-Commerce Mobile App': {
+        arch: ['Flutter Storefront UI', 'Reactive Cart & Wishlist', 'SharedPreferences Store', '60fps Product Carousel'],
+        tradeoff: 'Persisted cart and wishlist state locally via asynchronous SharedPreferences hydration so mobile shoppers keep full state across app restarts offline.'
+    },
+    'The Aviator 3D': {
+        arch: ['C++ Game Loop', 'Procedural Mesh Generator', 'OpenGL Shader Pipeline', '60fps Matrix Transform'],
+        tradeoff: 'Built hierarchical 3D scene transformations and procedural terrain/cloud generation directly in C++ and OpenGL with zero garbage-collection frame hitches.'
+    },
+    'Hotel Management System': {
+        arch: ['CLI / C++ Interface', 'Struct Memory Records', 'Room & Billing Engine', 'Binary / File Persistence'],
+        tradeoff: 'Implemented reservation lookup, room allocation, and invoice calculation in core C/C++ with deterministic file-backed record persistence.'
     }
 };
 
@@ -2386,6 +2414,93 @@ if (modalOverlay && projectCards.length > 0) {
                 { v: '99.2%', k: 'Parse Acc' },
                 { v: 'Auto', k: 'XLSX Build' },
                 { v: 'Django', k: 'Scheduler' }
+            ],
+            demos: [
+                { label: 'Run #1: 4-Portal DGDP/MOD Scrape', pred: '42 Active Tenders Extracted & Deduplicated', conf: 99.2, lat: '1.4 s', note: 'Headless Selenium resolved dynamic pagination; OpenPyXL generated formatted Excel workbook.' }
+            ]
+        },
+        'Matrix Trade & Engineering': {
+            par: {
+                problem: 'Corporate engineering teams needed a fast, zero-database CMS to update equipment catalogs, staff profiles, and service listings without developer intervention.',
+                approach: 'Built a PHP + Bootstrap corporate web system powered by a structured JSON content engine and a session-guarded admin control panel.',
+                result: 'Delivered sub-10ms page rendering and effortless non-technical catalog management across all corporate divisions.'
+            },
+            metrics5: [
+                { v: 'JSON', k: 'CMS Engine' },
+                { v: '9.2ms', k: 'TTFB Render' },
+                { v: '100%', k: 'Mobile UI' },
+                { v: 'PHP 8', k: 'Admin Auth' },
+                { v: '0 SQL', k: 'Zero DB Overhead' }
+            ]
+        },
+        'E-Commerce Shop': {
+            par: {
+                problem: 'Unindexed relational queries and unoptimized asset payloads caused slow catalog browsing across 200+ product SKUs.',
+                approach: 'Engineered a full-stack PHP + MySQL e-commerce platform with composite SQL indexing, session cart persistence, order workflows, and an admin dashboard.',
+                result: 'Supported 200+ active SKUs while reducing average catalog page load time by 35%.'
+            },
+            metrics5: [
+                { v: '200+', k: 'Active SKUs' },
+                { v: '-35%', k: 'Load Time' },
+                { v: 'MySQL', k: 'Indexed SQL' },
+                { v: 'RBAC', k: 'Admin Panel' },
+                { v: '99.8%', k: 'Cart Sync' }
+            ]
+        },
+        'Employee Management': {
+            par: {
+                problem: 'Manual spreadsheet HR tracking led to inconsistent employee records and slow departmental lookups.',
+                approach: 'Developed a desktop Employee Management System on .NET 6 WinForms using C# and Entity Framework Core backed by SQL Server.',
+                result: 'Streamlined full CRUD employee lifecycle operations with strongly typed EF Core migrations and instant search filtering.'
+            },
+            metrics5: [
+                { v: '.NET 6', k: 'Desktop Runtime' },
+                { v: 'EF Core', k: 'ORM Layer' },
+                { v: 'SQL Srv', k: 'ACID Store' },
+                { v: '3.8ms', k: 'Query Speed' },
+                { v: '100%', k: 'CRUD Valid' }
+            ]
+        },
+        'E-Commerce Mobile App': {
+            par: {
+                problem: 'Mobile shoppers abandon carts when app restarts wipe local wishlist/cart state or product galleries stutter.',
+                approach: 'Built a cross-platform Flutter + Dart mobile storefront with SharedPreferences local persistence and a 60fps interactive product carousel.',
+                result: 'Delivered smooth 60fps mobile browsing with instant offline-resilient cart and wishlist state recovery.'
+            },
+            metrics5: [
+                { v: '60fps', k: 'Flutter UI' },
+                { v: 'Local', k: 'Cart Persist' },
+                { v: 'Dart', k: 'Type-Safe' },
+                { v: '8.5ms', k: 'Hydration' },
+                { v: 'iOS/And', k: 'Cross-Plat' }
+            ]
+        },
+        'The Aviator 3D': {
+            par: {
+                problem: 'High-level game engines obscure the underlying linear algebra, transformation matrices, and lighting shaders of 3D computer graphics.',
+                approach: 'Engineered a 3D flight simulation from scratch in C++ and OpenGL featuring procedural terrain/cloud generation, custom lighting, and hierarchical camera transforms.',
+                result: 'Achieved locked 60fps real-time 3D rendering with zero garbage-collection pauses.'
+            },
+            metrics5: [
+                { v: '60fps', k: 'OpenGL Loop' },
+                { v: '0 GC', k: 'C++ Memory' },
+                { v: '3D Math', k: 'Matrix Pipe' },
+                { v: 'Custom', k: 'GL Lighting' },
+                { v: 'Native', k: 'Binary Exec' }
+            ]
+        },
+        'Hotel Management System': {
+            par: {
+                problem: 'Front-desk room allocation and guest billing require deterministic record locking and fast lookup without heavyweight runtime dependencies.',
+                approach: 'Written in core C and C++ using custom data structures and binary/file-based persistence for reservations, room check-in/out, and automated billing.',
+                result: 'Zero-dependency native execution with sub-millisecond record lookup and persistent invoice tracking.'
+            },
+            metrics5: [
+                { v: '<1ms', k: 'Record I/O' },
+                { v: 'C/C++', k: 'Core Engine' },
+                { v: '0 Deps', k: 'Native Bin' },
+                { v: 'ACID-File', k: 'Persistence' },
+                { v: '100%', k: 'Billing Acc' }
             ]
         }
     };
@@ -3020,6 +3135,9 @@ if (skillChips.length > 0 && smName && smProjects) {
         'LightGBM': { pct: 91, level: 'Tabular Ensemble Modeling', desc: 'Leaf-wise gradient boosting integrated into weighted clinical survival and cardiovascular risk stacks.', projects: ['Cirrhosis Survival Classification', 'Cardiovascular Risk Prediction'] },
         'CatBoost': { pct: 91, level: 'Categorical Gradient Boosting', desc: 'Ordered boosting over clinical biomarkers and student performance features with post-hoc temperature scaling.', projects: ['EduPredict ML', 'Cirrhosis Survival Classification'] },
         'OpenCV': { pct: 92, level: 'Image Preprocessing & CLAHE', desc: 'Contrast-limited adaptive histogram equalization (CLAHE), morphological filtering, and real-time frame pipelines.', projects: ['Pneumonia Classification', 'MangoCare AI', 'Breast Lesion AI'] },
+        'LLMs': { pct: 91, level: 'Grounded Language Models', desc: 'Retrieval-augmented generation, structured JSON schema outputs, semantic embeddings, and prompt guardrail pipelines.', projects: ['AtlasRec', 'Scopewise'] },
+        'NLP': { pct: 91, level: 'Semantic & Text Pipelines', desc: '384-d dense sentence embeddings (all-MiniLM-L6-v2), TF-IDF content encoders, and semantic similarity ranking.', projects: ['AtlasRec', 'Tender Scraper'] },
+        'Computer Vision': { pct: 95, level: 'Medical & Agricultural Vision', desc: 'End-to-end semantic segmentation (U-Net + ResNet-50), pathology detection (DenseNet-121), and chest X-ray screening (YOLOv8).', projects: ['Breast Lesion AI', 'MangoCare AI', 'Pneumonia Classification', 'Chicken Disease Detection'] },
         'RAG & Agentic AI': { pct: 92, level: 'Retrieval & Autonomous Workflows', desc: 'Semantic vector retrieval, grounded context injection, counterfactual reasoning sandboxes, and multi-step tool orchestration.', projects: ['AtlasRec', 'Scopewise'] },
         'LangChain': { pct: 90, level: 'LLM Orchestration & Chains', desc: 'Structured prompt pipelines, document chunking, vector store retrievers, and deterministic schema output parsing.', projects: ['AtlasRec'] },
         'FAISS Search': { pct: 94, level: 'High-Speed Vector Similarity', desc: 'Sub-20ms approximate nearest-neighbor (ANN) vector search across 20,500+ product embeddings and 6 hybrid recommendation engines.', projects: ['AtlasRec'] },
@@ -3034,17 +3152,51 @@ if (skillChips.length > 0 && smName && smProjects) {
         'API Contract Design': { pct: 93, level: 'REST, OpenAPI & Typed Schemas', desc: 'Pydantic / TypeScript / Swagger-documented API contracts ensuring zero-drift communication between AI services and React/Next.js UIs.', projects: ['AtlasRec', 'Ecommerce Admin Dashboard', 'Scopewise'] },
         'SLA & Telemetry': { pct: 90, level: 'Production Observability', desc: 'Tracking p95 inference latency, memory footprints, health-check endpoints, and model confidence drift in deployed environments.', projects: ['AtlasRec', 'MangoCare AI', 'Scopewise'] },
         'Technical Specs & Docs': { pct: 93, level: 'Architecture & Research Writing', desc: 'Authoring reproducible engineering datasheets, trade-off analyses, API specs, and academic methodology sections.', projects: ['Breast Lesion AI', 'AtlasRec', 'Scopewise', 'DSA House'] },
-        'FastAPI': { pct: 93, level: 'High-Throughput Async AI APIs', desc: 'Async Python inference microservices serving FAISS vector search and multi-model ML rankings with Pydantic validation.', projects: ['AtlasRec'] },
-        'Next.js': { pct: 94, level: 'Full-Stack App Router', desc: 'Server Actions, SSR/ISR rendering, counterfactual Taste Studio recommenders, and deterministic state engines.', projects: ['AtlasRec', 'DSA House', 'FinPilot BD'] },
-        'React': { pct: 94, level: 'Interactive UI Architecture', desc: 'Component-driven dashboards, 60fps algorithm visualisers, and state-synchronized enterprise frontends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard', 'TaskFlow', 'Employee & Family Registry'] },
-        'React.js': { pct: 94, level: 'Interactive UI Architecture', desc: 'Component-driven dashboards, 60fps algorithm visualisers, and state-synchronized enterprise frontends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard', 'TaskFlow', 'Employee & Family Registry'] },
+        'Python': { pct: 96, level: 'Primary AI & Backend Language', desc: 'Core language for PyTorch/TensorFlow deep learning, FastAPI/Flask/Django microservices, FAISS vector pipelines, and data automation.', projects: ['AtlasRec', 'MangoCare AI', 'Breast Lesion AI', 'EduPredict ML', 'Tender Scraper'] },
+        'SQL': { pct: 93, level: 'Relational Schema & Query Tuning', desc: 'Composite indexing, ACID ledger transactions, complex analytical joins, and ORM query optimization across Postgres, MySQL & SQL Server.', projects: ['Scopewise', 'Ecommerce Admin Dashboard', 'FinPilot BD', 'E-Commerce Shop'] },
+        'JavaScript': { pct: 94, level: 'Full-Stack Web & Edge Runtime', desc: 'Asynchronous ES2024+, Node 24 Serverless APIs, Three.js WebGL shaders, and interactive browser-native ML experiences.', projects: ['Scopewise', 'TaskFlow', 'DSA House', 'E-Commerce Shop'] },
         'TypeScript': { pct: 92, level: 'Strongly Typed Systems', desc: 'End-to-end type safety across Next.js 16 frontends, FastAPI/RecSys clients, and 9-module NestJS 10 backends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard'] },
+        'Java': { pct: 88, level: 'Object-Oriented Engineering', desc: 'Strong OOP design patterns, multithreaded data structures, and enterprise application fundamentals.', projects: ['DSA House', 'Ecommerce Admin Dashboard'] },
+        'C++': { pct: 90, level: 'Systems & 3D Graphics', desc: 'Zero-GC memory management, OpenGL 3D rendering pipelines, and core algorithmic data structure implementations.', projects: ['The Aviator 3D', 'Hotel Management System', 'DSA House'] },
+        'C#': { pct: 90, level: '.NET Enterprise & Desktop Systems', desc: 'ASP.NET Core 6 Web APIs, Entity Framework Core ORM, QuestPDF report streaming, and WinForms desktop applications.', projects: ['Employee & Family Registry', 'Employee Management'] },
+        'PHP': { pct: 89, level: 'Web & CMS Backend Systems', desc: 'Session-guarded corporate CMS engines, custom JSON content pipelines, and MySQL-backed e-commerce storefronts.', projects: ['Matrix Trade & Engineering', 'E-Commerce Shop'] },
+        'Dart': { pct: 89, level: 'Cross-Platform Mobile Language', desc: 'Sound null-safety, asynchronous streams, Riverpod state providers, and Hive NoSQL serialization in Flutter.', projects: ['MedRemind', 'E-Commerce Mobile App'] },
+        'React.js': { pct: 94, level: 'Interactive UI Architecture', desc: 'Component-driven dashboards, 60fps algorithm visualisers, and state-synchronized enterprise frontends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard', 'TaskFlow', 'Employee & Family Registry'] },
+        'Next.js': { pct: 94, level: 'Full-Stack App Router', desc: 'Server Actions, SSR/ISR rendering, counterfactual Taste Studio recommenders, and deterministic state engines.', projects: ['AtlasRec', 'DSA House', 'FinPilot BD'] },
+        'Node.js': { pct: 92, level: 'Serverless & REST Backends', desc: 'Node 24 Serverless API functions, Express REST routers, JWT middleware, and high-concurrency I/O pipelines.', projects: ['Scopewise', 'TaskFlow', 'Ecommerce Admin Dashboard'] },
         'NestJS': { pct: 90, level: 'Enterprise Backend Architecture', desc: 'Modular dependency injection, custom RBAC metadata decorators, global JWT guards, and OpenAPI specs.', projects: ['Ecommerce Admin Dashboard'] },
+        'Django': { pct: 89, level: 'Backend & Automation Systems', desc: 'Scheduled multi-portal procurement scrapers, ORM data pipelines, and automated Excel workbook generation.', projects: ['Tender Scraper'] },
+        'Flask': { pct: 92, level: 'ML Inference Microservices', desc: 'Production Gunicorn + Flask REST APIs serving PyTorch DenseNet-121 and CatBoost/Scikit-learn models.', projects: ['MangoCare AI', 'EduPredict ML'] },
+        'FastAPI': { pct: 93, level: 'High-Throughput Async AI APIs', desc: 'Async Python inference microservices serving FAISS vector search and multi-model ML rankings with Pydantic validation.', projects: ['AtlasRec'] },
+        'REST APIs': { pct: 95, level: 'Typed Service Architecture', desc: 'Designing authenticated, rate-limited, OpenAPI/Swagger-documented REST endpoints across FastAPI, NestJS, Express, Flask & .NET.', projects: ['AtlasRec', 'Ecommerce Admin Dashboard', 'MangoCare AI', 'TaskFlow', 'Employee & Family Registry'] },
+        'HTML5': { pct: 96, level: 'Semantic & Accessible Markup', desc: 'ARIA-compliant interactive interfaces, semantic SEO structure, Canvas/WebGL viewports, and zero-layout-shift pages.', projects: ['DSA House', 'Scopewise', 'Matrix Trade & Engineering'] },
+        'CSS3': { pct: 95, level: 'GPU-Accelerated UI & Motion', desc: 'Responsive CSS Grid/Flexbox layouts, custom design tokens, dark/light theme systems, and 60fps hardware-accelerated transitions.', projects: ['DSA House', 'AtlasRec', 'Scopewise'] },
+        'Tailwind': { pct: 94, level: 'Utility-First Design Systems', desc: 'Rapid, consistent component styling across Next.js 15/16 applications, dark-mode dashboards, and fintech ledgers.', projects: ['DSA House', 'FinPilot BD', 'AtlasRec'] },
         'PostgreSQL': { pct: 92, level: 'Relational ACID Database', desc: 'Neon serverless Postgres, indexed relational schemas, ACID ledger transactions, and role-permission join optimization.', projects: ['Scopewise', 'Ecommerce Admin Dashboard', 'FinPilot BD'] },
-        'Docker': { pct: 90, level: 'Containerized ML & Web Deployment', desc: 'Multi-stage container builds packaging FastAPI/FAISS and PyTorch/Flask inference engines on Hugging Face Spaces.', projects: ['AtlasRec', 'MangoCare AI'] },
-        'Django': { pct: 88, level: 'Backend & Automation Systems', desc: 'Scheduled multi-portal procurement scrapers and ORM-backed web workflows.', projects: ['Tender Scraper'] },
-        'C++': { pct: 90, level: 'Systems & 3D Graphics', desc: 'Zero-GC memory management, OpenGL 3D rendering pipelines, and core data structure implementations.', projects: ['The Aviator 3D', 'Hotel Management System'] },
-        'Flutter': { pct: 89, level: 'Cross-Platform Mobile', desc: 'Riverpod 2 reactive state, Hive NoSQL offline storage, timezone-aware local notifications, and 60fps mobile UIs.', projects: ['MedRemind', 'E-Commerce Mobile App'] }
+        'MySQL': { pct: 91, level: 'Relational Web Persistence', desc: 'Normalized e-commerce catalog schemas and composite query indexing that cut page load times by 35%.', projects: ['E-Commerce Shop'] },
+        'SQL Server': { pct: 90, level: 'Enterprise Relational Store', desc: 'Backed ASP.NET Core 6 and .NET WinForms applications via Entity Framework Core migrations and LINQ.', projects: ['Employee & Family Registry', 'Employee Management'] },
+        'Oracle SQL': { pct: 88, level: 'Enterprise Database Systems', desc: 'PL/SQL stored procedures, relational normalization, and transactional concurrency control.', projects: ['Employee & Family Registry', 'FinPilot BD'] },
+        'MongoDB': { pct: 89, level: 'Document NoSQL Store', desc: 'Flexible document schemas, aggregation pipelines, and high-throughput JSON event logging.', projects: ['AtlasRec', 'TaskFlow'] },
+        'SQLite': { pct: 92, level: 'Embedded WAL Persistence', desc: 'Zero-config embedded relational storage in Write-Ahead Logging (WAL) mode delivering sub-5ms local API reads/writes.', projects: ['TaskFlow', 'EduPredict ML'] },
+        'Vector DBs': { pct: 93, level: 'Dense Embedding Retrieval', desc: 'High-dimensional cosine/inner-product ANN indexing with FAISS for sub-20ms semantic recommendation and RAG.', projects: ['AtlasRec'] },
+        'Pandas': { pct: 95, level: 'Data Wrangling & Feature Eng', desc: 'Cleaning 70,000+ clinical records, outlier filtering, biomarker imputation, and tabular feature engineering.', projects: ['Cardiovascular Risk Prediction', 'Diabetes Prediction', 'Concrete Strength Prediction', 'EduPredict ML'] },
+        'NumPy': { pct: 95, level: 'Vectorized Tensor & Matrix Ops', desc: 'High-speed numerical array broadcasting, linear algebra transformations, and custom metric computation.', projects: ['Breast Lesion AI', 'AtlasRec', 'Concrete Strength Prediction'] },
+        'Matplotlib': { pct: 92, level: 'Scientific & Ablation Plotting', desc: 'ROC-AUC curves, calibration reliability diagrams, training loss trajectories, and pixel segmentation overlays.', projects: ['Breast Lesion AI', 'Pneumonia Classification', 'Concrete Strength Prediction'] },
+        'Seaborn': { pct: 92, level: 'Statistical EDA Visualization', desc: 'Clinical biomarker correlation heatmaps, violin distributions, and multi-variate regression diagnostics.', projects: ['Diabetes Prediction', 'Cardiovascular Risk Prediction', 'Cirrhosis Survival Classification'] },
+        'Power BI': { pct: 89, level: 'Executive BI Dashboards', desc: 'DAX measures, interactive KPI drill-downs, and operational analytics backed by Google & IBM Data certifications.', projects: ['Cardiovascular Risk Prediction', 'FinPilot BD'] },
+        'Tableau': { pct: 89, level: 'Visual Analytics & Storytelling', desc: 'Interactive cohort dashboards, geospatial/clinical risk breakdowns, and executive data storytelling.', projects: ['Diabetes Prediction', 'Concrete Strength Prediction'] },
+        'Git': { pct: 95, level: 'Distributed Version Control', desc: 'Clean atomic commits, feature branching, interactive rebasing, and collaborative pull-request workflows across 24 repositories.', projects: ['AtlasRec', 'Scopewise', 'DSA House'] },
+        'GitHub': { pct: 95, level: 'Open-Source & Code Hosting', desc: '24 public engineering repositories with comprehensive documentation, issue tracking, and release management.', projects: ['AtlasRec', 'DSA House', 'MangoCare AI', 'Breast Lesion AI'] },
+        'GitLab': { pct: 89, level: 'DevSecOps & Repo Management', desc: 'Container registry integration, merge request pipelines, and enterprise repository mirroring.', projects: ['Ecommerce Admin Dashboard', 'Scopewise'] },
+        'Docker': { pct: 93, level: 'Containerized MLOps & DevOps', desc: 'Multi-stage Dockerfiles packaging PyTorch, FastAPI, Flask, and Gunicorn inference stacks for zero-drift cloud deployment.', projects: ['AtlasRec', 'MangoCare AI', 'EduPredict ML'] },
+        'GitHub Actions': { pct: 91, level: 'Automated CI/CD Workflows', desc: 'Automated Vitest, Supertest, and Playwright E2E pipelines running on every push before production deployment.', projects: ['AtlasRec', 'Scopewise', 'TaskFlow'] },
+        'Jenkins': { pct: 88, level: 'Build & Deployment Automation', desc: 'Declarative multi-stage build pipelines, automated test gates, and container image publishing.', projects: ['Ecommerce Admin Dashboard', 'MangoCare AI'] },
+        'Terraform': { pct: 88, level: 'Infrastructure as Code (IaC)', desc: 'Declarative cloud resource provisioning, reproducible networking, and environment parity.', projects: ['EduPredict ML', 'AtlasRec'] },
+        'Linux': { pct: 92, level: 'Production Server & Container OS', desc: 'Bash scripting, systemd process management, Gunicorn/Nginx tuning, and Debian/Ubuntu container hardening.', projects: ['AtlasRec', 'MangoCare AI', 'Tender Scraper'] },
+        'Jupyter': { pct: 95, level: 'Reproducible ML Research', desc: 'Interactive ablation studies, medical imaging visualization, and published Kaggle/research notebooks.', projects: ['Breast Lesion AI', 'Chicken Disease Detection', 'Cirrhosis Survival Classification', 'Diabetes Prediction'] },
+        'VS Code': { pct: 96, level: 'Primary Development Environment', desc: 'Configured with remote container debugging, TypeScript/Pylance strict type checking, and integrated test runners.', projects: ['AtlasRec', 'DSA House', 'Scopewise'] },
+        'Postman': { pct: 93, level: 'API Contract & Load Testing', desc: 'Automated REST collection assertions, JWT/CSRF environment workflows, and latency benchmarking.', projects: ['Ecommerce Admin Dashboard', 'AtlasRec', 'TaskFlow', 'Employee & Family Registry'] },
+        'Vercel': { pct: 94, level: 'Edge & Full-Stack Cloud Hosting', desc: 'Zero-downtime production deployments for Next.js 16, React 19, and NestJS systems with global CDN caching.', projects: ['DSA House', 'Ecommerce Admin Dashboard', 'Employee & Family Registry', 'TaskFlow'] }
     };
 
     const selectSkillChip = (chip) => {
@@ -3058,10 +3210,10 @@ if (skillChips.length > 0 && smName && smProjects) {
         }).map(c => c.querySelector('.p-title')?.textContent?.trim()).filter(Boolean);
 
         const entry = SKILL_MAP_DB[name] || {
-            pct: 88,
+            pct: 90,
             level: 'Applied Engineering & Production',
             desc: `${name} is integrated across Tanvir's engineering workflow for building, testing, and shipping reliable software & ML pipelines.`,
-            projects: matchingCards.length > 0 ? matchingCards : ['DSA House', 'MangoCare AI', 'Breast Lesion AI']
+            projects: matchingCards.length > 0 ? matchingCards : ['AtlasRec', 'Scopewise', 'MangoCare AI', 'Breast Lesion AI']
         };
 
         smName.textContent = name;
@@ -3076,14 +3228,7 @@ if (skillChips.length > 0 && smName && smProjects) {
 
         smProjects.querySelectorAll('.skill-proj-pill').forEach(btn => {
             btn.addEventListener('click', () => {
-                const targetTitle = btn.dataset.projJump;
-                const targetCard = Array.from(document.querySelectorAll('.project-card')).find(
-                    c => c.querySelector('.p-title')?.textContent?.trim() === targetTitle
-                );
-                if (targetCard) {
-                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(() => targetCard.click(), 420);
-                }
+                openProjectCardByTitle(btn.dataset.projJump);
             });
         });
     };
@@ -3903,14 +4048,7 @@ if (jdPresetBtns.length > 0 && jdMatchedSkills && jdMatchedProjects) {
 
         jdMatchedProjects.querySelectorAll('[data-jd-proj]').forEach(btn => {
             btn.addEventListener('click', () => {
-                const targetTitle = btn.dataset.jdProj;
-                const card = Array.from(document.querySelectorAll('.project-card')).find(
-                    c => c.querySelector('.p-title')?.textContent?.trim() === targetTitle
-                );
-                if (card) {
-                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(() => card.click(), 420);
-                }
+                openProjectCardByTitle(btn.dataset.jdProj);
             });
         });
     };
@@ -3988,18 +4126,20 @@ const cmdkList = document.getElementById('cmdk-list');
 if (cmdkModal && cmdkInput && cmdkList) {
     const COMMAND_ITEMS = [
         { label: 'Start 60-Second Guided Recruiter Tour', tag: 'Autopilot', icon: 'fas fa-play-circle', action: () => document.getElementById('autopilot-tour-btn')?.click() },
+        { label: 'Explore Forward Deployed 0-to-1 Execution Playbook', tag: 'FDE Playbook', icon: 'fas fa-compass-drafting', action: () => document.getElementById('fde-playbook')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'Launch Forward Deployed AI & Systems Lab (RAG / API / ROI)', tag: 'FDE Lab', icon: 'fas fa-network-wired', action: () => document.getElementById('fde-systems-lab')?.scrollIntoView({ behavior: 'smooth' }) },
         { label: 'Analyze Job Description (JD) Role-Fit %', tag: 'AI Matcher', icon: 'fas fa-wand-magic-sparkles', action: () => document.getElementById('jd-matcher')?.scrollIntoView({ behavior: 'smooth' }) },
         { label: 'Inspect Explainable AI (XAI) Grad-CAM Slider', tag: 'Medical AI', icon: 'fas fa-eye', action: () => document.getElementById('xai-lab')?.scrollIntoView({ behavior: 'smooth' }) },
         { label: 'Simulate 50,000 RPS MLOps Auto-Scaling', tag: 'System Design', icon: 'fas fa-gauge-high', action: () => document.getElementById('mlops-scaler')?.scrollIntoView({ behavior: 'smooth' }) },
         { label: 'Run Live Code & API Terminal Emulator', tag: 'Terminal', icon: 'fas fa-terminal', action: () => document.getElementById('terminal-lab')?.scrollIntoView({ behavior: 'smooth' }) },
         { label: 'Generate 1-Page AI / ML Tailored Resume PDF', tag: 'PDF Export', icon: 'fas fa-file-pdf', action: () => generateTailoredCvPdf(ROLE_PRESETS.google_ml) },
-        { label: 'Generate 1-Page Full-Stack Tailored Resume PDF', tag: 'PDF Export', icon: 'fas fa-file-code', action: () => generateTailoredCvPdf(ROLE_PRESETS.fullstack) },
+        { label: 'Generate 1-Page Forward Deployed Engineer Tailored Resume PDF', tag: 'PDF Export', icon: 'fas fa-file-code', action: () => generateTailoredCvPdf(ROLE_PRESETS.fullstack) },
         { label: 'Book 15-Minute Google Calendar Intro Call', tag: 'Meeting', icon: 'fas fa-calendar-check', action: () => document.getElementById('open-calendar-modal')?.click() },
         { label: 'Copy Email (ruhittanvir14@gmail.com)', tag: 'Clipboard', icon: 'fas fa-copy', action: () => document.getElementById('copy-email-btn')?.click() },
         { label: 'Toggle Dark / Light Luxury Mode', tag: 'Appearance', icon: 'fas fa-moon', action: () => document.getElementById('mode-toggle')?.click() }
     ];
 
-    // Also index all 18 projects into Command Palette
+    // Also index all 24 projects into Command Palette
     document.querySelectorAll('.project-card').forEach(card => {
         const title = card.querySelector('.p-title')?.textContent?.trim();
         if (title) {
@@ -4007,10 +4147,7 @@ if (cmdkModal && cmdkInput && cmdkList) {
                 label: `Open Project: ${title}`,
                 tag: 'Project Sandbox',
                 icon: 'fas fa-cube',
-                action: () => {
-                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(() => card.click(), 380);
-                }
+                action: () => openProjectCardByTitle(title)
             });
         }
     });
@@ -4096,10 +4233,10 @@ const apStopBtn = document.getElementById('ap-stop-btn');
 
 if (apStartBtn && apHud) {
     const TOUR_STOPS = [
-        { sel: '#xai-lab', title: '1. Explainable AI & Medical Research', desc: '91.0% Dice breast ultrasound segmentation with interactive Grad-CAM attention & mathematical calibration.' },
-        { sel: '#work', title: '2. 18 Shipped Projects with Live Sandboxes', desc: 'Every project features Problem → Approach → Result, 5-metric telemetry, SVG data-flow, and downloadable PDF case studies.' },
-        { sel: '#terminal-lab', title: '3. Live Code & API Terminal Emulator', desc: 'Inspect production PyTorch DenseNet-121, U-Net ResNet-50, and NestJS RBAC guards with live endpoint execution.' },
-        { sel: '#mlops-scaler', title: '4. MLOps & System Scaling Simulator', desc: 'Interactive system design scaling from single-container CPU inference to 50,000 RPS Kubernetes TensorRT clusters.' },
+        { sel: '#fde-playbook', title: '1. Forward Deployed 0-to-1 Execution Playbook', desc: 'Interactive 4-stage delivery model and messy-problem-to-deployed-solution case transformations.' },
+        { sel: '#fde-systems-lab', title: '2. Forward Deployed AI & Systems Lab', desc: 'Live RAG/FAISS pipeline tracer, OpenAPI contract playground, operational ROI calculator, and security checklist.' },
+        { sel: '#xai-lab', title: '3. Explainable AI & Medical Research', desc: '91.0% Dice breast ultrasound segmentation with interactive Grad-CAM attention & mathematical calibration.' },
+        { sel: '#work', title: '4. 24 Shipped Projects with Live Sandboxes', desc: 'Every project features Problem → Approach → Result, 5-metric telemetry, SVG data-flow, and downloadable PDF case studies.' },
         { sel: '#jd-matcher', title: '5. AI Job Description Matcher & Fast-Track', desc: 'Compute instant role-fit percentage, generate a 1-page tailored CV, or book a 15-minute intro call in one click.' }
     ];
 
@@ -4154,15 +4291,19 @@ if (apStartBtn && apHud) {
    6 FORWARD DEPLOYED ENGINEER (FDE) & AI ENGINEER INTERACTIVE MODULES
    ========================================================================== */
 
-const openProjectCardByTitle = (targetTitle) => {
+function openProjectCardByTitle(targetTitle) {
     const card = Array.from(document.querySelectorAll('.project-card')).find(
         c => c.querySelector('.p-title')?.textContent?.trim() === targetTitle
     );
     if (card) {
+        if (card.classList.contains('is-hidden') && typeof window.__applyProjectFilter === 'function') {
+            window.__applyProjectFilter('all');
+        }
+        card.classList.remove('is-hidden');
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(() => card.click(), 420);
     }
-};
+}
 
 /* --- MODULE 1: FORWARD DEPLOYED 0-TO-1 EXECUTION PLAYBOOK --- */
 const fdeStageCards = document.querySelectorAll('[data-fde-stage]');
@@ -4615,13 +4756,47 @@ const roiKpiHours = document.getElementById('roi-kpi-hours');
 const roiKpiSpeed = document.getElementById('roi-kpi-speed');
 const roiKpiAcc = document.getElementById('roi-kpi-acc');
 const roiKpiSla = document.getElementById('roi-kpi-sla');
+const roiNoteHours = document.getElementById('roi-note-hours');
+const roiNoteSpeed = document.getElementById('roi-note-speed');
+const roiNoteAcc = document.getElementById('roi-note-acc');
+const roiNoteSla = document.getElementById('roi-note-sla');
 
 const ROI_DOMAIN_SPECS = {
-    all: { hoursPer1k: 12.4, speed: '42× Faster', acc: '+7.0 pp / 95.4%', sla: '99.9% Automated' },
-    recsys: { hoursPer1k: 9.8, speed: '18.4 ms p95', acc: '6-Model Hybrid', sla: '20,500+ SKUs Indexed' },
-    agency: { hoursPer1k: 15.2, speed: '38× Faster', acc: '0% Cost Drift', sla: '100% Scope Traceability' },
-    vision: { hoursPer1k: 14.0, speed: '14.2 ms / frame', acc: '91% Dice · 96.4% Acc', sla: 'Grad-CAM XAI Verified' },
-    scraper: { hoursPer1k: 18.6, speed: '85%+ Time Cut', acc: '100% Deduplicated', sla: 'Automated XLSX Pipeline' }
+    all: {
+        hoursPer1k: 12.4, speed: '42× Faster', acc: '+7.0 pp / 95.4%', sla: '99.9% Automated',
+        nHours: 'Replaces manual portal scraping, scope costing & visual screening',
+        nSpeed: '14.2ms CNN / 18.4ms FAISS vs. legacy SQL & manual workflows',
+        nAcc: '91% Ultrasound Dice (+7pp over baseline) & calibrated ensembles',
+        nSla: 'Playwright E2E verified + zero-float-drift ACID PostgreSQL ledgers'
+    },
+    recsys: {
+        hoursPer1k: 9.8, speed: '18.4 ms p95', acc: '6-Model Hybrid', sla: '20,500+ SKUs Indexed',
+        nHours: 'Automated catalog tagging, cold-start ranking & counterfactual search',
+        nSpeed: 'FAISS ANN vector retrieval across 250 Amazon departments',
+        nAcc: '4-pillar Match DNA X-Ray explainability & taste steering',
+        nSla: 'Argon2id + CSRF + RBAC + Playwright E2E verified on HF Spaces'
+    },
+    agency: {
+        hoursPer1k: 15.2, speed: '38× Faster', acc: '0% Cost Drift', sla: '100% Scope Traceability',
+        nHours: 'Eliminates manual change-request costing & sprint spreadsheet sync',
+        nSpeed: 'Deterministic Node 24 Serverless scope-impact rule evaluation',
+        nAcc: 'Every scope change linked to backlog tasks & acceptance criteria',
+        nSla: 'Multi-agency tenant isolation on Neon Serverless PostgreSQL'
+    },
+    vision: {
+        hoursPer1k: 14.0, speed: '14.2 ms / frame', acc: '91% Dice · 96.4% Acc', sla: 'Grad-CAM XAI Verified',
+        nHours: 'Accelerates clinical radiograph triage & agricultural pathology screening',
+        nSpeed: 'Fine-tuned YOLOv8, DenseNet-121 & U-Net + ResNet-50 inference',
+        nAcc: '+7.0pp Dice gain over baseline CNN on speckled ultrasound scans',
+        nSla: 'Dockerized Flask + Gunicorn REST APIs with spatial heatmaps'
+    },
+    scraper: {
+        hoursPer1k: 18.6, speed: '85%+ Time Cut', acc: '99.2% Parse Acc', sla: 'Automated XLSX Pipeline',
+        nHours: 'Replaces daily manual checking across 4 defence procurement portals',
+        nSpeed: 'Hybrid Django 4.2 + headless Selenium + BeautifulSoup extraction',
+        nAcc: 'Deduplicated tender notices with automated attachment downloads',
+        nSla: 'One-click structured OpenPyXL workbook generation'
+    }
 };
 
 let activeRoiDom = 'all';
@@ -4634,6 +4809,10 @@ const updateRoiCalculator = () => {
     if (roiKpiSpeed) roiKpiSpeed.textContent = spec.speed;
     if (roiKpiAcc) roiKpiAcc.textContent = spec.acc;
     if (roiKpiSla) roiKpiSla.textContent = spec.sla;
+    if (roiNoteHours) roiNoteHours.textContent = spec.nHours;
+    if (roiNoteSpeed) roiNoteSpeed.textContent = spec.nSpeed;
+    if (roiNoteAcc) roiNoteAcc.textContent = spec.nAcc;
+    if (roiNoteSla) roiNoteSla.textContent = spec.nSla;
 };
 
 if (roiPills.length > 0) {
@@ -4663,6 +4842,15 @@ if (secFilters.length > 0 && secCards.length > 0) {
                 const match = cat === 'all' || card.dataset.secItem === cat;
                 card.style.display = match ? '' : 'none';
             });
+            playSound('click');
+        });
+    });
+
+    document.querySelectorAll('.fde-sec-projs span').forEach(badge => {
+        badge.style.cursor = 'pointer';
+        badge.title = `Click to inspect ${badge.textContent.trim()}`;
+        badge.addEventListener('click', () => {
+            openProjectCardByTitle(badge.textContent.trim());
             playSound('click');
         });
     });

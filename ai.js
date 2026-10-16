@@ -90,9 +90,9 @@ function buildKnowledgeBase() {
     document.querySelectorAll('.project-card').forEach(card => {
         const title = card.querySelector('.p-title')?.textContent;
         const cat = card.querySelector('.p-cat')?.textContent;
-        const desc = card.querySelector('.p-desc')?.textContent;
+        const desc = card.querySelector('.p-desc, .p-par-list')?.textContent || '';
         const tags = [...card.querySelectorAll('.p-tags span')].map(s => s.textContent).join(', ');
-        const metrics = [...card.querySelectorAll('.p-metrics li')]
+        const metrics = [...card.querySelectorAll('.p-metrics li, .p-eng-metrics li')]
             .map(li => clean(li.textContent)).join('; ');
         const link = card.querySelector('.p-link')?.getAttribute('href');
         const domain = DOMAIN_TEXT[card.dataset.domain] || '';
@@ -122,8 +122,14 @@ function buildKnowledgeBase() {
         push(c.querySelector('.a-card-title')?.textContent, c.textContent, '#research', 'research');
     });
 
+    const fdePlaybook = document.getElementById('fde-playbook');
+    if (fdePlaybook) push('Forward Deployed Engineering Playbook', fdePlaybook.textContent.slice(0, 800), '#fde-playbook', 'about');
+
+    const fdeLab = document.getElementById('fde-systems-lab');
+    if (fdeLab) push('Forward Deployed AI & Systems Lab (RAG, FAISS, API Contracts, ROI, Security)', fdeLab.textContent.slice(0, 800), '#fde-systems-lab', 'about');
+
     const about = document.querySelector('.about-content-detailed');
-    if (about) push('About Md Tanvir Islam', about.textContent.slice(0, 700), '#about', 'about');
+    if (about) push('About Md Tanvir Islam — Forward Deployed Engineer & AI Engineer', about.textContent.slice(0, 700), '#about', 'about');
 
     const contact = document.querySelector('.contact-left');
     if (contact) push('Contact', contact.textContent, '#contact', 'contact');
@@ -188,7 +194,7 @@ export async function rankProjects(query, onProgress) {
             [DOMAIN_TEXT[c.dataset.domain] || '',
              c.querySelector('.p-title')?.textContent,
              c.querySelector('.p-cat')?.textContent,
-             c.querySelector('.p-desc')?.textContent,
+             c.querySelector('.p-desc, .p-par-list')?.textContent || '',
              [...c.querySelectorAll('.p-tags span')].map(s => s.textContent).join(' ')].join('. ')));
         const out = await extractor(texts, { pooling: 'mean', normalize: true });
         cardVectors = out.tolist();
