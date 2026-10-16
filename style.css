@@ -4377,8 +4377,7 @@ html.preloader-skip #preloader {
     align-items: center;
     padding: 4px 8px;
     border-radius: 999px;
-    background: rgba(9, 10, 15, 0.55);
-    backdrop-filter: blur(6px);
+    background: rgba(9, 10, 15, 0.72);
 }
 
 .p-preview-dots span {
@@ -4399,10 +4398,9 @@ html.preloader-skip #preloader {
     letter-spacing: 0.08em;
     padding: 3px 9px;
     border-radius: 999px;
-    background: rgba(9, 10, 15, 0.72);
+    background: rgba(9, 10, 15, 0.82);
     border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 45%, rgba(255, 255, 255, 0.18));
     color: #f8fafc;
-    backdrop-filter: blur(8px);
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -4480,9 +4478,8 @@ html.preloader-skip #preloader {
     width: 36px;
     height: 36px;
     border-radius: 11px;
-    background: rgba(9, 10, 15, 0.72);
+    background: rgba(9, 10, 15, 0.84);
     border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 50%, rgba(255, 255, 255, 0.2));
-    backdrop-filter: blur(10px);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4497,10 +4494,9 @@ html.preloader-skip #preloader {
     font-weight: 700;
     padding: 4px 10px;
     border-radius: 9px;
-    background: rgba(9, 10, 15, 0.75);
+    background: rgba(9, 10, 15, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.16);
     color: #f8fafc;
-    backdrop-filter: blur(10px);
 }
 
 .project-card .p-title {

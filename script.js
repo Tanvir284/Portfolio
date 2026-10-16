@@ -153,35 +153,30 @@ if (progressBar) {
     updateProgress();
 }
 
-// Cursor Logic (Elite Version)
+// Cursor Logic (Elite Version — zero-allocation quickTo)
 const cursorOuter = document.querySelector('.cursor-outer');
 const cursorInner = document.querySelector('.cursor-inner');
 let mouseX = 0, mouseY = 0;
 
-if (cursorOuter && cursorInner) window.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+if (cursorOuter && cursorInner && window.matchMedia('(pointer: fine)').matches) {
+    const xOuter = typeof gsap !== 'undefined' && gsap.quickTo ? gsap.quickTo(cursorOuter, 'x', { duration: 0.15, ease: 'power2.out' }) : null;
+    const yOuter = typeof gsap !== 'undefined' && gsap.quickTo ? gsap.quickTo(cursorOuter, 'y', { duration: 0.15, ease: 'power2.out' }) : null;
+    const xInner = typeof gsap !== 'undefined' && gsap.quickSetter ? gsap.quickSetter(cursorInner, 'x', 'px') : null;
+    const yInner = typeof gsap !== 'undefined' && gsap.quickSetter ? gsap.quickSetter(cursorInner, 'y', 'px') : null;
 
-    // Smooth trailing for outer
-    gsap.to(cursorOuter, {
-        x: mouseX,
-        y: mouseY,
-        duration: 0.15,
-        ease: "power2.out"
-    });
-
-    // Instant for inner
-    gsap.set(cursorInner, {
-        x: mouseX,
-        y: mouseY
-    });
-});
+    window.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (xOuter && yOuter) { xOuter(mouseX); yOuter(mouseY); }
+        if (xInner && yInner) { xInner(mouseX); yInner(mouseY); }
+    }, { passive: true });
+}
 
 // Cursor Hover States
 const hoverElements = document.querySelectorAll('a, button, .project-card, .menu-toggle, .social-btn');
 if (cursorOuter) hoverElements.forEach(el => {
-    el.addEventListener('mouseenter', () => cursorOuter.classList.add('hover'));
-    el.addEventListener('mouseleave', () => cursorOuter.classList.remove('hover'));
+    el.addEventListener('mouseenter', () => cursorOuter.classList.add('hover'), { passive: true });
+    el.addEventListener('mouseleave', () => cursorOuter.classList.remove('hover'), { passive: true });
 });
 
 // Circle Text
@@ -215,14 +210,14 @@ function initThreeJS() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 15;
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
 
     // Create Particle Sphere
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 2000;
+    const particlesCount = 1600;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i += 3) {
@@ -262,10 +257,10 @@ function initThreeJS() {
 
     syncThreeColors();
 
-    window.addEventListener('resize', onWindowResize);
+    window.addEventListener('resize', onWindowResize, { passive: true });
 
     // Mouse Interaction
-    document.addEventListener('mousemove', onDocumentMouseMove);
+    document.addEventListener('mousemove', onDocumentMouseMove, { passive: true });
 
     animateThreeJS();
 }
@@ -296,24 +291,21 @@ function animateThreeJS() {
 
     requestAnimationFrame(animateThreeJS);
 
+    if (document.hidden) return;
+
     const elapsedTime = clock.getElapsedTime();
 
-    // Base Rotation
-    particlesMesh.rotation.y = elapsedTime * 0.1;
+    // Zero-allocation smooth damping (replaces per-frame gsap.to leak)
+    const targetX = mouseY3D * 0.5;
+    const targetY = mouseX3D * 0.5 + (elapsedTime * 0.1);
+    particlesMesh.rotation.x += (targetX - particlesMesh.rotation.x) * 0.06;
+    particlesMesh.rotation.y += (targetY - particlesMesh.rotation.y) * 0.06;
     particlesMesh.rotation.z = elapsedTime * 0.05;
 
     if (coreMesh) {
         coreMesh.rotation.y = -elapsedTime * 0.07;
         coreMesh.rotation.x = elapsedTime * 0.04;
     }
-
-    // Mouse Interaction Parallax
-    gsap.to(particlesMesh.rotation, {
-        x: mouseY3D * 0.5,
-        y: mouseX3D * 0.5 + (elapsedTime * 0.1),
-        duration: 2,
-        ease: "power2.out"
-    });
 
     renderer.render(scene, camera);
 }
@@ -337,6 +329,18 @@ let isDetecting = false;
 let lastFrameTime = 0; // used by TF.js webcam detection
 let camStream = null;  // kept so the camera can actually be released
 
+function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+    });
+}
+
 async function loadModel() {
     if (!startCamBtn || !loaderCam) return;
     if (model) {
@@ -344,15 +348,14 @@ async function loadModel() {
         startWebcam();
         return;
     }
-    if (typeof cocoSsd === 'undefined') {
-        loaderCam.innerHTML = `<i class="fas fa-exclamation-triangle"></i> MODEL LIBRARY UNAVAILABLE`;
-        loaderCam.style.display = 'block';
-        return;
-    }
     startCamBtn.style.display = 'none';
     loaderCam.style.display = 'block';
 
     try {
+        if (typeof cocoSsd === 'undefined') {
+            await loadScriptOnce('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs');
+            await loadScriptOnce('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd');
+        }
         // Load the model.
         model = await cocoSsd.load();
         loaderCam.style.display = 'none';
@@ -787,30 +790,38 @@ if (!prefersReducedMotion) window.addEventListener('load', () => {
     });
 });
 
-/* --- 3D TILT & BENTO SPOTLIGHT FOR CARDS --- */
+/* --- 3D TILT & BENTO SPOTLIGHT FOR CARDS (rAF-throttled) --- */
 document.querySelectorAll('.project-card, .a-card, .cred-card, .stat-cell, .gh-card').forEach(card => {
+    let rafId = 0;
     card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        if (rafId) return;
+        const cx = e.clientX;
+        const cy = e.clientY;
+        rafId = requestAnimationFrame(() => {
+            rafId = 0;
+            const rect = card.getBoundingClientRect();
+            const x = cx - rect.left;
+            const y = cy - rect.top;
 
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
 
-        if (!prefersReducedMotion && card.classList.contains('project-card')) {
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -5;
-            const rotateY = ((x - centerX) / centerX) * 5;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
-        }
-    });
+            if (!prefersReducedMotion && card.classList.contains('project-card')) {
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -4;
+                const rotateY = ((x - centerX) / centerX) * 4;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+            }
+        });
+    }, { passive: true });
 
     card.addEventListener('mouseleave', () => {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
         if (card.classList.contains('project-card')) {
             card.style.transform = '';
         }
-    });
+    }, { passive: true });
 });
 
 if (!prefersReducedMotion) {
@@ -1406,9 +1417,9 @@ const startPreloader = () => {
     // Disable scrolling while loading
     document.body.style.overflow = 'hidden';
 
-    // Simulate loading
+    // Fast, responsive preloader (~0.35s total instead of ~2.8s)
     const loadInterval = setInterval(() => {
-        percentage += Math.floor(Math.random() * 5) + 1; // Random increment
+        percentage += Math.floor(Math.random() * 18) + 14;
 
         if (percentage > 100) percentage = 100;
 
@@ -1417,13 +1428,12 @@ const startPreloader = () => {
         if (percentage === 100) {
             clearInterval(loadInterval);
 
-            // Wait a bit at 100% then slide out
             setTimeout(() => {
                 preloader.classList.add('loaded');
                 document.body.style.overflow = ''; // Re-enable scrolling
-            }, 800);
+            }, 150);
         }
-    }, 50); // Speed of loading
+    }, 20);
 };
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
