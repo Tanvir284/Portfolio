@@ -75,6 +75,15 @@ if (cursorOuter && cursorInner && typeof gsap !== 'undefined') {
     });
 }
 
+/* --- Bento card spotlight on subpages --- */
+document.querySelectorAll('.project-card, .a-card, .cred-card, .stat-cell, .gh-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    });
+});
+
 /* --- Scroll progress --- */
 const progressBar = document.getElementById('progressBar');
 if (progressBar) {

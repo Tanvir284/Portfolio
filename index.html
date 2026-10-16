@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=55">
+    <link rel="stylesheet" href="style.css?v=56">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -278,17 +278,14 @@
 
     <section id="home" class="hero">
         <div class="hero-content">
-            <div>
+            <div class="hero-copy">
                 <div class="tagline">AVAILABLE FOR WORK</div>
-                <h1 class="magnetic-name" style="font-size: 3.5rem; line-height: 1.2; margin-bottom: 10px;">
-                    Hi, I'm <span style="color:var(--primary)">Md Tanvir Islam</span>
+                <h1 class="magnetic-name">
+                    Hi, I'm <span class="grad-accent">Md Tanvir Islam</span>
                 </h1>
-                <h2 style="font-size: 1.8rem; color: var(--text-gray); margin-bottom: 20px; font-weight: 400;">AI
-                    Architect &
-                    Software Engineer</h2>
+                <h2 class="hero-subtitle">AI Architect &amp; Software Engineer</h2>
 
-                <p class="hero-desc"
-                    style="max-width: 500px; color: var(--text-gray); margin: 20px 0; line-height: 1.6;">
+                <p class="hero-desc">
                     I engineer robust AI systems and scalable web applications, bridging the gap between theoretical
                     AI models and production-ready software solutions.
                 </p>
@@ -298,9 +295,9 @@
                     <li><span class="hp-val">4</span><span class="hp-key">live deployments</span></li>
                 </ul>
 
-                <div style="margin-top: 32px;">
-                    <a href="#work" class="btn btn-primary" data-magnetic>VIEW PROJECTS</a>
-
+                <div class="hero-actions">
+                    <a href="#work" class="btn btn-primary" data-magnetic>VIEW PROJECTS <i class="fas fa-arrow-right" style="margin-left: 8px; font-size: 0.8em;" aria-hidden="true"></i></a>
+                    <a href="#ai-demo" class="btn btn-outline" data-magnetic><i class="fas fa-bolt" style="margin-right: 8px; color: var(--primary);" aria-hidden="true"></i> LIVE AI LAB</a>
                 </div>
             </div>
 
@@ -1254,7 +1251,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=38"></script>
+    <script src="script.js?v=39"></script>
     <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 

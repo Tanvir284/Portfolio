@@ -787,27 +787,33 @@ if (!prefersReducedMotion) window.addEventListener('load', () => {
     });
 });
 
-/* --- 3D TILT EFFECT FOR CARDS --- */
-if (!prefersReducedMotion) {
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+/* --- 3D TILT & BENTO SPOTLIGHT FOR CARDS --- */
+document.querySelectorAll('.project-card, .a-card, .cred-card, .stat-cell, .gh-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+
+        if (!prefersReducedMotion && card.classList.contains('project-card')) {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-
-            const rotateX = ((y - centerY) / centerY) * -6;
-            const rotateY = ((x - centerX) / centerX) * 6;
-
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-        });
+            const rotateX = ((y - centerY) / centerY) * -5;
+            const rotateY = ((x - centerX) / centerX) * 5;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        }
     });
+
+    card.addEventListener('mouseleave', () => {
+        if (card.classList.contains('project-card')) {
+            card.style.transform = '';
+        }
+    });
+});
+
+if (!prefersReducedMotion) {
 
     /* --- MAGNETIC BUTTONS --- */
     document.querySelectorAll('[data-magnetic]').forEach(btn => {
