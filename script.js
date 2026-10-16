@@ -102,16 +102,29 @@ document.querySelectorAll('.nav-items a, a[href^="#"]').forEach(link => {
     });
 });
 
-// Scroll Progress
+// Scroll Progress (rAF-throttled & cached height to avoid layout reflow during scroll)
 const progressBar = document.getElementById("progressBar");
 if (progressBar) {
+    let maxScrollHeight = 1;
+    let progressTicking = false;
+    const recalcScrollHeight = () => {
+        maxScrollHeight = Math.max(1, document.documentElement.scrollHeight - document.documentElement.clientHeight);
+    };
     const updateProgress = () => {
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        progressTicking = false;
+        const winScroll = window.scrollY || document.documentElement.scrollTop || 0;
+        const scrolled = Math.min(100, Math.max(0, (winScroll / maxScrollHeight) * 100));
         progressBar.style.width = scrolled + "%";
     };
-    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', recalcScrollHeight, { passive: true });
+    window.addEventListener('load', recalcScrollHeight, { passive: true });
+    recalcScrollHeight();
+    window.addEventListener('scroll', () => {
+        if (!progressTicking) {
+            progressTicking = true;
+            requestAnimationFrame(updateProgress);
+        }
+    }, { passive: true });
     updateProgress();
 }
 
@@ -154,9 +167,10 @@ if (circleText) {
 /* --- PHOTOREALISTIC NASA 3D SOLAR SYSTEM & GALAXY SPACE TOUR (THREE.JS) --- */
 const container = document.getElementById('webgl-container');
 let scene, camera, renderer, particlesMesh, coreMesh, milkyWaySkyMesh;
-let farGeo, nearGeo, farCount = 1600, nearCount = 340;
+let farGeo, nearGeo, farCount = 1400, nearCount = 300;
 let shootingStars = [];
 let warpSpeed = 0;
+let targetWarpSpeed = 0;
 let lastScrollYSpace = window.scrollY || 0;
 
 // Space Tour State & Objects (Real NASA Maps for Saturn, Mars, Sun, Moon, Mercury, Venus, Jupiter, Uranus, Neptune & Hubble Galaxies; Earth excluded!)
@@ -219,6 +233,9 @@ function loadSpaceTex(url) {
     if (texCacheSpace[url]) return texCacheSpace[url];
     if (!texLoaderSpace) texLoaderSpace = new THREE.TextureLoader();
     const t = texLoaderSpace.load(url);
+    t.generateMipmaps = false;
+    t.minFilter = THREE.LinearFilter;
+    t.magFilter = THREE.LinearFilter;
     texCacheSpace[url] = t;
     return t;
 }
@@ -554,9 +571,9 @@ function initThreeJS() {
     camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 160);
     camera.position.z = 14;
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.35));
+    renderer.setPixelRatio(1);
     container.appendChild(renderer.domElement);
 
     const starSprite = makeStarSprite();
@@ -570,7 +587,7 @@ function initThreeJS() {
     scene.add(sunLight);
 
     // Layer 0: Real Astrophotography Milky Way Panorama Sky Sphere
-    const skyGeo = new THREE.SphereGeometry(135, 32, 32);
+    const skyGeo = new THREE.SphereGeometry(135, 28, 28);
     const skyMat = new THREE.MeshBasicMaterial({
         map: loadSpaceTex('assets/space/milkyway_sky.webp'),
         side: THREE.BackSide,
@@ -662,6 +679,8 @@ function initThreeJS() {
     }
 
     syncThreeColors();
+    // Pre-compile all shaders up front so scrolling never triggers a shader compile pause
+    if (renderer.compile) renderer.compile(scene, camera);
 
     window.addEventListener('resize', onWindowResize, { passive: true });
     document.addEventListener('mousemove', onDocumentMouseMove, { passive: true });
@@ -669,7 +688,7 @@ function initThreeJS() {
         const cur = window.scrollY || 0;
         const delta = Math.abs(cur - lastScrollYSpace);
         lastScrollYSpace = cur;
-        warpSpeed = Math.min(0.65, warpSpeed + delta * 0.0024);
+        targetWarpSpeed = Math.min(0.24, targetWarpSpeed + Math.min(delta, 100) * 0.0005);
     }, { passive: true });
 
     animateThreeJS();
@@ -702,13 +721,14 @@ function animateThreeJS() {
     if (document.hidden) return;
 
     const elapsedTime = clock.getElapsedTime();
-    const dt = Math.min(0.05, elapsedTime - prevTimeSpace || 0.016);
+    const dt = Math.min(0.033, elapsedTime - prevTimeSpace || 0.016);
     prevTimeSpace = elapsedTime;
 
-    // Decay scroll warp speed smoothly
-    warpSpeed *= 0.92;
-    const stepFar = (0.020 + warpSpeed * 0.65);
-    const stepNear = (0.038 + warpSpeed * 1.15);
+    // Smoothly filter scroll warp speed (no jerky jumps on wheel ticks)
+    targetWarpSpeed *= 0.90;
+    warpSpeed += (targetWarpSpeed - warpSpeed) * 0.08;
+    const stepFar = (0.020 + warpSpeed * 0.28);
+    const stepNear = (0.038 + warpSpeed * 0.48);
 
     // Slowly rotate the Milky Way panorama sky
     if (milkyWaySkyMesh) {
@@ -737,8 +757,8 @@ function animateThreeJS() {
         bgGalaxies[g].points.rotation.y = elapsedTime * 0.04;
     }
 
-    // Advance the Photorealistic 3D Solar System & Galaxy Space Tour!
-    const tourStep = (3.6 + warpSpeed * 32.0) * dt;
+    // Advance the Photorealistic 3D Solar System & Galaxy Space Tour smoothly!
+    const tourStep = (3.6 + warpSpeed * 7.5) * dt;
     const isMobile = window.innerWidth < 768;
     const lateralScale = isMobile ? 0.52 : (window.innerWidth < 1100 ? 0.78 : 1.0);
     const bodyScale = isMobile ? 0.68 : (window.innerWidth < 1100 ? 0.85 : 1.0);
@@ -751,11 +771,11 @@ function animateThreeJS() {
             b.zPos -= TOTAL_TRACK_LEN;
         }
 
-        if (b.zPos < -115 || b.zPos > 19) {
-            b.group.visible = false;
+        // Park far-queue planets behind camera far plane (-180) instead of toggling visible=false
+        if (b.zPos < -115) {
+            b.group.position.set(0, 0, -180);
             continue;
         }
-        b.group.visible = true;
 
         // Curved spacecraft flyby trajectory
         const approachNorm = Math.max(0, Math.min(1, (b.zPos + 105) / 120));
@@ -769,7 +789,7 @@ function animateThreeJS() {
 
         if (b.sphere) b.sphere.rotation.y = elapsedTime * (b.def.isSun ? 0.06 : 0.18);
         if (b.ring) b.ring.rotation.z = -elapsedTime * 0.05;
-        if (b.ringDust) b.ringDust.rotation.y = elapsedTime * (0.18 + warpSpeed * 0.4);
+        if (b.ringDust) b.ringDust.rotation.y = elapsedTime * (0.18 + warpSpeed * 0.25);
         if (b.moonPivot) b.moonPivot.rotation.y = elapsedTime * 0.36;
         if (b.galaxyObj) {
             b.galaxyObj.disc.rotation.z = -elapsedTime * 0.10;
@@ -1210,72 +1230,7 @@ if (chatbotToggle && chatbotWindow) {
     });
 }
 
-/* --- GSAP SCROLL ANIMATIONS --- */
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !prefersReducedMotion) {
-gsap.registerPlugin(ScrollTrigger);
-
-// Hero Parallax
-gsap.to('.hero-visual', {
-    yPercent: 30,
-    ease: "none",
-    scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-    }
-});
-
-// Fade Up Sections and Elements (transform only so elements never get stuck at opacity: 0)
-gsap.utils.toArray('.section-header').forEach(header => {
-    gsap.from(header, {
-        y: 28,
-        duration: 0.7,
-        ease: "power3.out",
-        clearProps: "transform",
-        scrollTrigger: {
-            trigger: header,
-            start: "top 92%",
-            once: true
-        }
-    });
-});
-
-// Staggered Cards (About, Research Domains, Work)
-gsap.utils.toArray(['.about-cards', '.project-grid', '.cred-grid']).forEach(container => {
-    const children = Array.from(container.children);
-    if (!children.length) return;
-    gsap.from(children, {
-        y: 24,
-        duration: 0.6,
-        stagger: 0.08,
-        ease: "power2.out",
-        clearProps: "transform",
-        scrollTrigger: {
-            trigger: container,
-            start: "top 92%",
-            once: true
-        }
-    });
-});
-
-// Timeline Items GSAP reveal
-gsap.utils.toArray('.timeline-item').forEach(item => {
-    gsap.from(item, {
-        x: -24,
-        duration: 0.6,
-        ease: "power3.out",
-        clearProps: "transform",
-        scrollTrigger: {
-            trigger: item,
-            start: "top 92%",
-            once: true
-        }
-    });
-});
-
-window.addEventListener('load', () => ScrollTrigger.refresh());
-} // end GSAP scroll animations
+/* --- GSAP SCROLL ANIMATIONS (Disabled heavy scrub/stagger on scroll to keep 120fps native scroll) --- */
 
 // Initial Page Load Animations
 if (!prefersReducedMotion) window.addEventListener('load', () => {

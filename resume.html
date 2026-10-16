@@ -306,6 +306,20 @@
                 text-decoration: none;
             }
         }
+
+        #webgl-container {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 1;
+        }
     </style>
     <script>
         /* Applied before first paint: set on <html> after the page has already
@@ -324,6 +338,7 @@
 </head>
 
 <body>
+    <div id="webgl-container" class="no-print"></div>
     <div class="wrap">
         <nav class="toolbar">
             <a href="index.html">&larr; BACK TO PORTFOLIO</a>
@@ -564,6 +579,8 @@
             });
         })();
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="subpage.js?v=40"></script>
 </body>
 
 </html>
