@@ -4149,3 +4149,522 @@ if (apStartBtn && apHud) {
 
     if (apStopBtn) apStopBtn.addEventListener('click', endTour);
 }
+
+/* ==========================================================================
+   6 FORWARD DEPLOYED ENGINEER (FDE) & AI ENGINEER INTERACTIVE MODULES
+   ========================================================================== */
+
+const openProjectCardByTitle = (targetTitle) => {
+    const card = Array.from(document.querySelectorAll('.project-card')).find(
+        c => c.querySelector('.p-title')?.textContent?.trim() === targetTitle
+    );
+    if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => card.click(), 420);
+    }
+};
+
+/* --- MODULE 1: FORWARD DEPLOYED 0-TO-1 EXECUTION PLAYBOOK --- */
+const fdeStageCards = document.querySelectorAll('[data-fde-stage]');
+const fdeDetailKicker = document.getElementById('fde-detail-kicker');
+const fdeDetailHeadline = document.getElementById('fde-detail-headline');
+const fdeDetailDesc = document.getElementById('fde-detail-desc');
+const fdeDeliverables = document.getElementById('fde-deliverables');
+const fdeDetailTools = document.getElementById('fde-detail-tools');
+const fdeDetailProjects = document.getElementById('fde-detail-projects');
+
+const FDE_STAGES_DATA = [
+    {
+        kicker: 'STAGE 01 // OPERATIONAL DISCOVERY & PROBLEM SCOPING (DAY 1–2)',
+        headline: 'Translating Messy Domain Bottlenecks into Defensible Engineering Specs',
+        desc: 'Before writing a single line of model code, I map the real operational workflow—identifying data leakage risks, acoustic/sensor artifacts, or agency scope-drift triggers, and defining hard target KPIs (Dice, RMSE, p95 latency, or cost variance).',
+        deliverables: [
+            'Domain Bottleneck & Failure-Mode Audit',
+            'Stratified Dataset Hygiene & CLAHE Pipeline',
+            'API Contract & Acceptance Criteria Spec'
+        ],
+        tools: 'Python · SQL · Pandas · OpenCV · OpenAPI Specs',
+        projects: ['Scopewise', 'Breast Lesion AI', 'AtlasRec', 'FinPilot BD']
+    },
+    {
+        kicker: 'STAGE 02 // AI / RAG / VISION PROTOTYPE & ABLATION (DAY 3–5)',
+        headline: 'Training, Ablating & Calibrating High-Signal Models Against Baselines',
+        desc: 'Rather than settling for the first model that converges, I run controlled ablations across encoder backbones (ResNet-50, DenseNet-121, YOLOv8), FAISS vector indices, and stacked gradient-boosted ensembles with temperature scaling.',
+        deliverables: [
+            'Baseline vs. Transfer-Learned Backbone Ablation',
+            'FAISS ANN Vector Indexing & Hybrid Reranking',
+            'Grad-CAM / SHAP / Match DNA Explainability'
+        ],
+        tools: 'PyTorch · TensorFlow · FAISS · YOLOv8 · XGBoost / LightGBM / CatBoost',
+        projects: ['AtlasRec', 'Breast Lesion AI', 'MangoCare AI', 'Pneumonia Classification']
+    },
+    {
+        kicker: 'STAGE 03 // FULL-STACK & API SYSTEM INTEGRATION (DAY 6–8)',
+        headline: 'Wrapping AI Pipelines in Strongly Typed, Secure Production Software',
+        desc: 'A notebook is not a product. I build the complete application layer—Next.js 15/16 & React 19 interfaces over FastAPI, NestJS 10, Flask, or Serverless Node backends backed by ACID PostgreSQL ledgers and Argon2id/JWT/RBAC security.',
+        deliverables: [
+            'Typed FastAPI / NestJS REST & Webhook Microservices',
+            'Argon2id + CSRF + Global O(1) JWT RBAC Guards',
+            'Interactive Next.js / React Operator Dashboards'
+        ],
+        tools: 'Next.js 16 · React 19 · TypeScript · FastAPI · NestJS 10 · PostgreSQL',
+        projects: ['AtlasRec', 'Scopewise', 'Ecommerce Admin Dashboard', 'DSA House']
+    },
+    {
+        kicker: 'STAGE 04 // DOCKER, PLAYWRIGHT E2E & LIVE SLA TELEMETRY (DAY 9+ LIVE)',
+        headline: 'Shipping Containerized Systems with Automated E2E Verification',
+        desc: 'Every critical path is verified with Playwright automated browser suites, packaged into reproducible multi-stage Docker images, and deployed live on Hugging Face Spaces, Vercel, or Netlify with p95 latency telemetry.',
+        deliverables: [
+            'Multi-Stage Docker & Pre-Warmed Model Containers',
+            'Playwright End-to-End Browser Verification Suites',
+            'Sub-20ms p95 Inference & Uptime Telemetry'
+        ],
+        tools: 'Docker · Playwright E2E · GitHub Actions · ONNX Runtime · Gunicorn',
+        projects: ['AtlasRec', 'Scopewise', 'MangoCare AI', 'FinPilot BD']
+    }
+];
+
+if (fdeStageCards.length > 0 && fdeDetailHeadline && fdeDetailProjects) {
+    const renderFdeStage = (idx) => {
+        const st = FDE_STAGES_DATA[idx] || FDE_STAGES_DATA[0];
+        fdeStageCards.forEach((c, i) => {
+            const active = i === idx;
+            c.classList.toggle('active', active);
+            c.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        if (fdeDetailKicker) fdeDetailKicker.innerHTML = `<i class="fas fa-satellite-dish" aria-hidden="true"></i> ${st.kicker}`;
+        fdeDetailHeadline.textContent = st.headline;
+        if (fdeDetailDesc) fdeDetailDesc.textContent = st.desc;
+        if (fdeDetailTools) fdeDetailTools.textContent = st.tools;
+        if (fdeDeliverables) {
+            fdeDeliverables.innerHTML = st.deliverables.map(d =>
+                `<span class="fde-deliv-pill"><i class="fas fa-check" aria-hidden="true"></i> ${d}</span>`
+            ).join('');
+        }
+        fdeDetailProjects.innerHTML = st.projects.map(p =>
+            `<button type="button" class="skill-proj-pill" data-fde-proj="${p}"><i class="fas fa-arrow-up-right-from-square"></i> ${p}</button>`
+        ).join('');
+        fdeDetailProjects.querySelectorAll('[data-fde-proj]').forEach(btn => {
+            btn.addEventListener('click', () => openProjectCardByTitle(btn.dataset.fdeProj));
+        });
+    };
+
+    fdeStageCards.forEach(card => {
+        card.addEventListener('click', () => {
+            renderFdeStage(Number(card.dataset.fdeStage) || 0);
+            playSound('click');
+        });
+    });
+    renderFdeStage(0);
+}
+
+/* --- MODULE 2: "MESSY PROBLEM -> DEPLOYED SOLUTION" DOMAIN SWITCHER --- */
+const fdeCaseTabs = document.querySelectorAll('[data-fde-case]');
+const fdeBaBeforeTitle = document.getElementById('fde-ba-before-title');
+const fdeBaBeforeList = document.getElementById('fde-ba-before-list');
+const fdeBaAfterTitle = document.getElementById('fde-ba-after-title');
+const fdeBaAfterList = document.getElementById('fde-ba-after-list');
+const fdeBaMetrics = document.getElementById('fde-ba-metrics');
+
+const FDE_CASES_DATA = {
+    atlasrec: {
+        beforeTitle: '20,500+ Unstructured Catalog SKUs & Opaque Cold-Start Recommendations',
+        beforeList: [
+            'Users faced generic popularity lists across 250 noisy Amazon product departments with zero explanation of why an item was shown.',
+            'Cold-start shoppers had no interactive way to steer price caps, brand affinity, or category weights in real time.',
+            'Single-algorithm recommenders failed whenever metadata was sparse or user intent shifted mid-session.'
+        ],
+        afterTitle: 'AtlasRec: 6-Model Hybrid Engine + FAISS Vector Search + Counterfactual Taste Studio',
+        afterList: [
+            'Engineered a FastAPI + Next.js 15 platform uniting 6 ML algorithms with sub-20ms FAISS approximate nearest-neighbor retrieval.',
+            'Shipped an interactive Counterfactual "What-If" Taste Studio and 4-pillar Match DNA X-Ray explainability breakdown.',
+            'Hardened with Argon2id password hashing, CSRF tokens, RBAC guards, Playwright E2E tests, and live Docker deployment on HF Spaces.'
+        ],
+        metrics: [
+            { v: '18.4 ms', k: 'FAISS Vector Query' },
+            { v: '20,500+', k: 'Indexed Catalog SKUs' },
+            { v: '6 Models', k: 'Hybrid + XAI Attribution' }
+        ]
+    },
+    scopewise: {
+        beforeTitle: 'Uncontrolled Agency Scope Creep, Unlinked Backlog Tasks & Cost Overruns',
+        beforeList: [
+            'Client change requests arrived over scattered messages without automated cost-impact rules or formal approval gates.',
+            'Engineers worked on tasks disconnected from signed acceptance criteria, causing billing disputes at sprint review.',
+            'Project managers lacked real-time visibility into hourly burn rates versus approved scope budgets.'
+        ],
+        afterTitle: 'Scopewise: Rule-Based Multi-Agency Scope & Delivery Workspace',
+        afterList: [
+            'Architected a Node 24 Serverless + Neon PostgreSQL workspace enforcing deterministic scope-change impact rules.',
+            'Linked every client requirement directly to backlog tasks, acceptance criteria, approval workflows, and live time-tracking.',
+            'Verified critical multi-agency user flows with automated Playwright E2E browser tests and deployed live on Netlify.'
+        ],
+        metrics: [
+            { v: '100%', k: 'Scope-to-Task Traceability' },
+            { v: 'ACID SQL', k: 'Neon Serverless Postgres' },
+            { v: 'E2E Tested', k: 'Playwright Suite Verified' }
+        ]
+    },
+    lesion: {
+        beforeTitle: 'High Acoustic Speckle Noise & Low-Contrast Boundaries in Breast Ultrasound',
+        beforeList: [
+            'Raw clinical B-mode ultrasound scans suffer from severe speckle artifacts and shadow dropout around lesion margins.',
+            'Standard vanilla CNNs over-segmented shadow regions, yielding an 84.0% baseline Dice score insufficient for clinical triage.',
+            'Clinicians lacked visual attention overlays to verify which pixel regions drove the malignant vs. benign prediction.'
+        ],
+        afterTitle: 'Transfer-Learned ResNet-50 Encoder + U-Net Decoder with Grad-CAM XAI',
+        afterList: [
+            'Combined ImageNet pre-trained ResNet-50 encoder stages with symmetrical U-Net skip connections and custom Dice + BCE loss.',
+            'Boosted lesion boundary segmentation to a 91.0% Dice coefficient (+7.0 percentage points above the baseline CNN).',
+            'Integrated Grad-CAM spatial attention overlays so radiologists can inspect boundary activation confidence directly.'
+        ],
+        metrics: [
+            { v: '91.0%', k: 'Dice Coefficient' },
+            { v: '+7.0 pp', k: 'Gain Over Baseline CNN' },
+            { v: '0.835 IoU', k: 'Boundary Overlap' }
+        ]
+    },
+    tender: {
+        beforeTitle: 'Hours of Repetitive Manual Checking Across Fragmented Procurement Portals',
+        beforeList: [
+            'Operations teams manually visited dozens of government and private tender portals daily to copy-paste bid deadlines.',
+            'Inconsistent HTML layouts and pagination caused missed procurement opportunities and formatting errors in spreadsheets.',
+            'Zero deduplication or automated filtering existed for category codes and submission windows.'
+        ],
+        afterTitle: 'Automated Django + Selenium Multi-Portal Tender Ingestion & Excel Engine',
+        afterList: [
+            'Built a headless Selenium + Django automation pipeline that scrapes, normalizes, and deduplicates multi-portal tender notices.',
+            'Automatically exports structured, filter-ready Excel reports with deadline alerts and category classifications.',
+            'Eliminated repetitive manual portal checking and reduced daily procurement reporting turnaround by over 85%.'
+        ],
+        metrics: [
+            { v: '85%+ Saved', k: 'Manual Reporting Time' },
+            { v: 'Zero Drift', k: 'Deduplicated Schema' },
+            { v: '1-Click XLSX', k: 'Automated Report Export' }
+        ]
+    }
+};
+
+if (fdeCaseTabs.length > 0 && fdeBaBeforeTitle && fdeBaAfterTitle) {
+    fdeCaseTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            fdeCaseTabs.forEach(t => t.classList.toggle('active', t === tab));
+            const c = FDE_CASES_DATA[tab.dataset.fdeCase] || FDE_CASES_DATA.atlasrec;
+            fdeBaBeforeTitle.textContent = c.beforeTitle;
+            fdeBaBeforeList.innerHTML = c.beforeList.map(li => `<li>${li}</li>`).join('');
+            fdeBaAfterTitle.textContent = c.afterTitle;
+            fdeBaAfterList.innerHTML = c.afterList.map(li => `<li>${li}</li>`).join('');
+            if (fdeBaMetrics) {
+                fdeBaMetrics.innerHTML = c.metrics.map(m =>
+                    `<div class="fde-ba-m"><span class="v">${m.v}</span><span class="k">${m.k}</span></div>`
+                ).join('');
+            }
+            playSound('click');
+        });
+    });
+}
+
+/* --- MODULE 3: INTERACTIVE RAG & AGENTIC AI ARCHITECTURE SIMULATOR --- */
+const ragScenBtns = document.querySelectorAll('[data-rag-scen]');
+const ragRunBtn = document.getElementById('rag-run-btn');
+const ragQueryText = document.getElementById('rag-query-text');
+const ragNodes = document.querySelectorAll('[data-rnode]');
+const ragMLat = document.getElementById('rag-m-lat');
+const ragMSim = document.getElementById('rag-m-sim');
+const ragMGround = document.getElementById('rag-m-ground');
+const ragMIndex = document.getElementById('rag-m-index');
+const ragTraceLog = document.getElementById('rag-trace-log');
+
+const RAG_SCENARIOS = {
+    atlasrec: {
+        query: '"Waterproof breathable hiking shell under $120 with high durability score"',
+        ms: ['1.8 ms', '6.4 ms', '11.2 ms', '8.5 ms', '2.1 ms'],
+        lat: '30.0 ms',
+        sim: '0.942',
+        ground: '99.4%',
+        index: '20,500+',
+        logs: [
+            '[01] Guardrail PASSED: Parsed price_cap <= 120.00, dept="Outdoor/Shells"',
+            '[02] Dense Vector Encoded: shape=(1, 384), L2-normalized float32',
+            '[03] FAISS IndexFlatIP top_k=25 retrieved in 11.2ms across 20,500 SKUs',
+            '[04] 6-Model Hybrid + Counterfactual Taste Studio reranked top candidate (Match DNA: 94.2%)',
+            '[05] Returned Grounded FastAPI Pydantic payload with 4-pillar XAI attribution.'
+        ]
+    },
+    clinical: {
+        query: '"B-mode ultrasound: irregular hypoechoic breast mass with posterior acoustic shadowing"',
+        ms: ['1.4 ms', '5.8 ms', '9.6 ms', '12.4 ms', '1.9 ms'],
+        lat: '31.1 ms',
+        sim: '0.961',
+        ground: '99.8%',
+        index: '12,400+',
+        logs: [
+            '[01] Clinical Schema Guardrail PASSED: Modality="Ultrasound", ROI="Breast Lesion"',
+            '[02] Multimodal Feature & Dense Embedding extracted (ResNet-50 + Clinical Text)',
+            '[03] Retrieved top-5 histopathology-confirmed reference cohorts via FAISS ANN (9.6ms)',
+            '[04] U-Net Segmentation Mask (91.0% Dice) + Grad-CAM attention aligned with BI-RADS criteria',
+            '[05] Emitted calibrated diagnostic triage packet with confidence bounds.'
+        ]
+    },
+    scopewise: {
+        query: '"Client Change CR-408: Add SSO + custom RBAC permissions to Sprint 4 agency scope"',
+        ms: ['1.2 ms', '4.9 ms', '7.8 ms', '9.1 ms', '1.7 ms'],
+        lat: '24.7 ms',
+        sim: '0.954',
+        ground: '100%',
+        index: '8,200+',
+        logs: [
+            '[01] Scope Policy Guardrail PASSED: Identified CR-408 under Contract SLA Tier-1',
+            '[02] Encoded requirement delta & linked backlog dependency graph',
+            '[03] Vector + SQL hybrid lookup matched 3 historical RBAC sprint templates (7.8ms)',
+            '[04] Rule Engine computed +18.5h engineering delta & flagged mandatory client approval gate',
+            '[05] Committed ACID Neon PostgreSQL scope-review record & webhook notification.'
+        ]
+    }
+};
+
+let activeRagKey = 'atlasrec';
+let ragTraceTimer = null;
+
+const renderRagScenario = (key, animate = false) => {
+    activeRagKey = key;
+    const sc = RAG_SCENARIOS[key] || RAG_SCENARIOS.atlasrec;
+    if (ragQueryText) ragQueryText.textContent = sc.query;
+    sc.ms.forEach((val, idx) => {
+        const el = document.getElementById(`rn-ms-${idx}`);
+        if (el) el.textContent = val;
+    });
+    if (ragMLat) ragMLat.textContent = sc.lat;
+    if (ragMSim) ragMSim.textContent = sc.sim;
+    if (ragMGround) ragMGround.textContent = sc.ground;
+    if (ragMIndex) ragMIndex.textContent = sc.index;
+
+    if (ragTraceTimer) clearInterval(ragTraceTimer);
+    if (!animate) {
+        ragNodes.forEach(n => { n.classList.add('is-active'); n.classList.remove('is-pulsing'); });
+        if (ragTraceLog) ragTraceLog.textContent = sc.logs.join('\n');
+        return;
+    }
+
+    ragNodes.forEach(n => { n.classList.remove('is-active', 'is-pulsing'); });
+    if (ragTraceLog) ragTraceLog.textContent = 'Initializing Forward Deployed RAG & Vector Pipeline...';
+    let step = 0;
+    ragTraceTimer = setInterval(() => {
+        ragNodes.forEach((n, idx) => {
+            n.classList.toggle('is-active', idx <= step);
+            n.classList.toggle('is-pulsing', idx === step);
+        });
+        if (ragTraceLog) {
+            ragTraceLog.textContent = sc.logs.slice(0, step + 1).join('\n');
+        }
+        step++;
+        if (step >= sc.logs.length) {
+            clearInterval(ragTraceTimer);
+            setTimeout(() => ragNodes.forEach(n => n.classList.remove('is-pulsing')), 400);
+        }
+    }, 280);
+};
+
+if (ragScenBtns.length > 0) {
+    ragScenBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            ragScenBtns.forEach(b => b.classList.toggle('active', b === btn));
+            renderRagScenario(btn.dataset.ragScen, true);
+            playSound('click');
+        });
+    });
+}
+if (ragRunBtn) {
+    ragRunBtn.addEventListener('click', () => {
+        renderRagScenario(activeRagKey, true);
+        playSound('click');
+    });
+}
+
+/* --- MODULE 4: LIVE API CONTRACT & WEBHOOK PLAYGROUND --- */
+const apiTabs = document.querySelectorAll('[data-api-ep]');
+const apiSendBtn = document.getElementById('api-send-btn');
+const apiGuardBadge = document.getElementById('api-guard-badge');
+const apiStatusBadge = document.getElementById('api-status-badge');
+const apiReqBox = document.getElementById('api-req-box');
+const apiResBox = document.getElementById('api-res-box');
+
+const API_ENDPOINTS_DATA = {
+    atlasrec: {
+        guard: 'Auth: Argon2id Session + CSRF Token + RBAC',
+        status: 'HTTP 200 OK · 18.4 ms',
+        req: `{
+  "user_id": "usr_9042_fde",
+  "query_vector_id": "sku_outdoor_881",
+  "counterfactual_weights": {
+    "price_sensitivity": 0.85,
+    "brand_exploration": 0.40,
+    "quality_floor": 4.6
+  },
+  "explain_match_dna": true
+}`,
+        res: `{
+  "status": "success",
+  "engine": "AtlasRec-Hybrid-6x-FAISS",
+  "latency_ms": 18.4,
+  "top_recommendation": {
+    "sku": "AMZ-20491",
+    "match_score": 0.942,
+    "match_dna": {
+      "semantic_sim": 0.38,
+      "collaborative": 0.27,
+      "price_fit": 0.21,
+      "quality_boost": 0.14
+    }
+  }
+}`
+    },
+    scopewise: {
+        guard: 'Auth: Agency Workspace Token + Role Guard (PM_APPROVER)',
+        status: 'HTTP 201 CREATED · 21.6 ms',
+        req: `{
+  "workspace_id": "ws_agency_04",
+  "change_request_id": "CR-408",
+  "added_deliverables": ["SSO_SAML_Integration", "RBAC_Audit_Log"],
+  "estimated_hours_delta": 18.5,
+  "require_client_signoff": true
+}`,
+        res: `{
+  "status": "scope_gate_locked",
+  "db_tx": "neon_pg_tx_99412",
+  "budget_delta_usd": 1480.00,
+  "linked_backlog_tasks": 4,
+  "approval_status": "PENDING_CLIENT_SIGNATURE",
+  "playwright_contract_check": "PASSED"
+}`
+    },
+    mangocare: {
+        guard: 'Auth: API Key + Multipart Image Stream Sanitizer',
+        status: 'HTTP 200 OK · 14.2 ms',
+        req: `{
+  "image_tensor_shape": [1, 3, 224, 224],
+  "preprocessing": "CLAHE_LAB_Normalize",
+  "backbone": "DenseNet-121-FineTuned",
+  "return_gradcam_bbox": true
+}`,
+        res: `{
+  "prediction": "Anthracnose",
+  "confidence": 0.964,
+  "inference_ms": 14.2,
+  "gradcam_hotspot": { "x": 48, "y": 62, "w": 118, "h": 104 },
+  "recommended_action": "Copper oxychloride (0.3%) foliar spray + prune affected twigs"
+}`
+    },
+    admin: {
+        guard: 'Auth: Global NestJS 10 O(1) JWT Guard + @Roles("ADMIN")',
+        status: 'HTTP 200 OK · 11.8 ms',
+        req: `GET /api/v1/admin/audit-ledger?module=orders&limit=5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+X-Permission-Scope: orders:read,ledger:verify`,
+        res: `{
+  "module": "Enterprise_RBAC_Ledger",
+  "jwt_guard_eval_ms": 0.4,
+  "ledger_integrity": "ACID_VERIFIED_FIXED_POINT",
+  "active_domain_modules": 9,
+  "records_returned": 5
+}`
+    }
+};
+
+let activeApiKey = 'atlasrec';
+if (apiTabs.length > 0 && apiReqBox && apiResBox) {
+    const renderApiEndpoint = (key, simulateSend = false) => {
+        activeApiKey = key;
+        const ep = API_ENDPOINTS_DATA[key] || API_ENDPOINTS_DATA.atlasrec;
+        if (apiGuardBadge) apiGuardBadge.innerHTML = `<i class="fas fa-lock" aria-hidden="true"></i> ${ep.guard}`;
+        apiReqBox.textContent = ep.req;
+        if (!simulateSend) {
+            if (apiStatusBadge) apiStatusBadge.textContent = ep.status;
+            apiResBox.textContent = ep.res;
+            return;
+        }
+        if (apiStatusBadge) apiStatusBadge.textContent = 'Executing Live Contract...';
+        apiResBox.textContent = '// Dispatching typed request through FastAPI / NestJS middleware...';
+        setTimeout(() => {
+            if (apiStatusBadge) apiStatusBadge.textContent = `${ep.status} (Verified Just Now)`;
+            apiResBox.textContent = ep.res;
+        }, 240);
+    };
+
+    apiTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            apiTabs.forEach(t => t.classList.toggle('active', t === tab));
+            renderApiEndpoint(tab.dataset.apiEp, false);
+            playSound('click');
+        });
+    });
+
+    if (apiSendBtn) {
+        apiSendBtn.addEventListener('click', () => {
+            renderApiEndpoint(activeApiKey, true);
+            playSound('click');
+        });
+    }
+}
+
+/* --- MODULE 5: BUSINESS & OPERATIONAL ROI IMPACT CALCULATOR --- */
+const roiPills = document.querySelectorAll('[data-roi-dom]');
+const roiSlider = document.getElementById('fde-roi-slider');
+const roiVolVal = document.getElementById('fde-roi-vol-val');
+const roiKpiHours = document.getElementById('roi-kpi-hours');
+const roiKpiSpeed = document.getElementById('roi-kpi-speed');
+const roiKpiAcc = document.getElementById('roi-kpi-acc');
+const roiKpiSla = document.getElementById('roi-kpi-sla');
+
+const ROI_DOMAIN_SPECS = {
+    all: { hoursPer1k: 12.4, speed: '42× Faster', acc: '+7.0 pp / 95.4%', sla: '99.9% Automated' },
+    recsys: { hoursPer1k: 9.8, speed: '18.4 ms p95', acc: '6-Model Hybrid', sla: '20,500+ SKUs Indexed' },
+    agency: { hoursPer1k: 15.2, speed: '38× Faster', acc: '0% Cost Drift', sla: '100% Scope Traceability' },
+    vision: { hoursPer1k: 14.0, speed: '14.2 ms / frame', acc: '91% Dice · 96.4% Acc', sla: 'Grad-CAM XAI Verified' },
+    scraper: { hoursPer1k: 18.6, speed: '85%+ Time Cut', acc: '100% Deduplicated', sla: 'Automated XLSX Pipeline' }
+};
+
+let activeRoiDom = 'all';
+const updateRoiCalculator = () => {
+    const vol = Number(roiSlider?.value || 25000);
+    if (roiVolVal) roiVolVal.textContent = `${vol.toLocaleString()} / mo`;
+    const spec = ROI_DOMAIN_SPECS[activeRoiDom] || ROI_DOMAIN_SPECS.all;
+    const hours = Math.round((vol / 1000) * spec.hoursPer1k);
+    if (roiKpiHours) roiKpiHours.textContent = `${hours.toLocaleString()} hrs/mo`;
+    if (roiKpiSpeed) roiKpiSpeed.textContent = spec.speed;
+    if (roiKpiAcc) roiKpiAcc.textContent = spec.acc;
+    if (roiKpiSla) roiKpiSla.textContent = spec.sla;
+};
+
+if (roiPills.length > 0) {
+    roiPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            roiPills.forEach(p => p.classList.toggle('active', p === pill));
+            activeRoiDom = pill.dataset.roiDom || 'all';
+            updateRoiCalculator();
+            playSound('click');
+        });
+    });
+}
+if (roiSlider) {
+    roiSlider.addEventListener('input', updateRoiCalculator);
+}
+
+/* --- MODULE 6: PRODUCTION READINESS & ENTERPRISE SECURITY CHECKLIST FILTER --- */
+const secFilters = document.querySelectorAll('[data-sec-cat]');
+const secCards = document.querySelectorAll('[data-sec-item]');
+
+if (secFilters.length > 0 && secCards.length > 0) {
+    secFilters.forEach(btn => {
+        btn.addEventListener('click', () => {
+            secFilters.forEach(b => b.classList.toggle('active', b === btn));
+            const cat = btn.dataset.secCat || 'all';
+            secCards.forEach(card => {
+                const match = cat === 'all' || card.dataset.secItem === cat;
+                card.style.display = match ? '' : 'none';
+            });
+            playSound('click');
+        });
+    });
+}
+

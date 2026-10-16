@@ -6814,3 +6814,704 @@ body.is-scrolling .cred-card {
     transition: none !important;
 }
 
+/* ==========================================================================
+   6 FORWARD DEPLOYED ENGINEER (FDE) & AI ENGINEER MODULES
+   ========================================================================== */
+
+.fde-blueprint-shell,
+.fde-case-switcher,
+.fde-lab-panel,
+.fde-roi-shell,
+.fde-security-shell {
+    border-radius: 22px;
+    padding: 26px;
+    background: color-mix(in srgb, var(--bg) 52%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    box-shadow: 0 20px 48px -22px rgba(0, 0, 0, 0.55);
+}
+
+.fde-blueprint-shell {
+    margin-bottom: 28px;
+}
+
+.fde-stage-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.fde-stage-card {
+    text-align: left;
+    padding: 18px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.fde-stage-card:hover {
+    border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+    transform: translateY(-2px);
+}
+
+.fde-stage-card.active {
+    background: color-mix(in srgb, var(--primary) 13%, transparent);
+    border-color: var(--primary);
+    box-shadow: 0 12px 28px -14px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+.fde-stage-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.fde-stage-num {
+    color: var(--primary);
+    letter-spacing: 0.08em;
+}
+
+.fde-stage-window {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    color: var(--text-gray);
+}
+
+.fde-stage-title {
+    font-size: 0.96rem;
+    font-weight: 800;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+}
+
+.fde-stage-title i {
+    color: var(--primary);
+}
+
+.fde-stage-mini {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+.fde-stage-detail {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 22px;
+    padding: 22px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--bg) 62%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.fde-detail-headline {
+    font-size: 1.18rem;
+    font-weight: 800;
+    margin: 6px 0 10px;
+    color: var(--text);
+}
+
+.fde-detail-desc {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text-gray);
+    margin: 0 0 14px;
+}
+
+.fde-deliverables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.fde-deliv-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 5px 11px;
+    border-radius: 8px;
+    background: color-mix(in srgb, #22c55e 12%, transparent);
+    border: 1px solid color-mix(in srgb, #22c55e 32%, transparent);
+    color: var(--text);
+}
+
+.fde-deliv-pill i {
+    color: #22c55e;
+    margin-right: 5px;
+}
+
+.fde-detail-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+}
+
+.fde-meta-box {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.fde-meta-lbl {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-gray);
+    margin-bottom: 6px;
+}
+
+.fde-meta-val {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.fde-proof-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* --- IDEA 2: MESSY PROBLEM -> DEPLOYED SOLUTION SWITCHER --- */
+.fde-sub-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.fde-sub-head h3 {
+    font-size: 1.28rem;
+    font-weight: 800;
+    margin: 4px 0 0;
+    color: var(--text);
+}
+
+.fde-case-tabs,
+.fde-rag-scenarios,
+.fde-api-tabs,
+.fde-roi-domain-pills,
+.fde-sec-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.fde-case-tab,
+.fde-rag-chip,
+.fde-api-tab,
+.fde-roi-pill,
+.fde-sec-filter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    color: var(--text-gray);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.fde-case-tab:hover,
+.fde-rag-chip:hover,
+.fde-api-tab:hover,
+.fde-roi-pill:hover,
+.fde-sec-filter:hover {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+.fde-case-tab.active,
+.fde-rag-chip.active,
+.fde-api-tab.active,
+.fde-roi-pill.active,
+.fde-sec-filter.active {
+    background: color-mix(in srgb, var(--primary) 16%, transparent);
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.fde-before-after-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 18px;
+}
+
+.fde-ba-card {
+    padding: 22px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.fde-ba-card.is-before {
+    border-left: 3px solid #f59e0b;
+}
+
+.fde-ba-card.is-after {
+    border-left: 3px solid #22c55e;
+}
+
+.fde-ba-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.fde-ba-card.is-before .fde-ba-badge {
+    background: color-mix(in srgb, #f59e0b 15%, transparent);
+    color: #f59e0b;
+}
+
+.fde-ba-card.is-after .fde-ba-badge {
+    background: color-mix(in srgb, #22c55e 15%, transparent);
+    color: #22c55e;
+}
+
+.fde-ba-card h4 {
+    font-size: 1.08rem;
+    font-weight: 800;
+    margin: 0 0 12px;
+    color: var(--text);
+}
+
+.fde-ba-list {
+    margin: 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--text-gray);
+}
+
+.fde-ba-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.fde-ba-m {
+    padding: 10px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    text-align: center;
+}
+
+.fde-ba-m .v {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: #22c55e;
+}
+
+.fde-ba-m .k {
+    font-size: 0.7rem;
+    color: var(--text-gray);
+}
+
+/* --- IDEAS 3 & 5: RAG SIMULATOR & API CONTRACT PLAYGROUND --- */
+.fde-lab-two-col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-bottom: 24px;
+}
+
+.fde-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.fde-panel-head h3 {
+    font-size: 1.16rem;
+    font-weight: 800;
+    margin: 4px 0 0;
+    color: var(--text);
+}
+
+.fde-trace-btn {
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.fde-rag-query-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    font-size: 0.78rem;
+}
+
+.fde-q-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 3px 7px;
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--primary) 16%, transparent);
+    color: var(--primary);
+    white-space: nowrap;
+}
+
+.fde-rag-nodes {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.fde-rag-node {
+    padding: 10px 8px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--text) 3%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    text-align: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.fde-rag-node.is-active {
+    border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.fde-rag-node.is-pulsing {
+    border-color: #22c55e;
+    background: color-mix(in srgb, #22c55e 18%, transparent);
+    transform: translateY(-2px);
+}
+
+.fde-rag-node .n-idx {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.fde-rag-node .n-name {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 3px 0;
+}
+
+.fde-rag-node .n-ms {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: #22c55e;
+}
+
+.fde-rag-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.fde-rm-cell {
+    padding: 8px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    text-align: center;
+}
+
+.fde-rm-cell .v {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.fde-rm-cell .k {
+    font-size: 0.66rem;
+    color: var(--text-gray);
+}
+
+.fde-code-box {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.fde-code-box.is-compact {
+    font-size: 0.69rem;
+    max-height: 225px;
+}
+
+.fde-code-box.is-resp {
+    border-color: color-mix(in srgb, #22c55e 32%, transparent);
+}
+
+.fde-api-tab .m-post {
+    color: #22c55e;
+    margin-right: 4px;
+}
+
+.fde-api-tab .m-get {
+    color: #38bdf8;
+    margin-right: 4px;
+}
+
+.fde-api-meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+}
+
+.fde-api-guard {
+    color: var(--text-gray);
+}
+
+.fde-api-guard i {
+    color: var(--primary);
+    margin-right: 5px;
+}
+
+.fde-api-status {
+    color: #22c55e;
+    font-weight: 700;
+}
+
+.fde-api-split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.fde-mini-cap {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text-gray);
+    margin-bottom: 6px;
+}
+
+/* --- IDEA 4: OPERATIONAL ROI IMPACT CALCULATOR --- */
+.fde-roi-shell {
+    margin-bottom: 24px;
+}
+
+.fde-roi-top {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 22px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.fde-roi-top h3 {
+    font-size: 1.24rem;
+    font-weight: 800;
+    margin: 4px 0 6px;
+    color: var(--text);
+}
+
+.fde-roi-sub {
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+.fde-roi-slider-row {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-gray);
+}
+
+.fde-roi-slider-row input[type="range"] {
+    width: 100%;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.fde-roi-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.fde-roi-card {
+    padding: 18px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--bg) 62%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fde-roi-card .roi-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.fde-roi-card .roi-lbl {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.fde-roi-card .roi-note {
+    font-size: 0.74rem;
+    color: var(--text-gray);
+    line-height: 1.45;
+}
+
+/* --- IDEA 6: ENTERPRISE SECURITY & PRODUCTION READINESS CHECKLIST --- */
+.fde-sec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.fde-sec-card {
+    padding: 18px;
+    border-radius: 15px;
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.fde-sec-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+}
+
+.fde-sec-status {
+    color: #22c55e;
+}
+
+.fde-sec-tag {
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--primary);
+}
+
+.fde-sec-card h4 {
+    font-size: 0.96rem;
+    font-weight: 800;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+
+.fde-sec-card p {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--text-gray);
+    margin: 0 0 12px;
+}
+
+.fde-sec-projs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.fde-sec-projs span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    color: var(--text);
+}
+
+@media (max-width: 1024px) {
+    .fde-stage-grid,
+    .fde-roi-kpis,
+    .fde-sec-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .fde-stage-detail,
+    .fde-before-after-grid,
+    .fde-lab-two-col,
+    .fde-roi-top {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .fde-stage-grid,
+    .fde-roi-kpis,
+    .fde-sec-grid,
+    .fde-api-split,
+    .fde-ba-metrics {
+        grid-template-columns: 1fr;
+    }
+    .fde-rag-nodes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
