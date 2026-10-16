@@ -1030,7 +1030,7 @@ nav {
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border);
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .a-card:hover {
@@ -1175,7 +1175,7 @@ nav {
     margin-bottom: 40px;
     padding: 20px;
     border-radius: 8px;
-    transition: 0.3s;
+    transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
     border: 1px solid transparent;
     /* Prevent layout jump */
 }

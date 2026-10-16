@@ -713,34 +713,35 @@ gsap.to('.hero-visual', {
     }
 });
 
-// Fade Up Sections and Elements
+// Fade Up Sections and Elements (transform only so elements never get stuck at opacity: 0)
 gsap.utils.toArray('.section-header').forEach(header => {
     gsap.from(header, {
-        opacity: 0,
-        y: 60,
-        duration: 1,
+        y: 28,
+        duration: 0.7,
         ease: "power3.out",
+        clearProps: "transform",
         scrollTrigger: {
             trigger: header,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
+            start: "top 92%",
+            once: true
         }
     });
 });
 
-// Staggered Cards (About, Work)
-gsap.utils.toArray(['.about-cards', '.project-grid', '.tech-stack-container']).forEach(container => {
+// Staggered Cards (About, Research Domains, Work)
+gsap.utils.toArray(['.about-cards', '.project-grid', '.cred-grid']).forEach(container => {
     const children = Array.from(container.children);
+    if (!children.length) return;
     gsap.from(children, {
-        opacity: 0,
-        y: 50,
-        duration: 0.8,
-        stagger: 0.15,
+        y: 24,
+        duration: 0.6,
+        stagger: 0.08,
         ease: "power2.out",
+        clearProps: "transform",
         scrollTrigger: {
             trigger: container,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
+            start: "top 92%",
+            once: true
         }
     });
 });
@@ -748,19 +749,19 @@ gsap.utils.toArray(['.about-cards', '.project-grid', '.tech-stack-container']).f
 // Timeline Items GSAP reveal
 gsap.utils.toArray('.timeline-item').forEach(item => {
     gsap.from(item, {
-        opacity: 0,
-        x: -50,
-        duration: 0.8,
+        x: -24,
+        duration: 0.6,
         ease: "power3.out",
+        clearProps: "transform",
         scrollTrigger: {
             trigger: item,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
+            start: "top 92%",
+            once: true
         }
     });
 });
 
-
+window.addEventListener('load', () => ScrollTrigger.refresh());
 } // end GSAP scroll animations
 
 // Initial Page Load Animations
