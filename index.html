@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=56">
+    <link rel="stylesheet" href="style.css?v=57">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -162,6 +162,11 @@
                     document.documentElement.classList.add('preloader-skip');
                 }
                 var a = localStorage.getItem('accent');
+                if (!localStorage.getItem('luxury-theme-v1')) {
+                    localStorage.removeItem('accent');
+                    localStorage.setItem('luxury-theme-v1', '1');
+                    a = null;
+                }
                 if (a) document.documentElement.setAttribute('data-accent', a);
             } catch (e) { /* private mode */ }
         })();
@@ -244,14 +249,14 @@
     <!-- 3D WebGL Container -->
     <div id="webgl-container"></div>
 
-    <!-- Cyber Theme Switcher -->
+    <!-- Luxury Theme Switcher -->
     <div class="theme-switcher" role="group" aria-label="Accent colour">
-        <div class="theme-btn active" data-theme="cyan" style="--t-color: #00f3ff;" role="button" tabindex="0"
-            aria-label="Cyan accent" aria-pressed="true"></div>
-        <div class="theme-btn" data-theme="emerald" style="--t-color: #00ff9d;" role="button" tabindex="0"
-            aria-label="Emerald accent" aria-pressed="false"></div>
-        <div class="theme-btn" data-theme="crimson" style="--t-color: #ff0055;" role="button" tabindex="0"
-            aria-label="Crimson accent" aria-pressed="false"></div>
+        <div class="theme-btn active" data-theme="cyan" style="--t-color: #6384ff;" role="button" tabindex="0"
+            aria-label="Sapphire Titanium accent" aria-pressed="true"></div>
+        <div class="theme-btn" data-theme="emerald" style="--t-color: #e5a93c;" role="button" tabindex="0"
+            aria-label="Desert Gold accent" aria-pressed="false"></div>
+        <div class="theme-btn" data-theme="crimson" style="--t-color: #f43f5e;" role="button" tabindex="0"
+            aria-label="Rose Titanium accent" aria-pressed="false"></div>
     </div>
 
     <div class="cursor-outer"></div>
@@ -627,14 +632,14 @@
         <div class="skill-group" style="margin-top:44px">
             <h3 class="skill-cat">Soft Skills &amp; Ways of Working<span class="skill-count">8</span></h3>
             <ul class="skill-chips soft-chips">
-                <li class="skill-chip" style="--dc-d:#00f3ff">Problem Solving</li>
-                <li class="skill-chip" style="--dc-d:#00f3ff">Critical Thinking</li>
-                <li class="skill-chip" style="--dc-d:#00f3ff">Fast Learner</li>
-                <li class="skill-chip" style="--dc-d:#00f3ff">Teamwork</li>
-                <li class="skill-chip" style="--dc-d:#00f3ff">Research &amp; Literature Review</li>
-                <li class="skill-chip" style="--dc-d:#00f3ff">Technical Writing</li>
-                <li class="skill-chip" style="--dc-d:#00f3ff">Analytical Thinking</li>
-                <li class="skill-chip" style="--dc-d:#00f3ff">Collaboration</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Problem Solving</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Critical Thinking</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Fast Learner</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Teamwork</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Research &amp; Literature Review</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Technical Writing</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Analytical Thinking</li>
+                <li class="skill-chip" style="--dc-d:#6384ff">Collaboration</li>
             </ul>
         </div>
     </section>
@@ -737,7 +742,7 @@
                     <a href="https://dsa-house.vercel.app" target="_blank" rel="noopener noreferrer" class="p-link p-link-live">LIVE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="project-card" data-domain="ai" style="--dc-d:#00f3ff;--dc-lt:#007e85">
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
                 <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
                 <p class="p-cat">DEEP LEARNING &bull; DEPLOYED</p>
                 <h3 class="p-title">MangoCare AI</h3>
@@ -855,7 +860,7 @@
                     <a href="https://github.com/Tanvir284/Matrix-Website" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="project-card" data-domain="ai" style="--dc-d:#00f3ff;--dc-lt:#007e85">
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
                 <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
                 <p class="p-cat">DEEP LEARNING &bull; MEDICAL IMAGING</p>
                 <h3 class="p-title">Pneumonia Classification</h3>
@@ -873,7 +878,7 @@
                     <a href="https://github.com/Tanvir284/Pneumonia-Classification-with-YOLOv8" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="project-card" data-domain="ai" style="--dc-d:#00f3ff;--dc-lt:#007e85">
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
                 <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
                 <p class="p-cat">DEEP LEARNING &bull; HEALTHCARE AI</p>
                 <h3 class="p-title">Breast Lesion AI</h3>
@@ -891,7 +896,7 @@
                     <a href="https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="project-card" data-domain="ai" style="--dc-d:#00f3ff;--dc-lt:#007e85">
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
                 <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
                 <p class="p-cat">TRANSFER LEARNING &bull; AGRICULTURE</p>
                 <h3 class="p-title">Chicken Disease Detection</h3>
@@ -1251,7 +1256,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=39"></script>
+    <script src="script.js?v=40"></script>
     <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 

@@ -1,53 +1,47 @@
 :root {
-    --bg: #050505;
-    --surface: rgba(20, 20, 20, 0.6);
-    --primary: #00f3ff;
-    /* Keep cyan but stronger glow */
-    --secondary: #bc26ff;   /* was #b000ff: 4.2:1 on the dark ground */
-    /* Shift purple to be more vibrant pinkish-purple */
-    --text: #ffffff;
-    --text-gray: #a1a1aa;
-    --border: rgba(255, 255, 255, 0.15);
-    /* Slightly brighter border */
-    --glow: 0 0 20px rgba(0, 243, 255, 0.4);
+    --bg: #090a0f;
+    --surface: rgba(20, 23, 34, 0.72);
+    --primary: #6384ff;
+    --secondary: #a78bfa;
+    --gold: #e5b869;
+    --text: #f5f5f7;
+    --text-gray: #94a3b8;
+    --border: rgba(255, 255, 255, 0.08);
+    --glow: 0 20px 44px -16px rgba(99, 132, 255, 0.32);
 
-    /* Surfaces that were hardcoded dark. Without these, every panel stayed
-       black in light mode while its text turned dark - 218 unreadable
-       elements. */
-    --nav-bg: rgba(5, 5, 5, 0.85);
-    --nav-panel: rgba(5, 5, 5, 0.95);
-    --panel: rgba(20, 20, 20, 0.9);
-    --panel-soft: rgba(20, 20, 20, 0.6);
-    --panel-strong: rgba(10, 10, 10, 0.95);
-    --section-alt: #080808;
-    --field: rgba(0, 0, 0, 0.5);
-    --field-label: #050505;
-    --scrim: rgba(0, 0, 0, 0.8);
-    --footer-bg: #000000;
+    --nav-bg: rgba(9, 10, 15, 0.78);
+    --nav-panel: rgba(12, 14, 22, 0.96);
+    --panel: rgba(18, 21, 31, 0.88);
+    --panel-soft: rgba(22, 26, 38, 0.65);
+    --panel-strong: rgba(13, 15, 23, 0.96);
+    --section-alt: #0d0f17;
+    --field: rgba(255, 255, 255, 0.03);
+    --field-label: #090a0f;
+    --scrim: rgba(6, 7, 11, 0.82);
+    --footer-bg: #06070b;
 }
 
 :root.light-mode {
-    --bg: #f8fafc;
-    --surface: rgba(255, 255, 255, 0.8);
-    /* Darker than the dark-theme cyan: #0088ff only reaches 3.4:1 on a near-white
-       background, which fails 4.5:1 for the small mono labels that use it. */
-    --primary: #0069cc;
-    --secondary: #7a1fd0;
-    --text: #0f172a;
-    --text-gray: #3d4a5c;   /* darkened: #475569 fell to 4.2:1 on tinted panels */
-    --border: rgba(0, 0, 0, 0.1);
-    --glow: 0 0 15px rgba(0, 136, 255, 0.3);
+    --bg: #fbfbfd;
+    --surface: rgba(255, 255, 255, 0.86);
+    --primary: #2563eb;
+    --secondary: #7c3aed;
+    --gold: #b45309;
+    --text: #1d1d1f;
+    --text-gray: #52525b;
+    --border: rgba(15, 23, 42, 0.08);
+    --glow: 0 18px 38px -16px rgba(37, 99, 235, 0.2);
 
-    --nav-bg: rgba(255, 255, 255, 0.88);
-    --nav-panel: rgba(255, 255, 255, 0.97);
-    --panel: rgba(255, 255, 255, 0.92);
-    --panel-soft: rgba(255, 255, 255, 0.75);
-    --panel-strong: rgba(255, 255, 255, 0.97);
-    --section-alt: #eef1f6;
-    --field: rgba(15, 23, 42, 0.04);
-    --field-label: #f8fafc;
-    --scrim: rgba(15, 23, 42, 0.55);
-    --footer-bg: #eef1f6;
+    --nav-bg: rgba(251, 251, 253, 0.84);
+    --nav-panel: rgba(255, 255, 255, 0.98);
+    --panel: rgba(255, 255, 255, 0.94);
+    --panel-soft: rgba(255, 255, 255, 0.82);
+    --panel-strong: rgba(255, 255, 255, 0.98);
+    --section-alt: #f4f5f8;
+    --field: rgba(15, 23, 42, 0.035);
+    --field-label: #fbfbfd;
+    --scrim: rgba(15, 23, 42, 0.52);
+    --footer-bg: #f1f3f7;
 }
 
 * {
@@ -3770,53 +3764,45 @@ footer a:hover {
 }
 
 /* ==========================================================================
-   ACCENT PALETTES — resolved per theme
-   The switcher used to write --primary inline on <html>. An inline custom
-   property beats any stylesheet rule, so :root.light-mode never applied and a
-   visitor who picked an accent got the neon dark-theme colour on a white page:
-   1.3:1 on every accent-coloured element. The accent is now an attribute and
-   the value is chosen here.
+   ACCENT PALETTES — Apple Pro Luxury Editions (Sapphire, Desert Gold, Rose)
    ========================================================================== */
 :root[data-accent="cyan"] {
-    --primary: #00f3ff;
-    --secondary: #bc26ff;   /* was #b000ff: 4.2:1 on the dark ground */
-    --glow: 0 0 20px rgba(0, 243, 255, 0.4);
+    --primary: #6384ff;
+    --secondary: #a78bfa;
+    --glow: 0 20px 44px -16px rgba(99, 132, 255, 0.34);
 }
 
 :root.light-mode[data-accent="cyan"] {
-    --primary: #007e85;
-    --secondary: #7a1fd0;
+    --primary: #2563eb;
+    --secondary: #7c3aed;
 }
 
 :root[data-accent="emerald"] {
-    --primary: #00ff9d;
-    --secondary: #00b8ff;
-    --glow: 0 0 20px rgba(0, 255, 157, 0.4);
+    --primary: #e5a93c;
+    --secondary: #f59e0b;
+    --glow: 0 20px 44px -16px rgba(229, 169, 60, 0.32);
 }
 
 :root.light-mode[data-accent="emerald"] {
-    --primary: #008250;
-    --secondary: #007bab;
+    --primary: #b45309;
+    --secondary: #d97706;
 }
 
 :root[data-accent="crimson"] {
-    --primary: #ff0055;
-    --secondary: #ff9d00;
-    --glow: 0 0 20px rgba(255, 0, 85, 0.4);
+    --primary: #f43f5e;
+    --secondary: #c084fc;
+    --glow: 0 20px 44px -16px rgba(244, 63, 94, 0.32);
 }
 
 :root.light-mode[data-accent="crimson"] {
-    --primary: #de004a;
-    --secondary: #a36400;
+    --primary: #e11d48;
+    --secondary: #9333ea;
 }
 
-/* The light-mode nav-link rule above is more specific than .nav-items a.nav-cta,
-   so it stripped the CTA's accent fill and left near-white text on a pale
-   background. Restate the CTA at matching specificity. */
 :root.light-mode .nav-items a.nav-cta {
     background: var(--primary);
     border-color: var(--primary);
-    color: var(--bg);
+    color: #ffffff;
     box-shadow: none;
 }
 
@@ -3828,167 +3814,766 @@ footer a:hover {
 }
 
 /* ==========================================================================
-   REFINEMENT PASS
-   No structural change: tighter typography, a consistent motion curve, and
-   depth built from surface lightness and hairlines rather than glow.
+   APPLE PRO / MINIMAL LUXURY DESIGN SYSTEM
+   High-contrast obsidian titanium surfaces, overhead studio lighting,
+   editorial typography, Bento layout, and graphical card previews.
    ========================================================================== */
 
 :root {
-    --ease: cubic-bezier(0.33, 1, 0.68, 1);
-    --dur: 200ms;
-    --hairline: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --dur: 260ms;
+    --hairline: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
 }
 
-/* --- Section rhythm ---------------------------------------------------- */
-/* Every section began at exactly the same weight with no marker, so the page
-   read as one long column. A short accent rule gives each start a beat. */
-.section-header::before {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 2px;
-    background: var(--primary);
-    border-radius: 999px;
-    margin-bottom: 20px;
-    opacity: 0.9;
+body {
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(ellipse 80% 45% at 50% -8%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 70%),
+        radial-gradient(circle at 88% 22%, color-mix(in srgb, var(--secondary) 10%, transparent), transparent 40%),
+        radial-gradient(circle at 12% 65%, color-mix(in srgb, var(--primary) 8%, transparent), transparent 45%);
+    background-attachment: fixed;
 }
 
-.section-header h2 {
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+:root.light-mode body {
+    background-image:
+        radial-gradient(ellipse 80% 45% at 50% -8%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 70%),
+        radial-gradient(circle at 88% 22%, color-mix(in srgb, var(--secondary) 6%, transparent), transparent 40%);
 }
 
-.section-header p {
-    max-width: 52ch;
-    line-height: 1.6;
-}
-
-/* A hairline between sections that share a background, so the eye gets a
-   resting point without another heavy divider. */
-.section-container + .section-container:not([data-alt-bg]) {
-    border-top: var(--hairline);
-}
-
-/* --- Display type ------------------------------------------------------ */
-.hero h1 {
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-}
-
-.hero h2 {
-    letter-spacing: -0.01em;
-}
-
-.hero-desc {
-    max-width: 46ch;
-    line-height: 1.7;
-}
-
-/* --- Depth: surface + hairline, not shadow ----------------------------- */
-.project-card,
-.a-card,
-.cred-card,
-.skill-group-primary,
-.stat-cell,
-.gh-card {
-    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 6%, transparent);
-}
-
-.project-card:hover,
-.a-card:hover,
-.cred-card:hover,
-.gh-card:hover {
-    box-shadow:
-        inset 0 1px 0 color-mix(in srgb, var(--text) 12%, transparent),
-        0 12px 28px -20px rgba(0, 0, 0, 0.85);
-}
-
-/* --- Motion: one curve, one duration ----------------------------------- */
-.project-card,
-.a-card,
-.cred-card,
-.gh-card,
-.skill-chip,
-.stat-cell,
-.btn,
-.p-link,
-.filter-btn,
-.nav-items a,
-.social-btn {
-    transition-timing-function: var(--ease);
-    transition-duration: var(--dur);
-}
-
-/* --- Buttons ----------------------------------------------------------- */
-.btn {
-    letter-spacing: 0.06em;
-    border-radius: 8px;
-}
-
-.btn-primary {
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 40%, transparent),
-                0 8px 24px -14px var(--primary);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 0 1px var(--primary),
-                0 12px 30px -12px var(--primary);
-}
-
-/* --- The availability pill --------------------------------------------- */
-.tagline {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    letter-spacing: 0.16em;
-    border-radius: 999px;
-}
-
-.tagline::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--primary);
-    flex: 0 0 auto;
-}
-
-/* --- Quieter texture --------------------------------------------------- */
-/* The grid and noise layers were competing with the content they sat behind. */
+/* Quieter ambient texture — no harsh cyberpunk grid */
 .grid-overlay {
-    opacity: 0.35;
+    opacity: 0.12;
+    background-size: 72px 72px;
 }
 
 .noise-overlay {
-    opacity: 0.025;
+    opacity: 0.018;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .btn-primary:hover {
-        transform: none;
+html.preloader-skip #preloader {
+    display: none !important;
+}
+
+/* --- 1. Floating VisionOS / Apple Glass Pill Navbar --- */
+@media (min-width: 1251px) {
+    nav {
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(94%, 1300px);
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+        background: color-mix(in srgb, var(--bg) 72%, transparent);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        box-shadow:
+            0 20px 50px -18px rgba(0, 0, 0, 0.65),
+            inset 0 1px 0 color-mix(in srgb, var(--text) 12%, transparent);
     }
 }
 
-/* The logo is the conventional way back to the top; on the home page it was
-   plain text with no affordance at all. */
+.logo {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.logo span {
+    color: var(--primary);
+    text-shadow: none;
+}
+
 .logo a {
     color: inherit;
     text-decoration: none;
     display: inline-block;
 }
 
-.logo a:hover {
-    opacity: 0.85;
+.nav-items a {
+    border-radius: 999px;
+    padding: 7px 14px;
+    border: 1px solid transparent;
+    background: transparent;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-gray);
+    transition: all var(--dur) var(--ease);
 }
 
-/* Splash already seen this session: hide it before it can paint. The class is
-   set in the head script, so there is no flash between paint and JS. */
-html.preloader-skip #preloader {
+.nav-items a:hover,
+.nav-items a.active,
+.nav-items a.is-current {
+    letter-spacing: 0.02em;
+    transform: none;
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    border-color: color-mix(in srgb, var(--text) 10%, transparent);
+    color: var(--text);
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.nav-items a.nav-cta {
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+    font-weight: 700;
+    box-shadow: 0 8px 24px -8px rgba(255, 255, 255, 0.35);
+}
+
+.nav-items a.nav-cta:hover,
+.nav-items a.nav-cta:focus-visible {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 10px 28px -8px color-mix(in srgb, var(--primary) 65%, transparent);
+}
+
+.mode-toggle {
+    border-radius: 999px;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    font-size: 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+}
+
+/* --- 2. Apple Pro Studio Hero Section --- */
+.hero {
+    padding: 135px 6% 70px;
+}
+
+.tagline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    backdrop-filter: blur(12px);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+}
+
+.tagline::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 12px #34d399;
+    flex: 0 0 auto;
+}
+
+.hero h1 {
+    font-size: clamp(2.8rem, 5.2vw, 4.65rem);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: var(--text);
+    background: none;
+    -webkit-text-fill-color: currentColor;
+}
+
+.hero h1 .grad-accent {
+    background: linear-gradient(135deg, #ffffff 0%, #dbeafe 42%, var(--primary) 82%, var(--secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+:root.light-mode .hero h1 .grad-accent {
+    background: linear-gradient(135deg, #0f172a 0%, var(--primary) 65%, var(--secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.25rem, 2.1vw, 1.75rem);
+    color: var(--text-gray);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+}
+
+.hero-desc {
+    font-size: 1.08rem;
+    color: var(--text-gray);
+    max-width: 50ch;
+    line-height: 1.72;
+    margin: 0 0 28px;
+}
+
+.hero-proof {
+    display: inline-grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0;
+    margin: 6px 0 0;
+    padding: 18px 28px;
+    border-radius: 20px;
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--text) 5.5%, transparent),
+        color-mix(in srgb, var(--text) 1.5%, transparent)
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+        0 20px 44px -22px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 color-mix(in srgb, var(--text) 12%, transparent);
+    max-width: 100%;
+}
+
+.hero-proof li {
+    padding: 0 24px;
+    border-right: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.hero-proof li:first-child {
+    padding-left: 0;
+}
+
+.hero-proof li:last-child {
+    padding-right: 0;
+    border-right: none;
+}
+
+.hp-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--text) 30%, var(--primary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hp-key {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--text-gray);
+}
+
+@media (max-width: 600px) {
+    .hero-proof {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        padding: 16px 18px;
+    }
+    .hero-proof li {
+        padding: 0;
+        border-right: none;
+    }
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-top: 34px;
+}
+
+.btn {
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 72%, var(--secondary)) 100%);
+    color: #ffffff;
+    border: 1px solid color-mix(in srgb, #ffffff 22%, var(--primary));
+    box-shadow:
+        0 14px 34px -10px color-mix(in srgb, var(--primary) 65%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary::before {
+    display: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 20px 42px -10px color-mix(in srgb, var(--primary) 80%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.btn-outline {
+    margin-left: 0;
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    backdrop-filter: blur(14px);
+    color: var(--text);
+}
+
+.btn-outline:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+/* Studio Portrait Squircle Frame (replaces spinning circle-text) */
+.circle-text {
     display: none !important;
 }
 
-/* --- LIVE WEBCAM STOP CONTROL & ASSISTANT QUICK PROMPTS --- */
+.hero-visual {
+    position: relative;
+    height: 490px;
+}
+
+.hero-visual::before {
+    content: '';
+    position: absolute;
+    width: 390px;
+    height: 440px;
+    border-radius: 44px;
+    background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--primary) 34%, transparent), color-mix(in srgb, var(--secondary) 16%, transparent) 55%, transparent 75%);
+    filter: blur(36px);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.main-img {
+    width: 350px;
+    height: 410px;
+    border-radius: 36px;
+    object-fit: cover;
+    padding: 6px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.03));
+    border: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+    box-shadow:
+        0 34px 80px -20px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    z-index: 10;
+}
+
+.float-card {
+    border-radius: 18px;
+    padding: 13px 20px;
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    box-shadow:
+        0 22px 45px -15px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 color-mix(in srgb, var(--text) 15%, transparent);
+}
+
+.fc-1 {
+    top: 10%;
+    right: 2%;
+}
+
+.fc-2 {
+    bottom: 12%;
+    left: 2%;
+}
+
+.fc-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 22%, transparent), color-mix(in srgb, var(--secondary) 14%, transparent));
+    border: 1px solid color-mix(in srgb, var(--primary) 38%, transparent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    color: var(--primary);
+}
+
+/* --- 3. Editorial Section Headers (No Cyberpunk Glitch) --- */
+.section-container {
+    padding: 110px 6%;
+}
+
+.section-container + .section-container:not([data-alt-bg]) {
+    border-top: var(--hairline);
+}
+
+.section-header {
+    margin-bottom: 56px;
+    max-width: 680px;
+}
+
+.section-header::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 999px;
+    margin-bottom: 18px;
+}
+
+.section-header h2,
+.section-header h1 {
+    font-size: clamp(2.25rem, 4vw, 3.35rem);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    margin-bottom: 12px;
+}
+
+.section-header h2:hover,
+.contact-box h2:hover {
+    transform: none;
+    text-shadow: none;
+}
+
+.section-header p {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.06rem;
+    color: var(--text-gray);
+    line-height: 1.65;
+    max-width: 56ch;
+}
+
+/* Full-color luxury portrait in About section */
+.about-image {
+    border-radius: 28px;
+}
+
+.about-image img {
+    filter: none;
+    border-radius: 28px;
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    box-shadow: 0 28px 65px -20px rgba(0, 0, 0, 0.7);
+}
+
+/* --- 4. Luxury Bento Surfaces & Interactive Spotlight --- */
+.project-card,
+.a-card,
+.cred-card,
+.stat-cell,
+.gh-card,
+.ai-row {
+    border-radius: 22px;
+    background:
+        radial-gradient(
+            480px circle at var(--mouse-x, 50%) var(--mouse-y, -200%),
+            color-mix(in srgb, var(--dc, var(--primary)) 14%, transparent),
+            transparent 60%
+        ),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--text) 5%, var(--surface)) 0%,
+            color-mix(in srgb, var(--text) 1.5%, var(--surface)) 100%
+        );
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--text) 11%, transparent),
+        0 18px 40px -22px rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.project-card:hover,
+.a-card:hover,
+.cred-card:hover,
+.gh-card:hover,
+.ai-row:hover {
+    border-color: color-mix(in srgb, var(--dc, var(--primary)) 48%, transparent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--text) 18%, transparent),
+        0 26px 56px -20px rgba(0, 0, 0, 0.8),
+        0 0 36px -14px color-mix(in srgb, var(--dc, var(--primary)) 28%, transparent);
+}
+
+/* Bento Grid for Selected Works */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-auto-rows: auto;
+    gap: 24px;
+}
+
+@media (min-width: 1120px) {
+    .project-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    .project-grid > .project-card {
+        grid-column: span 2;
+    }
+    /* First two flagship projects span 3 columns each (50% Bento showcase) */
+    .project-grid:not(.is-filtered) > .project-card:nth-child(1),
+    .project-grid:not(.is-filtered) > .project-card:nth-child(2) {
+        grid-column: span 3;
+    }
+}
+
+.project-card {
+    border-left: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    padding: 22px 24px 22px;
+    gap: 10px;
+}
+
+.p-watermark {
+    display: none;
+}
+
+/* --- 5. Graphical Preview Window Inside Every Project Card (.p-preview) --- */
+.p-preview {
+    position: relative;
+    height: 152px;
+    margin: -6px -6px 10px -6px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    background:
+        radial-gradient(circle at 82% 22%, color-mix(in srgb, var(--dc, var(--primary)) 28%, transparent), transparent 58%),
+        radial-gradient(circle at 18% 85%, color-mix(in srgb, var(--secondary) 16%, transparent), transparent 55%),
+        linear-gradient(180deg, color-mix(in srgb, var(--bg) 65%, #111522) 0%, color-mix(in srgb, var(--bg) 92%, #090b12) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px 14px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:root.light-mode .p-preview {
+    background:
+        radial-gradient(circle at 82% 22%, color-mix(in srgb, var(--dc, var(--primary)) 18%, transparent), transparent 58%),
+        radial-gradient(circle at 18% 85%, color-mix(in srgb, var(--secondary) 12%, transparent), transparent 55%),
+        linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+.p-preview-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+}
+
+.p-preview-dots {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.p-preview-dots span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--text) 20%, transparent);
+}
+
+.p-preview-dots span:nth-child(1) { background: rgba(255, 95, 86, 0.65); }
+.p-preview-dots span:nth-child(2) { background: rgba(255, 189, 46, 0.65); }
+.p-preview-dots span:nth-child(3) { background: rgba(39, 201, 63, 0.65); }
+
+.p-preview-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 38%, transparent);
+    color: var(--dc, var(--primary));
+    backdrop-filter: blur(8px);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.p-preview-badge.is-live::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 8px #34d399;
+}
+
+.p-preview-art {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.p-preview-svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.55;
+    transition: transform 0.45s var(--ease), opacity 0.45s var(--ease);
+}
+
+.project-card:hover .p-preview-svg {
+    transform: scale(1.05);
+    opacity: 0.82;
+}
+
+.p-preview-center {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.p-preview-orb {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--bg) 68%, transparent);
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 45%, transparent);
+    backdrop-filter: blur(12px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    color: var(--dc, var(--primary));
+    box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.55);
+}
+
+.p-preview-metric {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    color: var(--text);
+    backdrop-filter: blur(12px);
+}
+
+.project-card .p-title {
+    font-size: 1.28rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.a-card {
+    padding: 26px;
+}
+
+.a-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 18%, transparent), color-mix(in srgb, var(--secondary) 10%, transparent));
+    border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex: 0 0 auto;
+}
+
+/* --- 6. Pill Tech Tags & Card Action Buttons --- */
+.p-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.p-tags span {
+    margin-right: 0;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 0.74rem;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    color: var(--text-gray);
+}
+
+.project-card .p-actions,
+.ai-body .p-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.p-link {
+    margin-top: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    text-decoration: none;
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.p-link:hover {
+    background: var(--dc, var(--primary));
+    border-color: var(--dc, var(--primary));
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.p-link-live {
+    color: var(--dc, var(--primary));
+    background: color-mix(in srgb, var(--dc, var(--primary)) 12%, transparent);
+    border-color: color-mix(in srgb, var(--dc, var(--primary)) 38%, transparent);
+}
+
+.p-link-live:hover {
+    background: var(--dc, var(--primary));
+    color: #ffffff;
+}
+
+/* --- 7. Gradient Stat Numbers & Controls --- */
+.stat-num,
+.gh-num {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--text) 25%, var(--primary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .cam-stop-btn {
     pointer-events: auto;
     position: absolute;
@@ -4035,8 +4620,8 @@ html.preloader-skip #preloader {
     color: var(--text);
     border-radius: 999px;
     padding: 4px 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
     cursor: pointer;
     transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
@@ -4044,313 +4629,9 @@ html.preloader-skip #preloader {
 .chat-prompt-chip:hover {
     background: var(--primary);
     border-color: var(--primary);
-    color: var(--bg);
+    color: #ffffff;
     transform: translateY(-1px);
 }
 
-/* ==========================================================================
-   MODERN 2026 UI & BENTO GLASS PASS
-   Floating pill navbar, interactive radial spotlight cards, glassmorphic
-   hero stat bar, and refined pill badges/actions across all pages.
-   ========================================================================== */
-
-/* 1. Floating Glassmorphic Pill Navbar on Desktop */
-@media (min-width: 1251px) {
-    nav {
-        top: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: min(94%, 1320px);
-        padding: 10px 22px;
-        border-radius: 999px;
-        border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
-        background: color-mix(in srgb, var(--bg) 78%, transparent);
-        backdrop-filter: blur(22px) saturate(160%);
-        -webkit-backdrop-filter: blur(22px) saturate(160%);
-        box-shadow:
-            0 14px 40px -14px rgba(0, 0, 0, 0.55),
-            inset 0 1px 0 color-mix(in srgb, var(--text) 10%, transparent);
-    }
-}
-
-.nav-items a {
-    border-radius: 999px;
-    padding: 7px 14px;
-    border-color: transparent;
-    background: transparent;
-    letter-spacing: 0.06em;
-}
-
-.nav-items a:hover,
-.nav-items a.active,
-.nav-items a.is-current {
-    letter-spacing: 0.06em;
-    transform: translateY(-1px);
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    border-color: color-mix(in srgb, var(--primary) 38%, transparent);
-    color: var(--text);
-    box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 20%, transparent);
-    text-shadow: none;
-}
-
-.nav-items a.nav-cta {
-    padding: 8px 18px;
-    border-radius: 999px;
-    box-shadow: 0 0 24px color-mix(in srgb, var(--primary) 35%, transparent);
-}
-
-.mode-toggle {
-    border-radius: 999px;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    font-size: 1rem;
-    border-color: color-mix(in srgb, var(--text) 12%, transparent);
-    background: color-mix(in srgb, var(--text) 4%, transparent);
-}
-
-/* 2. Refined Hero Typography, Glass Stat Strip & Dual CTA */
-.hero h1 {
-    font-size: clamp(2.6rem, 4.8vw, 4.25rem);
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-    margin-bottom: 14px;
-}
-
-.hero-subtitle {
-    font-size: clamp(1.2rem, 2vw, 1.65rem);
-    color: var(--text-gray);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    margin-bottom: 18px;
-}
-
-.hero-desc {
-    font-size: 1.04rem;
-    color: var(--text-gray);
-    max-width: 48ch;
-    line-height: 1.7;
-    margin: 0 0 24px;
-}
-
-.hero-proof {
-    display: inline-grid;
-    grid-template-columns: repeat(3, auto);
-    gap: 0;
-    margin: 8px 0 0;
-    padding: 16px 24px;
-    border-radius: 16px;
-    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-    background: linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--text) 5%, transparent),
-        color-mix(in srgb, var(--text) 1.5%, transparent)
-    );
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow:
-        0 12px 32px -18px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 color-mix(in srgb, var(--text) 10%, transparent);
-    max-width: 100%;
-}
-
-.hero-proof li {
-    padding: 0 22px;
-    border-right: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-}
-
-.hero-proof li:first-child {
-    padding-left: 0;
-}
-
-.hero-proof li:last-child {
-    padding-right: 0;
-    border-right: none;
-}
-
-@media (max-width: 600px) {
-    .hero-proof {
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-        padding: 14px 16px;
-    }
-    .hero-proof li {
-        padding: 0;
-        border-right: none;
-    }
-}
-
-.hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    align-items: center;
-    margin-top: 32px;
-}
-
-.hero-actions .btn-outline {
-    margin-left: 0;
-    background: color-mix(in srgb, var(--text) 3%, transparent);
-    backdrop-filter: blur(10px);
-}
-
-.hero-actions .btn-outline:hover {
-    border-color: var(--primary);
-    background: color-mix(in srgb, var(--primary) 10%, transparent);
-}
-
-.main-img {
-    width: 310px;
-    height: 310px;
-    border: 2px solid color-mix(in srgb, var(--primary) 45%, var(--border));
-    box-shadow:
-        0 0 0 8px color-mix(in srgb, var(--primary) 6%, transparent),
-        0 0 60px color-mix(in srgb, var(--primary) 22%, transparent);
-}
-
-.float-card {
-    border-radius: 14px;
-    padding: 12px 18px;
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
-    box-shadow:
-        0 16px 36px -12px rgba(0, 0, 0, 0.55),
-        inset 0 1px 0 color-mix(in srgb, var(--text) 12%, transparent);
-}
-
-.fc-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--primary) 14%, transparent);
-    border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-}
-
-/* 3. Bento Cards + Interactive Radial Mouse Spotlight */
-.project-card,
-.a-card,
-.cred-card,
-.stat-cell,
-.gh-card {
-    border-radius: 16px;
-    background:
-        radial-gradient(
-            420px circle at var(--mouse-x, 50%) var(--mouse-y, -200%),
-            color-mix(in srgb, var(--dc, var(--primary)) 13%, transparent),
-            transparent 60%
-        ),
-        linear-gradient(
-            180deg,
-            color-mix(in srgb, var(--text) 4.5%, var(--surface)) 0%,
-            var(--surface) 100%
-        );
-    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-    box-shadow:
-        inset 0 1px 0 color-mix(in srgb, var(--text) 8%, transparent),
-        0 10px 30px -18px rgba(0, 0, 0, 0.5);
-}
-
-.project-card {
-    border-left: 2px solid var(--dc, var(--primary));
-    padding: 26px 26px 22px;
-    gap: 10px;
-}
-
-.a-card {
-    padding: 24px;
-}
-
-.a-card-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.15rem;
-    flex: 0 0 auto;
-}
-
-/* 4. Modern Pill Tech Tags & Card Action Buttons */
-.p-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 4px;
-}
-
-.p-tags span {
-    margin-right: 0;
-    padding: 4px 11px;
-    border-radius: 999px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    background: color-mix(in srgb, var(--text) 5%, transparent);
-    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-    color: var(--text-gray);
-}
-
-.project-card .p-actions,
-.ai-body .p-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    margin-top: auto;
-    padding-top: 14px;
-    border-top: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
-}
-
-.p-link {
-    margin-top: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--text);
-    background: color-mix(in srgb, var(--text) 6%, transparent);
-    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
-    text-decoration: none;
-    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur) var(--ease);
-}
-
-.p-link:hover {
-    background: var(--dc, var(--primary));
-    border-color: var(--dc, var(--primary));
-    color: var(--bg);
-    transform: translateY(-1px);
-}
-
-.p-link-live {
-    color: var(--dc, var(--primary));
-    background: color-mix(in srgb, var(--dc, var(--primary)) 12%, transparent);
-    border-color: color-mix(in srgb, var(--dc, var(--primary)) 40%, transparent);
-}
-
-.p-link-live:hover {
-    background: var(--dc, var(--primary));
-    color: var(--bg);
-}
-
-/* 5. Gradient Stat Numbers */
-.stat-num,
-.gh-num {
-    background: linear-gradient(135deg, var(--text) 20%, var(--primary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
 
 

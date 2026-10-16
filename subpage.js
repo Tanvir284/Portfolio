@@ -75,8 +75,12 @@ if (cursorOuter && cursorInner && typeof gsap !== 'undefined') {
     });
 }
 
-/* --- Bento card spotlight on subpages --- */
-document.querySelectorAll('.project-card, .a-card, .cred-card, .stat-cell, .gh-card').forEach(card => {
+/* --- Editorial subtitles & Bento card spotlight on subpages --- */
+document.querySelectorAll('.section-header p:not(.eyebrow)').forEach(p => {
+    p.textContent = p.textContent.replace(/^\s*\/\/\s*/, '');
+});
+
+document.querySelectorAll('.project-card, .a-card, .cred-card, .stat-cell, .gh-card, .ai-row').forEach(card => {
     card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
         card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);

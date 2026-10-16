@@ -239,10 +239,10 @@ function initThreeJS() {
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
     const material = new THREE.PointsMaterial({
-        size: 0.05,
-        color: 0x00f3ff,
+        size: 0.045,
+        color: 0x6384ff,
         transparent: true,
-        opacity: 0.8,
+        opacity: 0.65,
         blending: THREE.AdditiveBlending
     });
 
@@ -252,10 +252,10 @@ function initThreeJS() {
     // Inner Neural Lattice Core (counter-rotating wireframe geodesic sphere)
     const coreGeo = new THREE.IcosahedronGeometry(5.2, 2);
     const coreMat = new THREE.MeshBasicMaterial({
-        color: 0xbc26ff,
+        color: 0xa78bfa,
         wireframe: true,
         transparent: true,
-        opacity: 0.12
+        opacity: 0.1
     });
     coreMesh = new THREE.Mesh(coreGeo, coreMat);
     scene.add(coreMesh);
@@ -953,12 +953,106 @@ if (statNums.length) {
     sweep();
 }
 
+/* --- CLEAN EDITORIAL SUBTITLES & GRAPHICAL PROJECT PREVIEWS --- */
+document.querySelectorAll('.section-header p:not(.eyebrow)').forEach(p => {
+    p.textContent = p.textContent.replace(/^\s*\/\/\s*/, '');
+});
+
+const PREVIEW_SVGS = {
+    ai: `<svg class="p-preview-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="160" cy="70" r="46" stroke="currentColor" stroke-opacity="0.22" stroke-width="1" stroke-dasharray="4 4"/>
+        <circle cx="160" cy="70" r="28" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.2"/>
+        <path d="M40 95 C90 45, 130 95, 160 70 C190 45, 230 95, 280 50" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="70" y1="35" x2="132" y2="58" stroke="currentColor" stroke-opacity="0.25" stroke-width="1"/>
+        <line x1="250" y1="38" x2="188" y2="58" stroke="currentColor" stroke-opacity="0.25" stroke-width="1"/>
+        <circle cx="70" cy="35" r="3.5" fill="currentColor" fill-opacity="0.6"/>
+        <circle cx="250" cy="38" r="3.5" fill="currentColor" fill-opacity="0.6"/>
+        <circle cx="160" cy="70" r="4.5" fill="currentColor"/>
+    </svg>`,
+    web: `<svg class="p-preview-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="34" y="28" width="70" height="84" rx="8" stroke="currentColor" stroke-opacity="0.26" stroke-width="1.2" fill="currentColor" fill-opacity="0.04"/>
+        <rect x="114" y="28" width="172" height="38" rx="8" stroke="currentColor" stroke-opacity="0.32" stroke-width="1.2" fill="currentColor" fill-opacity="0.06"/>
+        <rect x="114" y="74" width="82" height="38" rx="8" stroke="currentColor" stroke-opacity="0.22" stroke-width="1.2"/>
+        <rect x="204" y="74" width="82" height="38" rx="8" stroke="currentColor" stroke-opacity="0.22" stroke-width="1.2"/>
+        <path d="M128 54 L158 42 L192 49 L232 36 L268 44" stroke="currentColor" stroke-opacity="0.65" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`,
+    ml: `<svg class="p-preview-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="44" y1="108" x2="276" y2="108" stroke="currentColor" stroke-opacity="0.2" stroke-width="1"/>
+        <path d="M48 102 Q115 92, 165 62 T272 28" stroke="currentColor" stroke-opacity="0.65" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="82" cy="92" r="3.5" fill="currentColor" fill-opacity="0.5"/>
+        <circle cx="128" cy="74" r="4" fill="currentColor" fill-opacity="0.7"/>
+        <circle cx="174" cy="58" r="4" fill="currentColor" fill-opacity="0.85"/>
+        <circle cx="222" cy="40" r="4.5" fill="currentColor"/>
+        <rect x="64" y="88" width="14" height="20" rx="3" fill="currentColor" fill-opacity="0.14"/>
+        <rect x="110" y="70" width="14" height="38" rx="3" fill="currentColor" fill-opacity="0.18"/>
+        <rect x="156" y="54" width="14" height="54" rx="3" fill="currentColor" fill-opacity="0.22"/>
+        <rect x="204" y="38" width="14" height="70" rx="3" fill="currentColor" fill-opacity="0.28"/>
+    </svg>`,
+    mobile: `<svg class="p-preview-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="122" y="14" width="76" height="112" rx="14" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" fill="currentColor" fill-opacity="0.05"/>
+        <line x1="148" y1="24" x2="172" y2="24" stroke="currentColor" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/>
+        <rect x="132" y="34" width="56" height="32" rx="6" fill="currentColor" fill-opacity="0.16"/>
+        <rect x="132" y="72" width="26" height="26" rx="5" stroke="currentColor" stroke-opacity="0.3" stroke-width="1"/>
+        <rect x="162" y="72" width="26" height="26" rx="5" stroke="currentColor" stroke-opacity="0.3" stroke-width="1"/>
+    </svg>`,
+    systems: `<svg class="p-preview-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="160,22 222,56 160,90 98,56" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.4" fill="currentColor" fill-opacity="0.06"/>
+        <polygon points="160,46 222,80 160,114 98,80" stroke="currentColor" stroke-opacity="0.28" stroke-width="1.2"/>
+        <line x1="98" y1="56" x2="98" y2="80" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.2"/>
+        <line x1="222" y1="56" x2="222" y2="80" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.2"/>
+        <line x1="160" y1="90" x2="160" y2="114" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.2"/>
+    </svg>`
+};
+
+const DOMAIN_ICONS = {
+    ai: 'fas fa-brain',
+    web: 'fas fa-layer-group',
+    ml: 'fas fa-chart-line',
+    mobile: 'fas fa-mobile-screen',
+    systems: 'fas fa-cube'
+};
+
+document.querySelectorAll('.project-card').forEach(card => {
+    if (card.querySelector('.p-preview')) return;
+    const domain = card.dataset.domain || 'ai';
+    const hasLive = Boolean(card.querySelector('.p-link-live'));
+    const firstMetricVal = card.querySelector('.p-metrics .m-val')?.textContent?.trim();
+    const firstMetricKey = card.querySelector('.p-metrics .m-key')?.textContent?.trim();
+    const firstTag = card.querySelector('.p-tags span')?.textContent?.trim() || 'Architecture';
+    const secTag = card.querySelectorAll('.p-tags span')[1]?.textContent?.trim();
+
+    const metricLabel = firstMetricVal
+        ? `${firstMetricVal} ${firstMetricKey || ''}`.trim()
+        : (secTag ? `${firstTag} · ${secTag}` : firstTag);
+
+    const badgeText = hasLive ? 'LIVE DEPLOYMENT' : firstTag.toUpperCase();
+    const iconCls = DOMAIN_ICONS[domain] || 'fas fa-cube';
+    const svgArt = PREVIEW_SVGS[domain] || PREVIEW_SVGS.ai;
+
+    const preview = document.createElement('div');
+    preview.className = 'p-preview';
+    preview.setAttribute('aria-hidden', 'true');
+    preview.innerHTML = `
+        <div class="p-preview-top">
+            <div class="p-preview-dots"><span></span><span></span><span></span></div>
+            <span class="p-preview-badge ${hasLive ? 'is-live' : ''}">${badgeText}</span>
+        </div>
+        <div class="p-preview-art" style="color: var(--dc, var(--primary))">${svgArt}</div>
+        <div class="p-preview-center">
+            <div class="p-preview-orb"><i class="${iconCls}"></i></div>
+            <span class="p-preview-metric">${metricLabel}</span>
+        </div>
+    `;
+    card.prepend(preview);
+});
+
 /* --- PROJECT FILTERING --- */
 const filterBtns = document.querySelectorAll('.filter-btn');
 const filterCount = document.querySelector('.filter-count');
 
 if (filterBtns.length > 0) {
     const cards = Array.from(document.querySelectorAll('.project-card'));
+    const grid = document.querySelector('.project-grid');
     const noResults = document.querySelector('.no-results');
 
     const applyFilter = (filter) => {
@@ -968,6 +1062,7 @@ if (filterBtns.length > 0) {
             card.classList.toggle('is-hidden', !match);
             if (match) shown++;
         });
+        if (grid) grid.classList.toggle('is-filtered', filter !== 'all');
 
         filterBtns.forEach(b => {
             const on = b.dataset.filter === filter;
@@ -1206,9 +1301,9 @@ function closeModal() {
 
 /* --- THEME SWITCHER LOGIC --- */
 const themes = {
-    cyan: { primary: '#00f3ff', secondary: '#b000ff', glow: 'rgba(0, 243, 255, 0.4)' },
-    emerald: { primary: '#00ff9d', secondary: '#00b8ff', glow: 'rgba(0, 255, 157, 0.4)' },
-    crimson: { primary: '#ff0055', secondary: '#ff9d00', glow: 'rgba(255, 0, 85, 0.4)' }
+    cyan: { primary: '#6384ff', secondary: '#a78bfa', glow: 'rgba(99, 132, 255, 0.34)' },
+    emerald: { primary: '#e5a93c', secondary: '#f59e0b', glow: 'rgba(229, 169, 60, 0.32)' },
+    crimson: { primary: '#f43f5e', secondary: '#c084fc', glow: 'rgba(244, 63, 94, 0.32)' }
 };
 
 const themeBtns = document.querySelectorAll('.theme-btn');
