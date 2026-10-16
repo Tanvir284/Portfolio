@@ -151,7 +151,7 @@ if (circleText) {
 }
 
 
-/* --- 3D DEEP SPACE STARFIELD + WARP-SPEED + SHOOTING STARS + RINGED PLANET (THREE.JS) --- */
+/* --- 3D SOLAR SYSTEM & GALAXY SPACE TOUR + WARP-SPEED + SHOOTING STARS (THREE.JS) --- */
 const container = document.getElementById('webgl-container');
 let scene, camera, renderer, particlesMesh, coreMesh;
 let farGeo, nearGeo, farCount = 1100, nearCount = 260;
@@ -159,15 +159,28 @@ let shootingStars = [];
 let warpSpeed = 0;
 let lastScrollYSpace = window.scrollY || 0;
 
-// Idea 3: 3D Ringed Planet objects
-let planetGroup, planetMesh, ringMesh, ringDustMesh, ringDustGeo, planetHaloSprite, moonPivot, moonMesh;
+// Space Tour State & Objects (All 7 other planets + Sun + Moon + Spiral Galaxies; Earth excluded as we departed from Earth!)
 let sunLight, ambientLight;
-const ringDustCount = 360;
-const planetTexCache = { dark: null, light: null };
-const ringTexCache = { dark: null, light: null };
-const haloTexCache = { dark: null, light: null };
+let tourBodies = [];
+let bgGalaxies = [];
+const TOUR_SPACING = 27;
+const TOUR_DEFS = [
+    { id: 'saturn',   side:  1, yOff:  2.2, radius: 2.35, tilt: [0.44, -0.28, -0.32], hasSaturnRings: true, hasMoon: true },
+    { id: 'mars',     side: -1, yOff: -1.6, radius: 1.75, tilt: [0.22,  0.15,  0.42], haloColor: [251, 113, 133], hasMoon: true },
+    { id: 'sun',      side:  1, yOff:  2.6, radius: 3.05, tilt: [0.05,  0.00,  0.08], isSun: true },
+    { id: 'moon',     side: -1, yOff:  1.8, radius: 1.38, tilt: [0.12, -0.10,  0.15], haloColor: [226, 232, 240] },
+    { id: 'mercury',  side:  1, yOff: -2.0, radius: 1.25, tilt: [0.08,  0.12, -0.05], haloColor: [214, 188, 150] },
+    { id: 'venus',    side: -1, yOff:  2.1, radius: 1.92, tilt: [0.18, -0.20,  0.12], haloColor: [251, 191, 36] },
+    { id: 'jupiter',  side:  1, yOff: -1.2, radius: 2.85, tilt: [0.16,  0.10, -0.18], haloColor: [245, 158, 11], hasMoon: true },
+    { id: 'uranus',   side: -1, yOff:  2.3, radius: 2.05, tilt: [0.35,  0.20,  1.42], hasUranusRings: true, haloColor: [103, 232, 249] },
+    { id: 'neptune',  side:  1, yOff: -1.9, radius: 2.00, tilt: [0.28, -0.18,  0.46], haloColor: [59, 130, 246], hasMoon: true },
+    { id: 'galaxy',   side: -1, yOff:  2.0, radius: 3.50, tilt: [0.68,  0.22, -0.38], isGalaxy: true }
+];
+const TOTAL_TRACK_LEN = TOUR_DEFS.length * TOUR_SPACING;
+const texCacheSpace = {};
 
 function makeStarSprite() {
+    if (texCacheSpace.starSprite) return texCacheSpace.starSprite;
     const c = document.createElement('canvas');
     c.width = 64;
     c.height = 64;
@@ -179,96 +192,207 @@ function makeStarSprite() {
     g.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 64, 64);
-    return new THREE.CanvasTexture(c);
+    texCacheSpace.starSprite = new THREE.CanvasTexture(c);
+    return texCacheSpace.starSprite;
 }
 
-function makePlanetTexture(isLight) {
-    const key = isLight ? 'light' : 'dark';
-    if (planetTexCache[key]) return planetTexCache[key];
+function makeColorHaloTexture(rgbArr, strength = 0.45) {
+    const key = `halo_${rgbArr.join('_')}_${strength}`;
+    if (texCacheSpace[key]) return texCacheSpace[key];
+    const c = document.createElement('canvas');
+    c.width = 128;
+    c.height = 128;
+    const ctx = c.getContext('2d');
+    const [r, g, b] = rgbArr;
+    const grad = ctx.createRadialGradient(64, 64, 14, 64, 64, 64);
+    grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${strength})`);
+    grad.addColorStop(0.45, `rgba(${r}, ${g}, ${b}, ${strength * 0.42})`);
+    grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 128, 128);
+    texCacheSpace[key] = new THREE.CanvasTexture(c);
+    return texCacheSpace[key];
+}
 
+function makeCelestialTexture(type) {
+    if (texCacheSpace[type]) return texCacheSpace[type];
     const c = document.createElement('canvas');
     c.width = 512;
     c.height = 256;
     const ctx = c.getContext('2d');
 
     const grad = ctx.createLinearGradient(0, 0, 0, 256);
-    if (isLight) {
-        grad.addColorStop(0.00, '#1e3a8a');
-        grad.addColorStop(0.16, '#3b82f6');
-        grad.addColorStop(0.30, '#6366f1');
-        grad.addColorStop(0.44, '#93c5fd');
-        grad.addColorStop(0.50, '#e0f2fe');
-        grad.addColorStop(0.58, '#60a5fa');
-        grad.addColorStop(0.72, '#4f46e5');
-        grad.addColorStop(0.86, '#2563eb');
-        grad.addColorStop(1.00, '#1e1b4b');
-    } else {
-        grad.addColorStop(0.00, '#090d24');
-        grad.addColorStop(0.14, '#1d3578');
-        grad.addColorStop(0.26, '#3b5bdb');
-        grad.addColorStop(0.36, '#2b2468');
-        grad.addColorStop(0.46, '#6384ff');
-        grad.addColorStop(0.52, '#a5f3fc');
-        grad.addColorStop(0.59, '#4c6ef5');
-        grad.addColorStop(0.70, '#5f3dc4');
-        grad.addColorStop(0.84, '#1e295b');
-        grad.addColorStop(1.00, '#070a1c');
-    }
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 512, 256);
-
-    // Subtle atmospheric cloud striations & storm bands
-    for (let y = 8; y < 248; y += 4) {
-        const wave = Math.sin(y * 0.18) * 0.5 + 0.5;
-        ctx.fillStyle = isLight
-            ? `rgba(255, 255, 255, ${0.04 + wave * 0.08})`
-            : `rgba(165, 243, 252, ${0.02 + wave * 0.06})`;
-        ctx.fillRect(0, y, 512, 1.5);
+    if (type === 'sun') {
+        grad.addColorStop(0.00, '#fff7ed');
+        grad.addColorStop(0.20, '#fef08a');
+        grad.addColorStop(0.45, '#facc15');
+        grad.addColorStop(0.70, '#f97316');
+        grad.addColorStop(0.90, '#ea580c');
+        grad.addColorStop(1.00, '#fde047');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+        // Solar plasma granulation & bright active flares
+        for (let i = 0; i < 160; i++) {
+            const x = (i * 73) % 512;
+            const y = (i * 41) % 256;
+            const rad = 6 + (i % 18);
+            const g2 = ctx.createRadialGradient(x, y, 0, x, y, rad);
+            g2.addColorStop(0, i % 3 === 0 ? 'rgba(255,255,255,0.45)' : 'rgba(220,38,38,0.28)');
+            g2.addColorStop(1, 'rgba(251,146,60,0)');
+            ctx.fillStyle = g2;
+            ctx.beginPath();
+            ctx.arc(x, y, rad, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (type === 'moon' || type === 'mercury') {
+        const isMerc = type === 'mercury';
+        grad.addColorStop(0.00, isMerc ? '#78716c' : '#94a3b8');
+        grad.addColorStop(0.35, isMerc ? '#a8a29e' : '#cbd5e1');
+        grad.addColorStop(0.55, isMerc ? '#78716c' : '#94a3b8');
+        grad.addColorStop(0.80, isMerc ? '#57534e' : '#64748b');
+        grad.addColorStop(1.00, isMerc ? '#44403c' : '#475569');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+        // Dark lunar mare basins & impact craters
+        for (let i = 0; i < 65; i++) {
+            const x = (i * 89 + 23) % 500 + 6;
+            const y = (i * 53 + 17) % 230 + 13;
+            const r = i < 10 ? (18 + (i % 16)) : (3 + (i % 9));
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = i < 10 ? 'rgba(30, 41, 59, 0.34)' : 'rgba(15, 23, 42, 0.24)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(248, 250, 252, 0.26)';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+        }
+    } else if (type === 'venus') {
+        grad.addColorStop(0.00, '#92400e');
+        grad.addColorStop(0.22, '#d97706');
+        grad.addColorStop(0.45, '#fbbf24');
+        grad.addColorStop(0.55, '#fde68a');
+        grad.addColorStop(0.76, '#f59e0b');
+        grad.addColorStop(1.00, '#78350f');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+        for (let y = 10; y < 246; y += 5) {
+            ctx.fillStyle = `rgba(254, 243, 199, ${0.06 + Math.sin(y * 0.14) * 0.05})`;
+            ctx.fillRect(0, y, 512, 2.5);
+        }
+    } else if (type === 'mars') {
+        // Ice caps at poles + rusty red-orange desert + dark canyon belt
+        grad.addColorStop(0.00, '#f8fafc');
+        grad.addColorStop(0.06, '#fdba74');
+        grad.addColorStop(0.22, '#ea580c');
+        grad.addColorStop(0.45, '#c2410c');
+        grad.addColorStop(0.55, '#7c2d12');
+        grad.addColorStop(0.75, '#dc2626');
+        grad.addColorStop(0.94, '#fb923c');
+        grad.addColorStop(1.00, '#f8fafc');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+        // Dark volcanic regions & Valles Marineris canyon
+        for (let i = 0; i < 38; i++) {
+            const x = (i * 97) % 512;
+            const y = 35 + ((i * 61) % 185);
+            ctx.fillStyle = i % 2 === 0 ? 'rgba(67, 20, 7, 0.30)' : 'rgba(254, 215, 170, 0.16)';
+            ctx.beginPath();
+            ctx.ellipse(x, y, 16 + (i % 24), 4 + (i % 8), 0.2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else if (type === 'jupiter') {
+        grad.addColorStop(0.00, '#451a03');
+        grad.addColorStop(0.12, '#9a3412');
+        grad.addColorStop(0.22, '#fed7aa');
+        grad.addColorStop(0.32, '#c2410c');
+        grad.addColorStop(0.42, '#fffbeb');
+        grad.addColorStop(0.52, '#d97706');
+        grad.addColorStop(0.62, '#9a3412');
+        grad.addColorStop(0.72, '#fde68a');
+        grad.addColorStop(0.84, '#b45309');
+        grad.addColorStop(1.00, '#451a03');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+        // Great Red Spot storm oval
+        ctx.save();
+        ctx.beginPath();
+        ctx.ellipse(310, 158, 34, 20, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#dc2626';
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#fed7aa';
+        ctx.stroke();
+        ctx.restore();
+    } else if (type === 'saturn') {
+        grad.addColorStop(0.00, '#1e293b');
+        grad.addColorStop(0.16, '#475569');
+        grad.addColorStop(0.32, '#d97706');
+        grad.addColorStop(0.46, '#fde68a');
+        grad.addColorStop(0.54, '#fef3c7');
+        grad.addColorStop(0.68, '#f59e0b');
+        grad.addColorStop(0.84, '#3b82f6');
+        grad.addColorStop(1.00, '#0f172a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+        for (let y = 8; y < 248; y += 4) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.03 + Math.sin(y * 0.2) * 0.04})`;
+            ctx.fillRect(0, y, 512, 1.5);
+        }
+    } else if (type === 'uranus') {
+        grad.addColorStop(0.00, '#0891b2');
+        grad.addColorStop(0.28, '#22d3ee');
+        grad.addColorStop(0.50, '#a5f3fc');
+        grad.addColorStop(0.72, '#06b6d4');
+        grad.addColorStop(1.00, '#155e75');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+    } else if (type === 'neptune') {
+        grad.addColorStop(0.00, '#172554');
+        grad.addColorStop(0.25, '#1d4ed8');
+        grad.addColorStop(0.50, '#3b82f6');
+        grad.addColorStop(0.75, '#1e40af');
+        grad.addColorStop(1.00, '#0f172a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+        // Supersonic white methane cloud streaks & Great Dark Spot
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.55)';
+        ctx.beginPath();
+        ctx.ellipse(220, 145, 28, 16, 0, 0, Math.PI * 2);
+        ctx.fill();
+        for (let i = 0; i < 18; i++) {
+            ctx.fillStyle = 'rgba(224, 242, 254, 0.45)';
+            ctx.fillRect((i * 83) % 460, 30 + ((i * 43) % 190), 38, 2.2);
+        }
     }
 
     const tex = new THREE.CanvasTexture(c);
-    planetTexCache[key] = tex;
+    texCacheSpace[type] = tex;
     return tex;
 }
 
-function makeRingDiscTexture(isLight) {
-    const key = isLight ? 'light' : 'dark';
-    if (ringTexCache[key]) return ringTexCache[key];
-
+function makeSaturnRingTexture() {
+    if (texCacheSpace.saturnRing) return texCacheSpace.saturnRing;
     const size = 512;
     const c = document.createElement('canvas');
     c.width = size;
     c.height = size;
     const ctx = c.getContext('2d');
-    const cx = size / 2;
-    const cy = size / 2;
+    const cx = size / 2, cy = size / 2;
 
-    // Draw concentric Saturn-style ring bands from inner r=106 to outer r=248
     for (let r = 106; r <= 248; r += 1) {
-        const norm = (r - 106) / (248 - 106); // 0 -> 1
-        // Cassini Division gap around norm 0.64 - 0.71 and Encke gap around 0.89 - 0.91
-        if ((norm > 0.64 && norm < 0.705) || (norm > 0.885 && norm < 0.905)) {
-            continue;
-        }
-
-        let alpha = Math.sin(norm * Math.PI) * 0.78;
-        // Fine harmonic ringlets
+        const norm = (r - 106) / (248 - 106);
+        if ((norm > 0.64 && norm < 0.705) || (norm > 0.885 && norm < 0.905)) continue;
+        let alpha = Math.sin(norm * Math.PI) * 0.82;
         alpha *= (0.68 + 0.32 * Math.sin(r * 0.55) * Math.cos(r * 0.23));
-        if (norm < 0.16) alpha *= norm / 0.16; // Soft inner C-ring fade
-        if (norm > 0.94) alpha *= (1 - norm) / 0.06; // Outer edge fade
+        if (norm < 0.16) alpha *= norm / 0.16;
+        if (norm > 0.94) alpha *= (1 - norm) / 0.06;
 
         let col;
-        if (isLight) {
-            if (norm < 0.38) col = `rgba(59, 130, 246, ${alpha * 0.65})`;
-            else if (norm < 0.64) col = `rgba(79, 70, 229, ${alpha * 0.82})`;
-            else col = `rgba(37, 99, 235, ${alpha * 0.72})`;
-        } else {
-            if (norm < 0.32) col = `rgba(124, 58, 237, ${alpha * 0.55})`;
-            else if (norm < 0.54) col = `rgba(99, 132, 255, ${alpha * 0.88})`;
-            else if (norm < 0.64) col = `rgba(165, 243, 252, ${alpha * 0.92})`;
-            else if (norm < 0.88) col = `rgba(129, 140, 248, ${alpha * 0.75})`;
-            else col = `rgba(251, 191, 36, ${alpha * 0.65})`;
-        }
+        if (norm < 0.32) col = `rgba(180, 130, 255, ${alpha * 0.55})`;
+        else if (norm < 0.54) col = `rgba(253, 230, 138, ${alpha * 0.88})`;
+        else if (norm < 0.64) col = `rgba(165, 243, 252, ${alpha * 0.92})`;
+        else if (norm < 0.88) col = `rgba(99, 132, 255, ${alpha * 0.78})`;
+        else col = `rgba(251, 191, 36, ${alpha * 0.70})`;
 
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -276,51 +400,107 @@ function makeRingDiscTexture(isLight) {
         ctx.lineWidth = 1.25;
         ctx.stroke();
     }
-
-    const tex = new THREE.CanvasTexture(c);
-    ringTexCache[key] = tex;
-    return tex;
+    texCacheSpace.saturnRing = new THREE.CanvasTexture(c);
+    return texCacheSpace.saturnRing;
 }
 
-function makeHaloTexture(isLight) {
-    const key = isLight ? 'light' : 'dark';
-    if (haloTexCache[key]) return haloTexCache[key];
-
+function makeUranusRingTexture() {
+    if (texCacheSpace.uranusRing) return texCacheSpace.uranusRing;
+    const size = 256;
     const c = document.createElement('canvas');
-    c.width = 128;
-    c.height = 128;
+    c.width = size;
+    c.height = size;
     const ctx = c.getContext('2d');
-    const g = ctx.createRadialGradient(64, 64, 18, 64, 64, 64);
-    if (isLight) {
-        g.addColorStop(0, 'rgba(59, 130, 246, 0.32)');
-        g.addColorStop(0.5, 'rgba(99, 102, 241, 0.14)');
-        g.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    } else {
-        g.addColorStop(0, 'rgba(99, 132, 255, 0.45)');
-        g.addColorStop(0.45, 'rgba(124, 58, 237, 0.20)');
-        g.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    }
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 128, 128);
+    const rings = [82, 88, 96, 108, 116];
+    rings.forEach((r, idx) => {
+        ctx.beginPath();
+        ctx.arc(128, 128, r, 0, Math.PI * 2);
+        ctx.strokeStyle = idx === 3 ? 'rgba(165, 243, 252, 0.65)' : 'rgba(103, 232, 249, 0.32)';
+        ctx.lineWidth = idx === 3 ? 2.2 : 1.2;
+        ctx.stroke();
+    });
+    texCacheSpace.uranusRing = new THREE.CanvasTexture(c);
+    return texCacheSpace.uranusRing;
+}
 
-    const tex = new THREE.CanvasTexture(c);
-    haloTexCache[key] = tex;
-    return tex;
+function createSpiralGalaxyGroup(starCount, radius, armCount, isDistantMilkyWay) {
+    const grp = new THREE.Group();
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(starCount * 3);
+    const col = new Float32Array(starCount * 3);
+
+    for (let i = 0; i < starCount; i++) {
+        const r = Math.pow(Math.random(), 1.45) * radius;
+        const armAngle = ((i % armCount) / armCount) * Math.PI * 2;
+        const spinAngle = r * (isDistantMilkyWay ? 0.55 : 0.95);
+        const scatter = (Math.random() - 0.5) * (0.35 + r * 0.14);
+        const angle = armAngle + spinAngle + scatter;
+
+        pos[i * 3] = Math.cos(angle) * r;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * (0.28 + (radius - r) * 0.08);
+        pos[i * 3 + 2] = Math.sin(angle) * r;
+
+        const t = r / radius;
+        if (t < 0.24) {
+            // Blazing golden-white galactic bulge
+            col[i * 3] = 1.0;
+            col[i * 3 + 1] = 0.93;
+            col[i * 3 + 2] = 0.76;
+        } else if (t < 0.62) {
+            // Violet-magenta spiral arms
+            col[i * 3] = 0.78;
+            col[i * 3 + 1] = 0.56;
+            col[i * 3 + 2] = 1.0;
+        } else {
+            // Outer sapphire-cyan star clusters
+            col[i * 3] = 0.42;
+            col[i * 3 + 1] = 0.78;
+            col[i * 3 + 2] = 1.0;
+        }
+    }
+
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+
+    const mat = new THREE.PointsMaterial({
+        size: isDistantMilkyWay ? 0.48 : 0.34,
+        map: makeStarSprite(),
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.92,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+    });
+    const pts = new THREE.Points(geo, mat);
+    grp.add(pts);
+
+    // Glowing galactic core sprite
+    const coreHalo = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: makeColorHaloTexture([253, 224, 71], 0.65),
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+    }));
+    const coreScale = radius * 0.75;
+    coreHalo.scale.set(coreScale, coreScale, 1);
+    grp.add(coreHalo);
+
+    return { group: grp, points: pts };
 }
 
 function populateStarColors(geo, count, isLight) {
     const cols = new Float32Array(count * 3);
     const paletteDark = [
-        [0.95, 0.97, 1.0],   // crisp starlight white
-        [0.52, 0.68, 1.0],   // sapphire blue
-        [0.72, 0.60, 1.0],   // cosmic violet
-        [1.0, 0.90, 0.68]    // warm gold giant
+        [0.95, 0.97, 1.0],
+        [0.52, 0.68, 1.0],
+        [0.72, 0.60, 1.0],
+        [1.0, 0.90, 0.68]
     ];
     const paletteLight = [
-        [0.12, 0.24, 0.68],  // deep royal blue
-        [0.26, 0.22, 0.78],  // cosmic indigo
-        [0.42, 0.16, 0.85],  // deep violet
-        [0.15, 0.38, 0.82]   // sapphire
+        [0.12, 0.24, 0.68],
+        [0.26, 0.22, 0.78],
+        [0.42, 0.16, 0.85],
+        [0.15, 0.38, 0.82]
     ];
     const pal = isLight ? paletteLight : paletteDark;
     for (let i = 0; i < count; i++) {
@@ -338,7 +518,6 @@ function syncThreeColors() {
 
     if (farGeo) populateStarColors(farGeo, farCount, isLight);
     if (nearGeo) populateStarColors(nearGeo, nearCount, isLight);
-    if (ringDustGeo) populateStarColors(ringDustGeo, ringDustCount, isLight);
 
     if (particlesMesh && particlesMesh.material) {
         particlesMesh.material.blending = blend;
@@ -350,31 +529,11 @@ function syncThreeColors() {
         coreMesh.material.opacity = isLight ? 0.82 : 0.95;
         coreMesh.material.needsUpdate = true;
     }
-    if (planetMesh && planetMesh.material) {
-        planetMesh.material.map = makePlanetTexture(isLight);
-        planetMesh.material.needsUpdate = true;
-    }
-    if (ringMesh && ringMesh.material) {
-        ringMesh.material.map = makeRingDiscTexture(isLight);
-        ringMesh.material.opacity = isLight ? 0.78 : 0.92;
-        ringMesh.material.needsUpdate = true;
-    }
-    if (ringDustMesh && ringDustMesh.material) {
-        ringDustMesh.material.blending = blend;
-        ringDustMesh.material.opacity = isLight ? 0.75 : 0.92;
-        ringDustMesh.material.needsUpdate = true;
-    }
-    if (planetHaloSprite && planetHaloSprite.material) {
-        planetHaloSprite.material.map = makeHaloTexture(isLight);
-        planetHaloSprite.material.blending = blend;
-        planetHaloSprite.material.needsUpdate = true;
-    }
     if (ambientLight) {
-        ambientLight.intensity = isLight ? 0.85 : 0.42;
+        ambientLight.intensity = isLight ? 0.92 : 0.52;
     }
     if (sunLight) {
-        sunLight.intensity = isLight ? 1.25 : 1.55;
-        sunLight.color.set(isLight ? 0xffffff : 0xdbeafe);
+        sunLight.intensity = isLight ? 1.35 : 1.65;
     }
     shootingStars.forEach(s => {
         if (s.line && s.line.material) {
@@ -401,24 +560,142 @@ function resetShootingStar(s, initialDelay = false) {
     if (s.line) s.line.material.opacity = 0;
 }
 
-function updatePlanetResponsivePos() {
-    if (!planetGroup) return;
-    const w = window.innerWidth;
-    if (w < 768) {
-        planetGroup.position.set(3.6, 4.2, -16.5);
-        planetGroup.scale.setScalar(0.68);
-    } else if (w < 1100) {
-        planetGroup.position.set(6.8, 3.2, -15.5);
-        planetGroup.scale.setScalar(0.84);
-    } else {
-        planetGroup.position.set(9.4, 2.7, -14.5);
-        planetGroup.scale.setScalar(1.0);
+function buildSpaceTourStop(def, index, isLight) {
+    const group = new THREE.Group();
+    group.rotation.set(def.tilt[0], def.tilt[1], def.tilt[2]);
+    scene.add(group);
+
+    const stopObj = {
+        def,
+        group,
+        sphere: null,
+        ring: null,
+        ringDust: null,
+        moonPivot: null,
+        coronaOuter: null,
+        galaxyPts: null,
+        zPos: -14 - index * TOUR_SPACING
+    };
+
+    if (def.isGalaxy) {
+        const gal = createSpiralGalaxyGroup(850, 7.2, 4, false);
+        group.add(gal.group);
+        stopObj.galaxyPts = gal.points;
+        return stopObj;
     }
+
+    // Atmospheric or Solar Corona Halo
+    const haloRGB = def.isSun ? [251, 146, 60] : (def.haloColor || [99, 132, 255]);
+    const haloMat = new THREE.SpriteMaterial({
+        map: makeColorHaloTexture(haloRGB, def.isSun ? 0.78 : 0.44),
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+    });
+    const haloSprite = new THREE.Sprite(haloMat);
+    const haloScale = def.isSun ? def.radius * 4.2 : def.radius * 3.4;
+    haloSprite.scale.set(haloScale, haloScale, 1);
+    group.add(haloSprite);
+
+    if (def.isSun) {
+        const outerCorona = new THREE.Sprite(new THREE.SpriteMaterial({
+            map: makeColorHaloTexture([254, 240, 138], 0.52),
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        }));
+        outerCorona.scale.set(def.radius * 5.8, def.radius * 5.8, 1);
+        group.add(outerCorona);
+        stopObj.coronaOuter = outerCorona;
+    }
+
+    // Main Celestial Sphere (Sun is self-luminous MeshBasicMaterial; Planets/Moon use 3D lit MeshStandardMaterial)
+    const sphereGeo = new THREE.SphereGeometry(def.radius, 36, 36);
+    const sphereMat = def.isSun
+        ? new THREE.MeshBasicMaterial({ map: makeCelestialTexture('sun') })
+        : new THREE.MeshStandardMaterial({
+            map: makeCelestialTexture(def.id),
+            roughness: def.id === 'moon' || def.id === 'mercury' || def.id === 'mars' ? 0.82 : 0.62,
+            metalness: 0.10
+        });
+    const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+    group.add(sphereMesh);
+    stopObj.sphere = sphereMesh;
+
+    // Saturn's Multi-Band Ring System + 320 Sparkling Ice Particles
+    if (def.hasSaturnRings) {
+        const ringGeo = new THREE.PlaneGeometry(def.radius * 5.3, def.radius * 5.3);
+        const ringMat = new THREE.MeshBasicMaterial({
+            map: makeSaturnRingTexture(),
+            transparent: true,
+            opacity: 0.92,
+            depthWrite: false,
+            side: THREE.DoubleSide
+        });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.rotation.x = Math.PI / 2;
+        group.add(ringMesh);
+        stopObj.ring = ringMesh;
+
+        const dustCount = 320;
+        const dustGeo = new THREE.BufferGeometry();
+        const dustPos = new Float32Array(dustCount * 3);
+        for (let i = 0; i < dustCount; i++) {
+            const ang = Math.random() * Math.PI * 2;
+            const r = def.radius * 1.28 + Math.random() * (def.radius * 1.28);
+            dustPos[i * 3] = Math.cos(ang) * r;
+            dustPos[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+            dustPos[i * 3 + 2] = Math.sin(ang) * r;
+        }
+        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+        populateStarColors(dustGeo, dustCount, isLight);
+        const dustMesh = new THREE.Points(dustGeo, new THREE.PointsMaterial({
+            size: 0.20,
+            map: makeStarSprite(),
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.9,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        }));
+        group.add(dustMesh);
+        stopObj.ringDust = dustMesh;
+    }
+
+    // Uranus's Vertical Translucent Ice Ring
+    if (def.hasUranusRings) {
+        const uRingGeo = new THREE.PlaneGeometry(def.radius * 3.8, def.radius * 3.8);
+        const uRingMat = new THREE.MeshBasicMaterial({
+            map: makeUranusRingTexture(),
+            transparent: true,
+            opacity: 0.78,
+            depthWrite: false,
+            side: THREE.DoubleSide
+        });
+        const uRingMesh = new THREE.Mesh(uRingGeo, uRingMat);
+        uRingMesh.rotation.x = Math.PI / 2;
+        group.add(uRingMesh);
+        stopObj.ring = uRingMesh;
+    }
+
+    // Orbiting Companion Moon for Saturn, Jupiter, Mars, Neptune
+    if (def.hasMoon) {
+        const pivot = new THREE.Group();
+        group.add(pivot);
+        const mGeo = new THREE.SphereGeometry(Math.max(0.18, def.radius * 0.11), 16, 16);
+        const mMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.65 });
+        const mMesh = new THREE.Mesh(mGeo, mMat);
+        mMesh.position.set(def.hasSaturnRings ? def.radius * 2.9 : def.radius * 1.85, 0.15, 0);
+        pivot.add(mMesh);
+        stopObj.moonPivot = pivot;
+    }
+
+    return stopObj;
 }
 
 function initThreeJS() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 120);
+    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 150);
     camera.position.z = 14;
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
@@ -429,25 +706,25 @@ function initThreeJS() {
     const starSprite = makeStarSprite();
     const isLight = document.documentElement.classList.contains('light-mode');
 
-    // Lighting for the 3D Ringed Planet & Moon
-    ambientLight = new THREE.AmbientLight(0x93c5fd, isLight ? 0.85 : 0.42);
+    // Solar System Lighting
+    ambientLight = new THREE.AmbientLight(0x93c5fd, isLight ? 0.92 : 0.52);
     scene.add(ambientLight);
-    sunLight = new THREE.DirectionalLight(0xdbeafe, isLight ? 1.25 : 1.55);
-    sunLight.position.set(-18, 12, 16);
+    sunLight = new THREE.DirectionalLight(0xfffbeb, isLight ? 1.35 : 1.65);
+    sunLight.position.set(-18, 12, 18);
     scene.add(sunLight);
 
     // Layer 1: Deep Space Far Starfield
     farGeo = new THREE.BufferGeometry();
     const farPos = new Float32Array(farCount * 3);
     for (let i = 0; i < farCount * 3; i += 3) {
-        farPos[i] = (Math.random() - 0.5) * 95;
-        farPos[i + 1] = (Math.random() - 0.5) * 60;
-        farPos[i + 2] = -58 + Math.random() * 70;
+        farPos[i] = (Math.random() - 0.5) * 105;
+        farPos[i + 1] = (Math.random() - 0.5) * 65;
+        farPos[i + 2] = -68 + Math.random() * 80;
     }
     farGeo.setAttribute('position', new THREE.BufferAttribute(farPos, 3));
     populateStarColors(farGeo, farCount, isLight);
 
-    const farMat = new THREE.PointsMaterial({
+    particlesMesh = new THREE.Points(farGeo, new THREE.PointsMaterial({
         size: 0.34,
         map: starSprite,
         vertexColors: true,
@@ -455,22 +732,21 @@ function initThreeJS() {
         opacity: 0.88,
         depthWrite: false,
         blending: THREE.AdditiveBlending
-    });
-    particlesMesh = new THREE.Points(farGeo, farMat);
+    }));
     scene.add(particlesMesh);
 
-    // Layer 2: Foreground Bright Twinkling Stars (faster warp parallax)
+    // Layer 2: Foreground Bright Twinkling Stars
     nearGeo = new THREE.BufferGeometry();
     const nearPos = new Float32Array(nearCount * 3);
     for (let i = 0; i < nearCount * 3; i += 3) {
-        nearPos[i] = (Math.random() - 0.5) * 70;
-        nearPos[i + 1] = (Math.random() - 0.5) * 44;
-        nearPos[i + 2] = -45 + Math.random() * 58;
+        nearPos[i] = (Math.random() - 0.5) * 74;
+        nearPos[i + 1] = (Math.random() - 0.5) * 46;
+        nearPos[i + 2] = -48 + Math.random() * 60;
     }
     nearGeo.setAttribute('position', new THREE.BufferAttribute(nearPos, 3));
     populateStarColors(nearGeo, nearCount, isLight);
 
-    const nearMat = new THREE.PointsMaterial({
+    coreMesh = new THREE.Points(nearGeo, new THREE.PointsMaterial({
         size: 0.62,
         map: starSprite,
         vertexColors: true,
@@ -478,96 +754,31 @@ function initThreeJS() {
         opacity: 0.95,
         depthWrite: false,
         blending: THREE.AdditiveBlending
-    });
-    coreMesh = new THREE.Points(nearGeo, nearMat);
+    }));
     scene.add(coreMesh);
 
-    // Layer 3: Idea 3 — 3D Ringed Gas Giant Planet (Saturn-Style)
-    planetGroup = new THREE.Group();
-    planetGroup.rotation.set(0.44, -0.28, -0.32); // Iconic tilted Saturn ring angle
-    scene.add(planetGroup);
+    // Layer 3: Distant Milky Way & Deep-Space Spiral Galaxies (Always visible in far cosmos)
+    bgGalaxies = [];
+    const milkyWay = createSpiralGalaxyGroup(700, 18, 3, true);
+    milkyWay.group.position.set(-22, 10, -92);
+    milkyWay.group.rotation.set(0.58, -0.32, -0.45);
+    scene.add(milkyWay.group);
+    bgGalaxies.push(milkyWay);
 
-    // 3a. Atmospheric Limb Halo Sprite behind planet
-    const haloMat = new THREE.SpriteMaterial({
-        map: makeHaloTexture(isLight),
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending
-    });
-    planetHaloSprite = new THREE.Sprite(haloMat);
-    planetHaloSprite.scale.set(9.2, 9.2, 1);
-    planetGroup.add(planetHaloSprite);
+    const distantSpiral = createSpiralGalaxyGroup(520, 12, 4, true);
+    distantSpiral.group.position.set(25, -9, -86);
+    distantSpiral.group.rotation.set(0.72, 0.28, 0.35);
+    scene.add(distantSpiral.group);
+    bgGalaxies.push(distantSpiral);
 
-    // 3b. Gas Giant Sphere
-    const planetGeo = new THREE.SphereGeometry(2.45, 40, 40);
-    const planetMat = new THREE.MeshStandardMaterial({
-        map: makePlanetTexture(isLight),
-        roughness: 0.68,
-        metalness: 0.12
-    });
-    planetMesh = new THREE.Mesh(planetGeo, planetMat);
-    planetGroup.add(planetMesh);
+    // Layer 4: Full Solar System & Galaxy Space Tour Queue (Saturn -> Mars -> Sun -> Moon -> Mercury -> Venus -> Jupiter -> Uranus -> Neptune -> Galaxy)
+    tourBodies = TOUR_DEFS.map((def, idx) => buildSpaceTourStop(def, idx, isLight));
 
-    // 3c. Concentric Multi-Band Ring Disc
-    const ringPlaneGeo = new THREE.PlaneGeometry(12.8, 12.8);
-    const ringPlaneMat = new THREE.MeshBasicMaterial({
-        map: makeRingDiscTexture(isLight),
-        transparent: true,
-        opacity: 0.92,
-        depthWrite: false,
-        side: THREE.DoubleSide
-    });
-    ringMesh = new THREE.Mesh(ringPlaneGeo, ringPlaneMat);
-    ringMesh.rotation.x = Math.PI / 2;
-    planetGroup.add(ringMesh);
-
-    // 3d. Orbiting Sparkling Ice/Dust Particles along the Ring Plane
-    ringDustGeo = new THREE.BufferGeometry();
-    const dustPos = new Float32Array(ringDustCount * 3);
-    for (let i = 0; i < ringDustCount; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        // Concentrate particles along main rings (radius 3.0 to 6.1)
-        const radius = 3.0 + Math.random() * 3.1;
-        dustPos[i * 3] = Math.cos(angle) * radius;
-        dustPos[i * 3 + 1] = (Math.random() - 0.5) * 0.12;
-        dustPos[i * 3 + 2] = Math.sin(angle) * radius;
-    }
-    ringDustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
-    populateStarColors(ringDustGeo, ringDustCount, isLight);
-
-    const dustMat = new THREE.PointsMaterial({
-        size: 0.22,
-        map: starSprite,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.92,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending
-    });
-    ringDustMesh = new THREE.Points(ringDustGeo, dustMat);
-    planetGroup.add(ringDustMesh);
-
-    // 3e. Orbiting Companion Icy Moon (Titan / Enceladus style)
-    moonPivot = new THREE.Group();
-    planetGroup.add(moonPivot);
-    const moonGeo = new THREE.SphereGeometry(0.28, 20, 20);
-    const moonMat = new THREE.MeshStandardMaterial({
-        color: 0xe0f2fe,
-        roughness: 0.5,
-        metalness: 0.2
-    });
-    moonMesh = new THREE.Mesh(moonGeo, moonMat);
-    moonMesh.position.set(7.2, 0.18, 0);
-    moonPivot.add(moonMesh);
-
-    updatePlanetResponsivePos();
-
-    // Layer 4: Shooting Stars / Meteors (2 pooled streaks)
+    // Layer 5: Shooting Stars / Meteors (2 pooled streaks)
     shootingStars = [];
     for (let k = 0; k < 2; k++) {
         const lineGeo = new THREE.BufferGeometry();
-        const linePos = new Float32Array(6);
-        lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
+        lineGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
         const lineMat = new THREE.LineBasicMaterial({
             color: 0xa5f3fc,
             transparent: true,
@@ -590,7 +801,7 @@ function initThreeJS() {
         const cur = window.scrollY || 0;
         const delta = Math.abs(cur - lastScrollYSpace);
         lastScrollYSpace = cur;
-        warpSpeed = Math.min(0.55, warpSpeed + delta * 0.0022);
+        warpSpeed = Math.min(0.65, warpSpeed + delta * 0.0024);
     }, { passive: true });
 
     animateThreeJS();
@@ -608,7 +819,6 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    updatePlanetResponsivePos();
 }
 
 let clock = new THREE.Clock();
@@ -629,14 +839,14 @@ function animateThreeJS() {
 
     // Decay scroll warp speed smoothly
     warpSpeed *= 0.92;
-    const stepFar = (0.018 + warpSpeed * 0.65);
-    const stepNear = (0.036 + warpSpeed * 1.15);
+    const stepFar = (0.022 + warpSpeed * 0.65);
+    const stepNear = (0.042 + warpSpeed * 1.15);
 
     // Stream Far Stars toward camera
     const fArr = farGeo.attributes.position.array;
     for (let i = 2; i < fArr.length; i += 3) {
         fArr[i] += stepFar;
-        if (fArr[i] > 14) fArr[i] = -58;
+        if (fArr[i] > 14) fArr[i] = -68;
     }
     farGeo.attributes.position.needsUpdate = true;
 
@@ -644,7 +854,7 @@ function animateThreeJS() {
     const nArr = nearGeo.attributes.position.array;
     for (let i = 2; i < nArr.length; i += 3) {
         nArr[i] += stepNear;
-        if (nArr[i] > 14) nArr[i] = -45;
+        if (nArr[i] > 14) nArr[i] = -48;
     }
     nearGeo.attributes.position.needsUpdate = true;
 
@@ -653,15 +863,55 @@ function animateThreeJS() {
         coreMesh.material.size = 0.58 + Math.sin(elapsedTime * 2.4) * 0.08;
     }
 
-    // Animate 3D Ringed Planet, Rings, Dust & Orbiting Moon
-    if (planetGroup) {
-        planetMesh.rotation.y = elapsedTime * 0.14;
-        ringMesh.rotation.z = -elapsedTime * 0.06;
-        ringDustMesh.rotation.y = elapsedTime * (0.18 + warpSpeed * 0.45);
-        moonPivot.rotation.y = elapsedTime * 0.32;
-        // Gentle cosmic float & subtle tilt breathing
-        planetGroup.rotation.x = 0.44 + Math.sin(elapsedTime * 0.35) * 0.035;
-        planetGroup.rotation.z = -0.32 + Math.cos(elapsedTime * 0.28) * 0.025;
+    // Rotate distant Milky Way & background Spiral Galaxies
+    for (let g = 0; g < bgGalaxies.length; g++) {
+        bgGalaxies[g].points.rotation.y = elapsedTime * (0.035 + g * 0.015);
+    }
+
+    // Advance the Continuous 3D Solar System & Galaxy Space Tour!
+    const tourStep = (3.8 + warpSpeed * 32.0) * dt;
+    const isMobile = window.innerWidth < 768;
+    const lateralScale = isMobile ? 0.52 : (window.innerWidth < 1100 ? 0.78 : 1.0);
+    const bodyScale = isMobile ? 0.68 : (window.innerWidth < 1100 ? 0.85 : 1.0);
+
+    for (let i = 0; i < tourBodies.length; i++) {
+        const b = tourBodies[i];
+        b.zPos += tourStep;
+
+        // Once a planet passes behind the camera (z > 19), recycle it to the back of the tour queue
+        if (b.zPos > 19) {
+            b.zPos -= TOTAL_TRACK_LEN;
+        }
+
+        // Only render bodies within the visible deep-space corridor (-110 to +19) for zero lag
+        if (b.zPos < -110 || b.zPos > 19) {
+            b.group.visible = false;
+            continue;
+        }
+        b.group.visible = true;
+
+        // Curved spacecraft flyby trajectory: starts closer to horizon center in deep space,
+        // then glides smoothly outward to the left/right side as we fly past it
+        const approachNorm = Math.max(0, Math.min(1, (b.zPos + 100) / 115)); // 0 far -> 1 near
+        const xPos = b.def.side * (3.2 + approachNorm * 7.2) * lateralScale;
+        const yPos = b.def.yOff * lateralScale + Math.sin(elapsedTime * 0.5 + i) * 0.22;
+
+        b.group.position.set(xPos, yPos, b.zPos);
+
+        // Smooth fade-in from deep space (-110 to -85)
+        const distScale = b.zPos < -85 ? Math.max(0.01, (b.zPos + 110) / 25) : 1.0;
+        b.group.scale.setScalar(bodyScale * distScale);
+
+        // Axial rotation of planet/Sun, rings, dust, moon, or spiral galaxy
+        if (b.sphere) b.sphere.rotation.y = elapsedTime * (b.def.isSun ? 0.08 : 0.22);
+        if (b.ring) b.ring.rotation.z = -elapsedTime * 0.07;
+        if (b.ringDust) b.ringDust.rotation.y = elapsedTime * (0.20 + warpSpeed * 0.4);
+        if (b.moonPivot) b.moonPivot.rotation.y = elapsedTime * 0.42;
+        if (b.galaxyPts) b.galaxyPts.rotation.y = elapsedTime * 0.14;
+        if (b.coronaOuter) {
+            const pulse = b.def.radius * (5.6 + Math.sin(elapsedTime * 2.2) * 0.35);
+            b.coronaOuter.scale.set(pulse, pulse, 1);
+        }
     }
 
     // Smooth camera parallax with mouse
