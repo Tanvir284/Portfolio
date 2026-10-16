@@ -6044,3 +6044,801 @@ html.preloader-skip #preloader {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
+
+/* ==========================================================================
+   7 NEXT-GEN GOOGLE-GRADE FEATURES (XAI, MATH, MLOPS, JD MATCHER, ⌘K, TOUR)
+   ========================================================================== */
+
+/* --- 1. Navbar ⌘K Button & Hero Tour / Tailored CV Strip --- */
+.cmdk-nav-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--primary) 38%, transparent);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.cmdk-nav-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-tour {
+    background: color-mix(in srgb, var(--secondary) 16%, transparent);
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--secondary) 45%, transparent);
+    cursor: pointer;
+}
+
+.btn-tour:hover {
+    background: var(--secondary);
+    color: #fff;
+}
+
+.hero-cv-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.cv-strip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-gray);
+}
+
+.cv-role-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.cv-role-btn:hover {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    transform: translateY(-1px);
+}
+
+.cv-role-btn.highlight {
+    background: color-mix(in srgb, #22c55e 14%, transparent);
+    color: #22c55e;
+    border-color: color-mix(in srgb, #22c55e 38%, transparent);
+}
+
+/* --- 2. Explainable AI (XAI) Grad-CAM & Mask Split-Screen Slider --- */
+.xai-suite,
+.math-suite {
+    margin-top: 32px;
+    padding: 28px;
+    border-radius: 22px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 20px 48px -22px rgba(0, 0, 0, 0.45);
+}
+
+.xai-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.xai-tabs,
+.math-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.xai-tab,
+.math-tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.73rem;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    color: var(--text-gray);
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.xai-tab.active,
+.xai-tab:hover,
+.math-tab.active,
+.math-tab:hover {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.xai-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 22px;
+    align-items: stretch;
+}
+
+.xai-viewport {
+    position: relative;
+    min-height: 260px;
+    border-radius: 16px;
+    background: #06070c;
+    border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+    overflow: hidden;
+    user-select: none;
+}
+
+.xai-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.xai-layer svg {
+    width: 100%;
+    height: 100%;
+}
+
+.xai-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #fff;
+    box-shadow: 0 0 12px rgba(99, 132, 255, 0.9);
+    pointer-events: none;
+}
+
+.xai-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.xai-corner-tag {
+    position: absolute;
+    top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: rgba(9, 10, 15, 0.82);
+    color: #f5f5f7;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.xai-corner-tag.left { left: 12px; }
+.xai-corner-tag.right { right: 12px; color: #22c55e; border-color: rgba(34, 197, 94, 0.4); }
+
+.xai-controls-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--bg) 65%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.xai-slider-row label,
+.math-slider-wrap label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--text-gray);
+    margin-bottom: 8px;
+}
+
+.xai-slider-row input[type="range"],
+.math-slider-wrap input[type="range"],
+.scaler-slider-box input[type="range"] {
+    width: 100%;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.xai-telemetry {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.xai-stat {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+}
+
+.xai-stat span { color: var(--text-gray); }
+.xai-stat strong { color: var(--text); }
+
+.xai-insight {
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+/* --- 3. Mathematical Rigor & Loss Function Visualizer --- */
+.math-body-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 22px;
+    align-items: center;
+}
+
+.math-eq-box {
+    margin: 8px 0 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: #07080d;
+    border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e4e4ef;
+}
+
+.math-desc {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--text-gray);
+    margin: 0 0 14px;
+}
+
+.math-sim-pane {
+    padding: 18px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.math-bar-row {
+    margin-bottom: 10px;
+}
+
+.math-bar-row:last-child {
+    margin-bottom: 0;
+}
+
+.math-bar-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    margin-bottom: 4px;
+    color: var(--text);
+}
+
+.math-bar-track {
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+    overflow: hidden;
+}
+
+.math-bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.25s ease;
+}
+
+/* --- 4. Interactive MLOps & System Scaling Simulator (#mlops-scaler) --- */
+.scaler-shell {
+    padding: 28px;
+    border-radius: 22px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+}
+
+.scaler-top {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 22px;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.scaler-slider-box label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.scaler-rps-readout {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.scaler-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-gray);
+    margin-top: 6px;
+}
+
+.scaler-tier-badge {
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--primary) 10%, var(--bg));
+    border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent);
+}
+
+.tier-kicker {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.scaler-tier-badge strong {
+    font-size: 0.92rem;
+    color: var(--text);
+}
+
+.scaler-arch-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    margin-bottom: 20px;
+}
+
+.scaler-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.scaler-m-card {
+    padding: 16px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sm-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-gray);
+}
+
+.sm-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.sm-sub {
+    font-size: 0.73rem;
+    color: #22c55e;
+}
+
+/* --- 5. AI Job Description (JD) Role-Fit Analyzer (#jd-matcher) --- */
+.jd-shell {
+    display: grid;
+    grid-template-columns: 1.05fr 1.2fr;
+    gap: 24px;
+    padding: 28px;
+    border-radius: 22px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+}
+
+.jd-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.jd-preset-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    color: var(--text-gray);
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.jd-preset-btn.active,
+.jd-preset-btn:hover {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.jd-input-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-gray);
+    margin-bottom: 6px;
+}
+
+.jd-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    resize: vertical;
+    margin-bottom: 12px;
+}
+
+.jd-btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.jd-right {
+    padding: 22px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--primary) 9%, var(--bg)), color-mix(in srgb, var(--bg) 88%, transparent));
+    border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.jd-score-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.jd-score-ring {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--primary) 24%, transparent), transparent);
+    border: 3px solid #22c55e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.jd-score-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #22c55e;
+}
+
+.jd-score-cap {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+    color: var(--text-gray);
+}
+
+.jd-role-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #22c55e;
+}
+
+.jd-role-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 3px 0 6px;
+}
+
+.jd-role-summary {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+.jd-matched-skills,
+.jd-matched-projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+/* --- 6. Global ⌘K / Ctrl+K Command Palette Modal (#cmdk-modal) --- */
+.cmdk-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 12000;
+    background: rgba(5, 6, 10, 0.78);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 10vh 16px 24px;
+}
+
+.cmdk-overlay[hidden] {
+    display: none !important;
+}
+
+.cmdk-box {
+    width: 100%;
+    max-width: 620px;
+    border-radius: 20px;
+    background: #0d0f17;
+    border: 1px solid color-mix(in srgb, var(--primary) 42%, transparent);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75);
+    overflow: hidden;
+}
+
+.cmdk-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cmdk-search-ico {
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+#cmdk-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f5f5f7;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.cmdk-kbd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #9898a6;
+}
+
+.cmdk-list {
+    max-height: 340px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.cmdk-item {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 11px;
+    background: transparent;
+    border: none;
+    color: #e4e4ef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.86rem;
+}
+
+.cmdk-item:hover,
+.cmdk-item.active {
+    background: color-mix(in srgb, var(--primary) 22%, transparent);
+    color: #fff;
+}
+
+.cmdk-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cmdk-item-left i {
+    width: 18px;
+    color: var(--primary);
+    text-align: center;
+}
+
+.cmdk-item-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    color: #9898a6;
+}
+
+.cmdk-foot {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    color: #8b8b99;
+}
+
+/* --- 7. 60-Second Recruiter Autopilot Tour HUD (#autopilot-hud) --- */
+.autopilot-hud {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    z-index: 11000;
+    width: 340px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: rgba(11, 13, 21, 0.94);
+    backdrop-filter: blur(16px);
+    border: 1px solid color-mix(in srgb, var(--primary) 48%, transparent);
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.7);
+}
+
+.autopilot-hud[hidden] {
+    display: none !important;
+}
+
+.ap-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.ap-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #22c55e;
+}
+
+.ap-step-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    color: var(--primary);
+}
+
+.ap-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 4px;
+}
+
+.ap-desc {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #a3a8b8;
+    margin: 0 0 10px;
+}
+
+.ap-progress {
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.ap-progress-fill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #22c55e);
+    transition: width 0.35s ease;
+}
+
+.ap-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.ap-btn {
+    flex: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.ap-btn.stop {
+    background: rgba(244, 63, 94, 0.18);
+    color: #f43f5e;
+    border: 1px solid rgba(244, 63, 94, 0.4);
+}
+
+@media (max-width: 960px) {
+    .xai-grid,
+    .math-body-grid,
+    .scaler-top,
+    .jd-shell {
+        grid-template-columns: 1fr;
+    }
+    .scaler-metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

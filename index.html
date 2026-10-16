@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=59">
+    <link rel="stylesheet" href="style.css?v=60">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -275,6 +275,9 @@
             <a href="#github">GITHUB</a>
             <a href="resume.html">RESUME</a>
             <a href="hire.html" class="nav-cta">HIRE ME</a>
+            <button type="button" id="cmdk-trigger" class="cmdk-nav-btn" aria-label="Open Command Palette (Ctrl+K)" title="Quick Command Palette (Ctrl+K)">
+                <i class="fas fa-terminal" aria-hidden="true"></i> <span>⌘K</span>
+            </button>
             <button id="mode-toggle" class="mode-toggle" aria-label="Toggle Light/Dark Mode">
                 <i class="fas fa-moon"></i>
             </button>
@@ -303,6 +306,15 @@
                 <div class="hero-actions">
                     <a href="#work" class="btn btn-primary" data-magnetic>VIEW PROJECTS <i class="fas fa-arrow-right" style="margin-left: 8px; font-size: 0.8em;" aria-hidden="true"></i></a>
                     <a href="#ai-demo" class="btn btn-outline" data-magnetic><i class="fas fa-bolt" style="margin-right: 8px; color: var(--primary);" aria-hidden="true"></i> LIVE AI LAB</a>
+                    <button type="button" id="autopilot-tour-btn" class="btn btn-tour">
+                        <i class="fas fa-play-circle" aria-hidden="true"></i> 60s Guided Tour
+                    </button>
+                </div>
+                <div class="hero-cv-strip" aria-label="Role-Tailored Resume Downloads">
+                    <span class="cv-strip-label"><i class="fas fa-file-signature" aria-hidden="true"></i> 1-CLICK TAILORED CV:</span>
+                    <button type="button" class="cv-role-btn" data-cv-role="ai"><i class="fas fa-brain" aria-hidden="true"></i> AI / ML Research CV</button>
+                    <button type="button" class="cv-role-btn" data-cv-role="fullstack"><i class="fas fa-layer-group" aria-hidden="true"></i> Full-Stack Systems CV</button>
+                    <a href="#jd-matcher" class="cv-role-btn highlight"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Check JD Role-Fit %</a>
                 </div>
             </div>
 
@@ -693,6 +705,83 @@
                         <strong>Ablation Takeaway (+7.0pp Dice over Baseline):</strong> Replacing standard encoder blocks with ImageNet-pretrained ResNet-50 residual stages preserved spatial boundary gradients under heavy ultrasound speckle noise while converging in 38% fewer epochs.
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- INTERACTIVE EXPLAINABLE AI (XAI) GRAD-CAM & SEGMENTATION SLIDER -->
+        <div class="xai-suite" id="xai-lab">
+            <div class="xai-header">
+                <div>
+                    <span class="eyebrow"><i class="fas fa-eye" aria-hidden="true"></i> EXPLAINABLE AI (XAI) &bull; GRAD-CAM &amp; MASK OVERLAY</span>
+                    <h3 class="ablation-title">Inspect Where the Neural Network Focuses</h3>
+                </div>
+                <div class="xai-tabs" role="tablist" aria-label="Select XAI Vision Pipeline">
+                    <button type="button" class="xai-tab active" data-xai="ultrasound" role="tab" aria-selected="true">Ultrasound U-Net Mask</button>
+                    <button type="button" class="xai-tab" data-xai="cxr" role="tab" aria-selected="false">Chest X-Ray Grad-CAM</button>
+                    <button type="button" class="xai-tab" data-xai="leaf" role="tab" aria-selected="false">MangoCare Leaf Attention</button>
+                </div>
+            </div>
+
+            <div class="xai-grid">
+                <div class="xai-viewport" id="xai-viewport">
+                    <!-- Raw Scan Layer (Base) -->
+                    <div class="xai-layer xai-raw" id="xai-raw-svg"></div>
+                    <!-- Grad-CAM / Segmentation Mask Layer (Clipped by slider %) -->
+                    <div class="xai-layer xai-heatmap" id="xai-heat-svg" style="clip-path: inset(0 0 0 48%);"></div>
+                    <!-- Divider Handle -->
+                    <div class="xai-divider" id="xai-divider" style="left: 48%;">
+                        <span class="xai-handle"><i class="fas fa-arrows-left-right" aria-hidden="true"></i></span>
+                    </div>
+                    <span class="xai-corner-tag left">RAW INPUT SCAN</span>
+                    <span class="xai-corner-tag right">GRAD-CAM + PIXEL MASK</span>
+                </div>
+
+                <div class="xai-controls-card">
+                    <div class="xai-slider-row">
+                        <label for="xai-range">Drag XAI Overlay Split: <strong id="xai-pct-label">52% Attention Overlay</strong></label>
+                        <input type="range" id="xai-range" min="5" max="95" value="48">
+                    </div>
+                    <div class="xai-telemetry" id="xai-telemetry">
+                        <div class="xai-stat"><span>Target Layer</span><strong id="xai-layer-name">ResNet-50 Stage-4 + Skip Decoder</strong></div>
+                        <div class="xai-stat"><span>Boundary IoU / Dice</span><strong id="xai-iou-val">84.2% IoU &middot; 91.0% Dice</strong></div>
+                        <div class="xai-stat"><span>Artifact Suppression</span><strong id="xai- artifact-val" style="color:#22c55e;">Speckle Shadow Filtered</strong></div>
+                    </div>
+                    <p class="xai-insight" id="xai-insight">
+                        <strong>Clinical Interpretability:</strong> High-activation Grad-CAM contours (warm crimson/gold) lock strictly onto the hypoechoic lesion boundary while ignoring acoustic posterior shadowing.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MATHEMATICAL RIGOR & INTERACTIVE LOSS / CALIBRATION VISUALIZER -->
+        <div class="math-suite" id="math-rigor">
+            <div class="xai-header">
+                <div>
+                    <span class="eyebrow"><i class="fas fa-square-root-variable" aria-hidden="true"></i> MATHEMATICAL RIGOR &bull; OPTIMIZATION &amp; CALIBRATION</span>
+                    <h3 class="ablation-title">Interactive Loss Formulation &amp; Probability Calibration</h3>
+                </div>
+                <div class="math-tabs" role="tablist">
+                    <button type="button" class="math-tab active" data-math="temp" role="tab" aria-selected="true">Temperature Scaling (T)</button>
+                    <button type="button" class="math-tab" data-math="dice" role="tab" aria-selected="false">Dice-BCE Combo Loss (α)</button>
+                    <button type="button" class="math-tab" data-math="xgb" role="tab" aria-selected="false">XGBoost L2 Regularization (λ)</button>
+                </div>
+            </div>
+
+            <div class="math-body-grid">
+                <div class="math-formula-pane">
+                    <span class="modal-sub-label" id="math-kicker">POST-HOC LOGIT CALIBRATION (CIRRHOSIS ENSEMBLE)</span>
+                    <div class="math-eq-box" id="math-eq-box">
+                        <code>q_i = exp(z_i / T) / &Sigma;_j exp(z_j / T)</code>
+                    </div>
+                    <p class="math-desc" id="math-desc">
+                        Unscaled gradient-boosted ensembles output overconfident probabilities near 0 or 1. Dividing raw logits <code>z_i</code> by learned temperature <code>T &gt; 1</code> softens the distribution to match true clinical survival rates.
+                    </p>
+                    <div class="math-slider-wrap">
+                        <label for="math-param-slider"><span id="math-param-label">Temperature Parameter (T)</span>: <strong id="math-param-val">1.45 (Optimal Clinical Calibration)</strong></label>
+                        <input type="range" id="math-param-slider" min="5" max="30" value="14">
+                    </div>
+                </div>
+                <div class="math-sim-pane" id="math-sim-pane"></div>
             </div>
         </div>
 
@@ -1292,6 +1381,60 @@
         </div>
     </section>
 
+    <!-- INTERACTIVE MLOPS & SYSTEM SCALING SIMULATOR -->
+    <section id="mlops-scaler" class="section-container">
+        <div class="section-header">
+            <h2>MLOPS &amp; SYSTEM <span style="color:var(--primary)">SCALING SIMULATOR</span></h2>
+            <p>// Drag the traffic load slider to inspect how the inference &amp; API architecture scales from 10 RPS to 50,000 RPS.</p>
+        </div>
+
+        <div class="scaler-shell">
+            <div class="scaler-top">
+                <div class="scaler-slider-box">
+                    <label for="scaler-rps-slider">
+                        <span class="modal-sub-label"><i class="fas fa-gauge-high" aria-hidden="true"></i> SIMULATED CONCURRENT TRAFFIC LOAD</span>
+                        <span class="scaler-rps-readout" id="scaler-rps-readout">1,200 req / sec</span>
+                    </label>
+                    <input type="range" id="scaler-rps-slider" min="1" max="100" value="35">
+                    <div class="scaler-ticks">
+                        <span>10 RPS (Prototype)</span>
+                        <span>1,200 RPS (Production)</span>
+                        <span>50,000 RPS (Global Scale)</span>
+                    </div>
+                </div>
+                <div class="scaler-tier-badge" id="scaler-tier-badge">
+                    <span class="tier-kicker">ACTIVE DEPLOYMENT TIER</span>
+                    <strong id="scaler-tier-name">TIER 02 &middot; ONNX Runtime + Dynamic Batching + Redis</strong>
+                </div>
+            </div>
+
+            <div class="scaler-arch-flow" id="scaler-arch-flow"></div>
+
+            <div class="scaler-metrics-grid">
+                <div class="scaler-m-card">
+                    <span class="sm-label">P99 Inference Latency</span>
+                    <strong class="sm-val" id="scaler-lat-val">14.2 ms</strong>
+                    <span class="sm-sub" id="scaler-lat-sub">Dynamic batch window: 4ms</span>
+                </div>
+                <div class="scaler-m-card">
+                    <span class="sm-label">Compute Topology</span>
+                    <strong class="sm-val" id="scaler-nodes-val">2x T4 GPU Replicas</strong>
+                    <span class="sm-sub" id="scaler-nodes-sub">FP16 Mixed Precision</span>
+                </div>
+                <div class="scaler-m-card">
+                    <span class="sm-label">Cache &amp; Queue Layer</span>
+                    <strong class="sm-val" id="scaler-cache-val">Redis + BullMQ</strong>
+                    <span class="sm-sub" id="scaler-cache-sub">38% Embedding Hit Rate</span>
+                </div>
+                <div class="scaler-m-card">
+                    <span class="sm-label">Availability &amp; Est. Cloud Cost</span>
+                    <strong class="sm-val" id="scaler-cost-val">99.95% &middot; $145/mo</strong>
+                    <span class="sm-sub" id="scaler-cost-sub">Auto-scaled HPA Target: 70%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- LIVE GITHUB ACTIVITY -->
     <section id="github" class="section-container" data-alt-bg>
         <div class="section-header">
@@ -1418,7 +1561,7 @@
                     <span class="testi-badge"><i class="fas fa-graduation-cap" aria-hidden="true"></i> ACADEMIC MENTORSHIP</span>
                     <i class="fas fa-quote-right testi-quote-ico" aria-hidden="true"></i>
                 </div>
-                <p class="testi-text">&ldquo;Securing 2nd Place in AI Battle 2024 and 3rd Place in Research Poster Presentation reflects Tanvir&rsquo;s ability to bridge mathematical foundations with working software. HisDSA House platform is now used by peers to visualize complex graph and dynamic programming invariants.&rdquo;</p>
+                <p class="testi-text">&ldquo;Securing 2nd Place in AI Battle 2024 and 3rd Place in Research Poster Presentation reflects Tanvir&rsquo;s ability to bridge mathematical foundations with working software. His DSA House platform is now used by peers to visualize complex graph and dynamic programming invariants.&rdquo;</p>
                 <div class="testi-author">
                     <div class="testi-avatar">CS</div>
                     <div>
@@ -1442,6 +1585,54 @@
                     </div>
                 </div>
             </article>
+        </div>
+    </section>
+
+    <!-- AI JOB DESCRIPTION (JD) ROLE-FIT ANALYZER & TAILORED CV GENERATOR -->
+    <section id="jd-matcher" class="section-container">
+        <div class="section-header">
+            <h2>AI JOB DESCRIPTION <span style="color:var(--primary)">ROLE-FIT ANALYZER</span></h2>
+            <p>// Select a target engineering role or paste your Job Description to compute skill overlap, matched projects &amp; a tailored 1-page CV.</p>
+        </div>
+
+        <div class="jd-shell">
+            <div class="jd-left">
+                <span class="modal-sub-label"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> 1-CLICK TARGET ROLE PRESETS</span>
+                <div class="jd-presets">
+                    <button type="button" class="jd-preset-btn active" data-jd="google_ml">Google / DeepMind ML Engineer</button>
+                    <button type="button" class="jd-preset-btn" data-jd="cv_med">Computer Vision &amp; Medical AI</button>
+                    <button type="button" class="jd-preset-btn" data-jd="fullstack">Full-Stack Engineer (Next.js / NestJS)</button>
+                    <button type="button" class="jd-preset-btn" data-jd="data_ml">Data Scientist / Tabular ML</button>
+                </div>
+                <label for="jd-textarea" class="jd-input-label">Or paste your custom Job Description / Requirements:</label>
+                <textarea id="jd-textarea" class="jd-textarea" rows="4" placeholder="Paste job requirements here (e.g. PyTorch, Computer Vision, TensorFlow, U-Net, Next.js, TypeScript, NestJS, PostgreSQL, Docker, REST APIs)..."></textarea>
+                <div class="jd-btn-row">
+                    <button type="button" class="btn btn-primary" id="jd-analyze-btn"><i class="fas fa-microchip" style="margin-right:8px;" aria-hidden="true"></i> Analyze Role Fit</button>
+                    <button type="button" class="btn btn-outline" id="jd-tailor-cv-btn"><i class="fas fa-file-pdf" style="margin-right:8px;" aria-hidden="true"></i> Generate Role-Tailored CV</button>
+                </div>
+            </div>
+
+            <div class="jd-right" id="jd-result-card" aria-live="polite">
+                <div class="jd-score-row">
+                    <div class="jd-score-ring">
+                        <span class="jd-score-num" id="jd-score-num">96%</span>
+                        <span class="jd-score-cap">ROLE MATCH</span>
+                    </div>
+                    <div>
+                        <span class="jd-role-kicker" id="jd-role-kicker">VERIFIED ALIGNMENT REPORT</span>
+                        <h3 class="jd-role-title" id="jd-role-title">Google / DeepMind Machine Learning Engineer</h3>
+                        <p class="jd-role-summary" id="jd-role-summary">Strong alignment across Deep Learning (PyTorch, TensorFlow), Empirical Ablation Studies (91% Dice, 4.2 MPa RMSE), and Production Docker/ONNX Deployment.</p>
+                    </div>
+                </div>
+                <div class="jd-block">
+                    <span class="modal-sub-label">MATCHED TECHNICAL COMPETENCIES</span>
+                    <div class="jd-matched-skills" id="jd-matched-skills"></div>
+                </div>
+                <div class="jd-block">
+                    <span class="modal-sub-label">MOST RELEVANT SHIPPED PROJECTS (CLICK TO OPEN)</span>
+                    <div class="jd-matched-projects" id="jd-matched-projects"></div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1665,6 +1856,37 @@
         </div>
     </div>
 
+    <!-- GLOBAL ⌘K / CTRL+K DEVELOPER COMMAND PALETTE MODAL -->
+    <div id="cmdk-modal" class="cmdk-overlay" role="dialog" aria-modal="true" aria-labelledby="cmdk-input" hidden>
+        <div class="cmdk-box">
+            <div class="cmdk-search-bar">
+                <i class="fas fa-magnifying-glass cmdk-search-ico" aria-hidden="true"></i>
+                <input type="text" id="cmdk-input" autocomplete="off" placeholder="Type a command or search projects, skills, actions... (Esc to close)">
+                <kbd class="cmdk-kbd">ESC</kbd>
+            </div>
+            <div class="cmdk-list" id="cmdk-list" role="listbox"></div>
+            <div class="cmdk-foot">
+                <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> to navigate &middot; <kbd>&crarr;</kbd> to execute</span>
+                <span>Tanvir AI Engineering Hub &middot; Spotlight</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 60-SECOND RECRUITER AUTOPILOT TOUR HUD -->
+    <div id="autopilot-hud" class="autopilot-hud" role="status" aria-live="polite" hidden>
+        <div class="ap-top">
+            <span class="ap-badge"><i class="fas fa-satellite-dish" aria-hidden="true"></i> RECRUITER AUTOPILOT TOUR</span>
+            <span class="ap-step-count" id="ap-step-count">STEP 1 / 5</span>
+        </div>
+        <h4 class="ap-title" id="ap-title">Empirical ML Benchmarks &amp; XAI</h4>
+        <p class="ap-desc" id="ap-desc">Inspecting U-Net + ResNet-50 ultrasound lesion segmentation (91% Dice) and Grad-CAM neural attention overlays.</p>
+        <div class="ap-progress"><span class="ap-progress-fill" id="ap-progress-fill" style="width:20%"></span></div>
+        <div class="ap-actions">
+            <button type="button" class="ap-btn" id="ap-next-btn">Next Stop <i class="fas fa-forward-step" aria-hidden="true"></i></button>
+            <button type="button" class="ap-btn stop" id="ap-stop-btn"><i class="fas fa-stop" aria-hidden="true"></i> End Tour</button>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
     <!-- GSAP for Elite Animations -->
@@ -1679,7 +1901,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=42"></script>
+    <script src="script.js?v=43"></script>
     <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 

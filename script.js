@@ -2772,3 +2772,725 @@ document.querySelectorAll('.dsa-card, .case-card, .testi-card').forEach(card => 
         card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
     });
 });
+
+/* ==========================================================================
+   7 NEXT-GEN GOOGLE-GRADE FEATURES (XAI, MATH, MLOPS, JD MATCHER, ⌘K, TOUR)
+   ========================================================================== */
+
+/* --- 1. INTERACTIVE EXPLAINABLE AI (XAI) GRAD-CAM & SEGMENTATION SLIDER --- */
+const xaiTabs = document.querySelectorAll('.xai-tab');
+const xaiRawSvg = document.getElementById('xai-raw-svg');
+const xaiHeatSvg = document.getElementById('xai-heat-svg');
+const xaiDivider = document.getElementById('xai-divider');
+const xaiRange = document.getElementById('xai-range');
+const xaiPctLabel = document.getElementById('xai-pct-label');
+const xaiLayerName = document.getElementById('xai-layer-name');
+const xaiIouVal = document.getElementById('xai-iou-val');
+const xaiInsight = document.getElementById('xai-insight');
+const xaiViewport = document.getElementById('xai-viewport');
+
+if (xaiRawSvg && xaiHeatSvg && xaiRange) {
+    const XAI_SCENES = {
+        ultrasound: {
+            layer: 'ResNet-50 Stage-4 + U-Net Skip Decoder',
+            iou: '84.2% IoU · 91.0% Dice Coefficient',
+            insight: '<strong>Clinical Interpretability:</strong> High-activation Grad-CAM contours (crimson/amber) lock strictly onto the hypoechoic breast lesion boundary while suppressing posterior acoustic speckle noise.',
+            raw: `<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+                <rect width="420" height="260" fill="#090b12"/>
+                <g opacity="0.28" stroke="#334155" stroke-width="1">
+                    <line x1="0" y1="52" x2="420" y2="52"/><line x1="0" y1="104" x2="420" y2="104"/>
+                    <line x1="0" y1="156" x2="420" y2="156"/><line x1="0" y1="208" x2="420" y2="208"/>
+                </g>
+                <ellipse cx="215" cy="128" rx="76" ry="52" fill="#111827" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <ellipse cx="215" cy="128" rx="54" ry="36" fill="#05070b"/>
+                <text x="18" y="242" fill="#64748b" font-family="JetBrains Mono, monospace" font-size="10">BUSI_ULTRASOUND_SCAN_042.PNG · SPECKLE FIELD</text>
+            </svg>`,
+            heat: `<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="gradCamLesion" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.88"/>
+                        <stop offset="55%" stop-color="#f59e0b" stop-opacity="0.58"/>
+                        <stop offset="85%" stop-color="#6384ff" stop-opacity="0.25"/>
+                        <stop offset="100%" stop-color="#090b12" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <rect width="420" height="260" fill="#090b12"/>
+                <ellipse cx="215" cy="128" rx="95" ry="68" fill="url(#gradCamLesion)"/>
+                <ellipse cx="215" cy="128" rx="56" ry="38" fill="rgba(34,197,94,0.18)" stroke="#22c55e" stroke-width="2.5"/>
+                <text x="165" y="82" fill="#22c55e" font-family="JetBrains Mono, monospace" font-weight="700" font-size="10">U-NET MASK (91.0% DICE)</text>
+            </svg>`
+        },
+        cxr: {
+            layer: 'YOLOv8 CSPDarknet Stage-5 + CLAHE',
+            iou: '95.4% Accuracy · 0.96 F1-Score',
+            insight: '<strong>Radiograph Attention:</strong> After CLAHE contrast normalization, class activation maps concentrate on right lower-lobe alveolar consolidation rather than rib cage edges.',
+            raw: `<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+                <rect width="420" height="260" fill="#080a10"/>
+                <path d="M145 55 C105 70 95 160 110 210 L185 210 L185 60 Z" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+                <path d="M275 55 C315 70 325 160 310 210 L235 210 L235 60 Z" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+                <ellipse cx="148" cy="160" rx="28" ry="22" fill="#1e293b"/>
+                <text x="18" y="242" fill="#64748b" font-family="JetBrains Mono, monospace" font-size="10">CXR_PEDIATRIC_0192.DCM · CLAHE NORMALIZED</text>
+            </svg>`,
+            heat: `<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="gradCamCxr" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.9"/>
+                        <stop offset="55%" stop-color="#e5a93c" stop-opacity="0.55"/>
+                        <stop offset="100%" stop-color="#080a10" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <rect width="420" height="260" fill="#080a10"/>
+                <path d="M145 55 C105 70 95 160 110 210 L185 210 L185 60 Z" fill="#111827" stroke="#475569"/>
+                <path d="M275 55 C315 70 325 160 310 210 L235 210 L235 60 Z" fill="#111827" stroke="#475569"/>
+                <circle cx="148" cy="160" r="52" fill="url(#gradCamCxr)"/>
+                <rect x="114" y="132" width="68" height="54" rx="6" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4 2"/>
+                <text x="108" y="124" fill="#22c55e" font-family="JetBrains Mono, monospace" font-weight="700" font-size="9.5">PNEUMONIA: 96.8%</text>
+            </svg>`
+        },
+        leaf: {
+            layer: 'DenseNet-121 DenseBlock-4 Feature Map',
+            iou: '96.4% Precision · 18.4ms Latency',
+            insight: '<strong>Pathology Localization:</strong> DenseNet-121 feature reuse isolates necrotic anthracnose spots along leaf venation while ignoring background soil and specular leaf shine.',
+            raw: `<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+                <rect width="420" height="260" fill="#080b0e"/>
+                <path d="M90 140 Q210 45 335 125 Q210 215 90 140 Z" fill="#132a1e" stroke="#22c55e" stroke-opacity="0.45" stroke-width="1.5"/>
+                <line x1="95" y1="140" x2="330" y2="126" stroke="#22c55e" stroke-opacity="0.35" stroke-width="1.5"/>
+                <circle cx="235" cy="118" r="14" fill="#3f2e21"/><circle cx="268" cy="138" r="11" fill="#3f2e21"/>
+                <text x="18" y="242" fill="#64748b" font-family="JetBrains Mono, monospace" font-size="10">MANGOCARE_LEAF_224x224.JPG · RGB TENSOR</text>
+            </svg>`,
+            heat: `<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="gradCamLeaf" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.92"/>
+                        <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.55"/>
+                        <stop offset="100%" stop-color="#080b0e" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <rect width="420" height="260" fill="#080b0e"/>
+                <path d="M90 140 Q210 45 335 125 Q210 215 90 140 Z" fill="#132a1e" stroke="#22c55e" stroke-width="1.8"/>
+                <circle cx="250" cy="128" r="56" fill="url(#gradCamLeaf)"/>
+                <circle cx="235" cy="118" r="16" fill="none" stroke="#22c55e" stroke-width="2"/>
+                <circle cx="268" cy="138" r="13" fill="none" stroke="#22c55e" stroke-width="2"/>
+                <text x="175" y="72" fill="#22c55e" font-family="JetBrains Mono, monospace" font-weight="700" font-size="10">ANTHRACNOSE: 98.2%</text>
+            </svg>`
+        }
+    };
+
+    const updateXaiSplit = (val) => {
+        const pct = Math.max(5, Math.min(95, Number(val)));
+        xaiHeatSvg.style.clipPath = `inset(0 0 0 ${pct}%)`;
+        if (xaiDivider) xaiDivider.style.left = `${pct}%`;
+        if (xaiPctLabel) xaiPctLabel.textContent = `${100 - pct}% Attention Overlay`;
+    };
+
+    const loadXaiScene = (key) => {
+        const sc = XAI_SCENES[key] || XAI_SCENES.ultrasound;
+        xaiRawSvg.innerHTML = sc.raw;
+        xaiHeatSvg.innerHTML = sc.heat;
+        if (xaiLayerName) xaiLayerName.textContent = sc.layer;
+        if (xaiIouVal) xaiIouVal.textContent = sc.iou;
+        if (xaiInsight) xaiInsight.innerHTML = sc.insight;
+        updateXaiSplit(xaiRange.value);
+    };
+
+    xaiRange.addEventListener('input', (e) => updateXaiSplit(e.target.value));
+
+    if (xaiViewport) {
+        let dragging = false;
+        const moveSplit = (clientX) => {
+            const rect = xaiViewport.getBoundingClientRect();
+            const rel = ((clientX - rect.left) / rect.width) * 100;
+            xaiRange.value = String(Math.round(Math.max(5, Math.min(95, rel))));
+            updateXaiSplit(xaiRange.value);
+        };
+        xaiViewport.addEventListener('pointerdown', (e) => { dragging = true; moveSplit(e.clientX); });
+        window.addEventListener('pointermove', (e) => { if (dragging) moveSplit(e.clientX); });
+        window.addEventListener('pointerup', () => { dragging = false; });
+    }
+
+    xaiTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            xaiTabs.forEach(t => {
+                const active = t === tab;
+                t.classList.toggle('active', active);
+                t.setAttribute('aria-selected', String(active));
+            });
+            loadXaiScene(tab.dataset.xai);
+            playSound('click');
+        });
+    });
+
+    loadXaiScene('ultrasound');
+}
+
+/* --- 2. MATHEMATICAL RIGOR & LOSS FUNCTION / CALIBRATION VISUALIZER --- */
+const mathTabs = document.querySelectorAll('.math-tab');
+const mathKicker = document.getElementById('math-kicker');
+const mathEqBox = document.getElementById('math-eq-box');
+const mathDesc = document.getElementById('math-desc');
+const mathParamLabel = document.getElementById('math-param-label');
+const mathParamVal = document.getElementById('math-param-val');
+const mathSlider = document.getElementById('math-param-slider');
+const mathSimPane = document.getElementById('math-sim-pane');
+
+if (mathTabs.length > 0 && mathSlider && mathSimPane) {
+    let currentMath = 'temp';
+
+    const renderMathSim = () => {
+        const raw = Number(mathSlider.value);
+        if (currentMath === 'temp') {
+            const T = (raw / 10).toFixed(2);
+            if (mathParamVal) mathParamVal.textContent = `T = ${T} ${T >= 1.3 && T <= 1.6 ? '(Optimal Clinical Calibration)' : T < 1.0 ? '(Sharpened / Overconfident)' : '(Softened Distribution)'}`;
+            const logits = [3.1, 1.4, 0.3];
+            const exps = logits.map(z => Math.exp(z / Number(T)));
+            const sum = exps.reduce((a, b) => a + b, 0);
+            const probs = exps.map(e => Math.round((e / sum) * 1000) / 10);
+            const labels = ['Class C (Survived > 5y)', 'Class CL (Transplant)', 'Class D (High Risk)'];
+            mathSimPane.innerHTML = labels.map((l, i) => `
+                <div class="math-bar-row">
+                    <div class="math-bar-head"><span>${l}</span><strong>${probs[i]}%</strong></div>
+                    <div class="math-bar-track"><span class="math-bar-fill" style="width:${probs[i]}%"></span></div>
+                </div>
+            `).join('') + `<div class="pg-out-meta" style="margin-top:10px;">Expected Calibration Error (ECE): <strong>${(Math.abs(Number(T) - 1.45) * 4.2 + 1.1).toFixed(2)}%</strong> &middot; Log-Loss: <strong>0.412</strong></div>`;
+        } else if (currentMath === 'dice') {
+            const alpha = (raw / 30).toFixed(2);
+            if (mathParamVal) mathParamVal.textContent = `α = ${alpha} (Dice Weight) · 1-α = ${(1 - Number(alpha)).toFixed(2)} (BCE Weight)`;
+            const diceScore = Math.min(91.0, (84.0 + Math.sin((Number(alpha) - 0.15) * 3.1) * 7.0)).toFixed(1);
+            const precision = Math.min(93.4, (86.0 + Number(alpha) * 7.2)).toFixed(1);
+            mathSimPane.innerHTML = `
+                <div class="math-bar-row">
+                    <div class="math-bar-head"><span>Lesion Boundary Dice Score</span><strong>${diceScore}%</strong></div>
+                    <div class="math-bar-track"><span class="math-bar-fill" style="width:${diceScore}%"></span></div>
+                </div>
+                <div class="math-bar-row">
+                    <div class="math-bar-head"><span>Small-Lesion Recall Stability</span><strong>${precision}%</strong></div>
+                    <div class="math-bar-track"><span class="math-bar-fill" style="width:${precision}%"></span></div>
+                </div>
+                <div class="pg-out-meta" style="margin-top:10px;">Optimal combo weight <strong>α = 0.65</strong> prevents background pixels (92% of scan) from dominating gradient updates.</div>
+            `;
+        } else {
+            const lam = (raw / 10).toFixed(1);
+            if (mathParamVal) mathParamVal.textContent = `λ = ${lam} (L2 Leaf Weight Penalty)`;
+            const trainRmse = (2.1 + Number(lam) * 0.45).toFixed(2);
+            const testRmse = (4.20 + Math.abs(Number(lam) - 1.5) * 0.85).toFixed(2);
+            const r2 = Math.max(0.78, (0.931 - Math.abs(Number(lam) - 1.5) * 0.04)).toFixed(3);
+            mathSimPane.innerHTML = `
+                <div class="math-bar-row">
+                    <div class="math-bar-head"><span>Test Generalization R² Score</span><strong>${r2}</strong></div>
+                    <div class="math-bar-track"><span class="math-bar-fill" style="width:${Number(r2) * 100}%"></span></div>
+                </div>
+                <div class="math-bar-row">
+                    <div class="math-bar-head"><span>Validation RMSE (Lower is better)</span><strong>${testRmse} MPa (Train: ${trainRmse})</strong></div>
+                    <div class="math-bar-track"><span class="math-bar-fill" style="width:${Math.max(25, 100 - Number(testRmse) * 10)}%"></span></div>
+                </div>
+                <div class="pg-out-meta" style="margin-top:10px;">At <strong>λ = 1.5</strong>, tree leaf weights resist overfitting noisy slag/fly-ash interactions, locking test RMSE at <strong>4.20 MPa</strong>.</div>
+            `;
+        }
+    };
+
+    const MATH_CONFIGS = {
+        temp: {
+            kicker: 'POST-HOC LOGIT CALIBRATION (CIRRHOSIS ENSEMBLE)',
+            eq: 'q_i = exp(z_i / T) / Σ_j exp(z_j / T)',
+            desc: 'Unscaled gradient-boosted ensembles output overconfident probabilities near 0 or 1. Dividing raw logits z_i by learned temperature T > 1 softens the distribution to match true clinical survival rates.',
+            label: 'Temperature Parameter (T)',
+            val: 14
+        },
+        dice: {
+            kicker: 'CLASS-IMBALANCE SEGMENTATION OBJECTIVE (BREAST LESION U-NET)',
+            eq: 'L_Combo = α · (1 - (2∑p_i g_i + ε)/(∑p_i + ∑g_i + ε)) + (1 - α) · L_BCE',
+            desc: 'Ultrasound lesions occupy <8% of total scan pixels. Combining soft Dice overlap loss with pixel-wise Binary Cross-Entropy ensures sharp boundary gradients without collapsing to all-background predictions.',
+            label: 'Dice vs. BCE Balance (α)',
+            val: 20
+        },
+        xgb: {
+            kicker: 'REGULARIZED SECOND-ORDER BOOSTING OBJECTIVE (CONCRETE STRENGTH)',
+            eq: 'L(φ) = ∑ l(y_i, ŷ_i) + ∑_k [ γT_k + ½ λ ∑_{j=1}^T w_j² ]',
+            desc: 'Second-order Taylor expansion with L2 leaf weight regularization (λ) and complexity cost (γ) penalizes overly deep splits on small civil-engineering mix datasets.',
+            label: 'L2 Regularization Penalty (λ)',
+            val: 15
+        }
+    };
+
+    mathTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            mathTabs.forEach(t => {
+                const active = t === tab;
+                t.classList.toggle('active', active);
+                t.setAttribute('aria-selected', String(active));
+            });
+            currentMath = tab.dataset.math;
+            const cfg = MATH_CONFIGS[currentMath];
+            if (mathKicker) mathKicker.textContent = cfg.kicker;
+            if (mathEqBox) mathEqBox.innerHTML = `<code>${cfg.eq}</code>`;
+            if (mathDesc) mathDesc.textContent = cfg.desc;
+            if (mathParamLabel) mathParamLabel.textContent = cfg.label;
+            mathSlider.value = String(cfg.val);
+            renderMathSim();
+            playSound('click');
+        });
+    });
+
+    mathSlider.addEventListener('input', renderMathSim);
+    renderMathSim();
+}
+
+/* --- 3. INTERACTIVE MLOPS & SYSTEM SCALING SIMULATOR (#mlops-scaler) --- */
+const scalerSlider = document.getElementById('scaler-rps-slider');
+const scalerReadout = document.getElementById('scaler-rps-readout');
+const scalerTierName = document.getElementById('scaler-tier-name');
+const scalerArchFlow = document.getElementById('scaler-arch-flow');
+const scalerLatVal = document.getElementById('scaler-lat-val');
+const scalerLatSub = document.getElementById('scaler-lat-sub');
+const scalerNodesVal = document.getElementById('scaler-nodes-val');
+const scalerNodesSub = document.getElementById('scaler-nodes-sub');
+const scalerCacheVal = document.getElementById('scaler-cache-val');
+const scalerCacheSub = document.getElementById('scaler-cache-sub');
+const scalerCostVal = document.getElementById('scaler-cost-val');
+const scalerCostSub = document.getElementById('scaler-cost-sub');
+
+if (scalerSlider && scalerArchFlow) {
+    const updateScaler = () => {
+        const v = Number(scalerSlider.value);
+        const rps = v <= 20 ? Math.round(v * 12) : v <= 60 ? Math.round(240 + (v - 20) * 65) : Math.round(2840 + (v - 60) * 1179);
+        if (scalerReadout) scalerReadout.textContent = `${rps.toLocaleString()} req / sec`;
+
+        let tier = '';
+        let nodes = [];
+        if (rps <= 300) {
+            tier = 'TIER 01 · Single Docker Container + Gunicorn + CPU/ONNX';
+            nodes = ['Client HTTPS', 'Nginx Reverse Proxy', 'Flask / NestJS Worker', 'ONNX CPU Runtime', 'PostgreSQL Primary'];
+            if (scalerLatVal) scalerLatVal.textContent = '18.4 ms';
+            if (scalerLatSub) scalerLatSub.textContent = 'Synchronous single-tensor inference';
+            if (scalerNodesVal) scalerNodesVal.textContent = '1x Docker Node (4 vCPU)';
+            if (scalerNodesSub) scalerNodesSub.textContent = 'INT8 / FP32 ONNX Graph';
+            if (scalerCacheVal) scalerCacheVal.textContent = 'In-Memory LRU';
+            if (scalerCacheSub) scalerCacheSub.textContent = 'Zero external cache overhead';
+            if (scalerCostVal) scalerCostVal.textContent = '99.5% · $24/mo';
+            if (scalerCostSub) scalerCostSub.textContent = 'Ideal for MVP & Research Demos';
+        } else if (rps <= 5000) {
+            tier = 'TIER 02 · ONNX Runtime + Dynamic Batching + Redis Cache';
+            nodes = ['Cloudflare Edge', 'API Gateway + JWT Guard', 'Redis Feature Cache', 'Triton Dynamic Batcher (x2 GPU)', 'PostgreSQL + Read Replica'];
+            if (scalerLatVal) scalerLatVal.textContent = '14.2 ms';
+            if (scalerLatSub) scalerLatSub.textContent = 'Dynamic batch window: 4ms (Batch=16)';
+            if (scalerNodesVal) scalerNodesVal.textContent = '2x T4 GPU Replicas';
+            if (scalerNodesSub) scalerNodesSub.textContent = 'FP16 Mixed Precision Tensor Cores';
+            if (scalerCacheVal) scalerCacheVal.textContent = 'Redis + BullMQ';
+            if (scalerCacheSub) scalerCacheSub.textContent = '38% Hash / Embedding Hit Rate';
+            if (scalerCostVal) scalerCostVal.textContent = '99.95% · $145/mo';
+            if (scalerCostSub) scalerCostSub.textContent = 'Auto-scaled HPA Target: 70% GPU';
+        } else {
+            tier = 'TIER 03 · Multi-Region Kubernetes HPA + TensorRT FP16 Cluster';
+            nodes = ['Global Anycast CDN', 'Envoy Mesh + Rate Limiter', 'Redis Cluster + Kafka Stream', 'K8s TensorRT GPU Fleet (8-24 Pods)', 'Sharded PostgreSQL + PgBouncer'];
+            if (scalerLatVal) scalerLatVal.textContent = '9.6 ms';
+            if (scalerLatSub) scalerLatSub.textContent = 'TensorRT Kernel Fusion + Pinned VRAM';
+            if (scalerNodesVal) scalerNodesVal.textContent = `${Math.min(24, Math.max(6, Math.round(rps / 2200)))}x L4 GPU Pods (K8s HPA)`;
+            if (scalerNodesSub) scalerNodesSub.textContent = 'Zero-downtime rolling canary deploys';
+            if (scalerCacheVal) scalerCacheVal.textContent = 'Redis Cluster + Kafka';
+            if (scalerCacheSub) scalerCacheSub.textContent = 'Async telemetry + backpressure queue';
+            if (scalerCostVal) scalerCostVal.textContent = `99.99% · $${Math.round(420 + rps * 0.028)}/mo`;
+            if (scalerCostSub) scalerCostSub.textContent = 'Multi-AZ active-active failover';
+        }
+
+        if (scalerTierName) scalerTierName.textContent = tier;
+        scalerArchFlow.innerHTML = nodes.map((n, i) =>
+            `<span class="modal-arch-node">${n}</span>` +
+            (i < nodes.length - 1 ? `<i class="fas fa-arrow-right modal-arch-arrow" aria-hidden="true"></i>` : '')
+        ).join('');
+    };
+
+    scalerSlider.addEventListener('input', updateScaler);
+    updateScaler();
+}
+
+/* --- 4. AI JOB DESCRIPTION (JD) ROLE-FIT ANALYZER & 1-CLICK TAILORED CV GENERATOR --- */
+const jdPresetBtns = document.querySelectorAll('.jd-preset-btn');
+const jdTextarea = document.getElementById('jd-textarea');
+const jdAnalyzeBtn = document.getElementById('jd-analyze-btn');
+const jdTailorCvBtn = document.getElementById('jd-tailor-cv-btn');
+const jdScoreNum = document.getElementById('jd-score-num');
+const jdRoleTitle = document.getElementById('jd-role-title');
+const jdRoleSummary = document.getElementById('jd-role-summary');
+const jdMatchedSkills = document.getElementById('jd-matched-skills');
+const jdMatchedProjects = document.getElementById('jd-matched-projects');
+
+const ROLE_PRESETS = {
+    google_ml: {
+        title: 'Google / DeepMind Machine Learning Engineer',
+        score: '96%',
+        jdText: 'Looking for a Machine Learning Engineer experienced in PyTorch, TensorFlow, Deep Learning, Computer Vision, Model Ablation & Benchmarking, Python, C++, Docker, and scalable production inference.',
+        summary: 'Strong alignment across Deep Learning (PyTorch, TensorFlow), Empirical Ablation Studies (91% Dice, +7pp over baseline), Algorithmic Rigor (600+ problems in DSA House), and Docker/ONNX deployment.',
+        skills: ['PyTorch', 'TensorFlow', 'Deep Learning', 'Python', 'C++', 'Model Ablation', 'Docker', 'ONNX / WebGL', 'Algorithms & DSA'],
+        projects: ['Breast Lesion AI', 'MangoCare AI', 'Pneumonia Classification', 'DSA House', 'Cirrhosis Survival Classification'],
+        cvFocus: 'ai'
+    },
+    cv_med: {
+        title: 'Computer Vision & Medical Imaging AI Researcher',
+        score: '98%',
+        jdText: 'Seeking a Computer Vision & Medical Imaging Researcher skilled in U-Net segmentation, ResNet backbones, YOLOv8, OpenCV, CLAHE preprocessing, Dice/IoU evaluation, and transfer learning.',
+        summary: 'Direct research & publication alignment: shipped U-Net + ResNet-50 ultrasound segmentation (91.0% Dice), YOLOv8 chest X-ray triage (95.4% Acc), and DenseNet-121 pathology pipelines.',
+        skills: ['U-Net Segmentation', 'ResNet-50', 'YOLOv8', 'OpenCV & CLAHE', 'PyTorch', 'TensorFlow', 'Medical Imaging', 'Grad-CAM XAI'],
+        projects: ['Breast Lesion AI', 'Pneumonia Classification', 'MangoCare AI', 'Chicken Disease Detection'],
+        cvFocus: 'ai'
+    },
+    fullstack: {
+        title: 'Senior Full-Stack Engineer (Next.js / NestJS / TypeScript)',
+        score: '95%',
+        jdText: 'Hiring a Full-Stack Engineer with strong experience in Next.js, React 19, TypeScript, NestJS, PostgreSQL, REST APIs, JWT/RBAC authentication, automated testing (Vitest/Supertest), and Vercel deployment.',
+        summary: 'Production full-stack track record: shipped 9-module NestJS 10 RBAC backend, Next.js 16 DSA platform, fixed-point PostgreSQL fintech ledger, and ASP.NET Core 6 enterprise registries.',
+        skills: ['Next.js 16', 'React 19', 'TypeScript', 'NestJS 10', 'PostgreSQL', 'JWT + RBAC', 'ASP.NET Core 6', 'Vitest & Supertest'],
+        projects: ['Ecommerce Admin Dashboard', 'DSA House', 'FinPilot BD', 'Employee & Family Registry', 'TaskFlow'],
+        cvFocus: 'fullstack'
+    },
+    data_ml: {
+        title: 'Data Scientist & Predictive Tabular ML Engineer',
+        score: '95%',
+        jdText: 'Data Scientist role requiring Scikit-learn, XGBoost, LightGBM, CatBoost, ensemble stacking, probability calibration, Pandas, SQL, feature importance permutation, and Google/IBM certified analytics.',
+        summary: 'Verified by Google Data Analytics & IBM Data Science certifications plus 4.20 MPa RMSE XGBoost regression and temperature-calibrated multi-class survival ensembles.',
+        skills: ['Scikit-learn', 'XGBoost', 'LightGBM', 'CatBoost', 'Probability Calibration', 'Pandas & NumPy', 'SQL', 'Power BI & Tableau'],
+        projects: ['Concrete Strength Prediction', 'Cirrhosis Survival Classification', 'Tender Scraper'],
+        cvFocus: 'ai'
+    }
+};
+
+let activeRoleSpec = ROLE_PRESETS.google_ml;
+
+const generateTailoredCvPdf = (spec) => {
+    const win = window.open('', '_blank', 'width=940,height=880');
+    if (!win) return;
+    const isFullStack = spec.cvFocus === 'fullstack';
+    const headline = isFullStack
+        ? 'Full-Stack Software Engineer & AI Systems Architect (Next.js · NestJS · TypeScript · PostgreSQL)'
+        : 'AI Architect & Machine Learning Research Engineer (PyTorch · TensorFlow · Computer Vision · MLOps)';
+
+    win.document.write(`<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Md Tanvir Islam — Tailored CV (${spec.title})</title>
+<style>
+  body { font-family: 'Segoe UI', Inter, system-ui, sans-serif; color: #0f172a; margin: 0; padding: 36px 46px; line-height: 1.5; font-size: 13px; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 18px; }
+  h1 { margin: 0; font-size: 26px; letter-spacing: -0.02em; }
+  .sub { font-size: 13px; font-weight: 700; color: #2563eb; margin-top: 4px; }
+  .contact { text-align: right; font-size: 11.5px; color: #334155; }
+  .sec { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #1e293b; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin: 16px 0 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip { padding: 3px 9px; border-radius: 4px; background: #eff6ff; border: 1px solid #bfdbfe; font-weight: 600; font-size: 11px; color: #1d4ed8; }
+  .item { margin-bottom: 10px; }
+  .item-head { display: flex; justify-content: space-between; font-weight: 700; color: #0f172a; }
+  .item-sub { font-size: 12px; color: #475569; margin: 2px 0 0; }
+  @media print { .no-print { display: none; } body { padding: 18px; } }
+</style></head><body>
+  <div class="no-print" style="margin-bottom:14px;display:flex;justify-content:flex-end;">
+    <button onclick="window.print()" style="background:#2563eb;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:700;cursor:pointer;">Save / Print 1-Page Tailored CV as PDF</button>
+  </div>
+  <div class="head">
+    <div>
+      <h1>MD TANVIR ISLAM</h1>
+      <div class="sub">${headline}</div>
+    </div>
+    <div class="contact">
+      Dhaka, Bangladesh (Open to Remote &amp; Relocation)<br>
+      ruhittanvir14@gmail.com &middot; +8801828077520<br>
+      github.com/Tanvir284 &middot; tanvir284.github.io/Portfolio
+    </div>
+  </div>
+  <div class="sec">Executive Alignment for: ${spec.title} (${spec.score} Role Match)</div>
+  <p style="margin:0 0 10px;">${spec.summary}</p>
+  <div class="sec">Core Technical Competencies (Prioritized for Role)</div>
+  <div class="chips">${spec.skills.map(s => `<span class="chip">${s}</span>`).join('')}</div>
+  <div class="sec">Selected Flagship Engineering Projects</div>
+  <div class="item">
+    <div class="item-head"><span>Breast Lesion Ultrasound AI (U-Net + ResNet-50)</span><span>91.0% Dice · +7.0pp vs Baseline</span></div>
+    <div class="item-sub">Engineered transfer-learned ResNet-50 encoder stages with U-Net skip connections to segment breast lesions under heavy acoustic speckle noise.</div>
+  </div>
+  <div class="item">
+    <div class="item-head"><span>MangoCare AI &amp; Pneumonia YOLOv8 Classifier</span><span>96.4% Acc · 14.2ms Latency · Docker</span></div>
+    <div class="item-sub">Fine-tuned DenseNet-121 and YOLOv8 vision backbones with CLAHE preprocessing and containerized Flask Gunicorn REST inference APIs.</div>
+  </div>
+  <div class="item">
+    <div class="item-head"><span>DSA House &amp; 9-Module Enterprise Ecommerce Admin</span><span>Next.js 16 · NestJS 10 · PostgreSQL · RBAC</span></div>
+    <div class="item-sub">Built 16 interactive 60fps algorithm visualisers (600 problems) in Next.js 16 and a 9-module NestJS 10 backend with global O(1) JWT + RBAC guards.</div>
+  </div>
+  <div class="item">
+    <div class="item-head"><span>Concrete Strength XGBoost &amp; Cirrhosis Survival Stacking</span><span>4.20 MPa RMSE · Calibrated Ensembles</span></div>
+    <div class="item-sub">Benchmarked 5 regression families and stacked XGBoost + LightGBM + CatBoost with post-hoc temperature scaling calibration.</div>
+  </div>
+  <div class="sec">Experience, Education &amp; Honours</div>
+  <div class="item">
+    <div class="item-head"><span>Applied AI &amp; ML Researcher — InsightEdu</span><span>Medical Imaging &amp; Predictive Modeling</span></div>
+    <div class="item-sub">B.Sc. in Computer Science &amp; Engineering (CSE), BUBT (CGPA 3.36) · 2nd Place AI Battle 2024 · 3rd Place AI Research Poster 2024 · Google Data Analytics, IBM Data Science &amp; IBM AI Developer Certified.</div>
+  </div>
+  <script>setTimeout(() => window.print(), 350);<\/script>
+</body></html>`);
+    win.document.close();
+};
+
+document.querySelectorAll('[data-cv-role]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const role = btn.dataset.cvRole;
+        generateTailoredCvPdf(role === 'fullstack' ? ROLE_PRESETS.fullstack : ROLE_PRESETS.google_ml);
+        playSound('click');
+    });
+});
+
+if (jdPresetBtns.length > 0 && jdMatchedSkills && jdMatchedProjects) {
+    const renderJdResult = (spec) => {
+        activeRoleSpec = spec;
+        if (jdScoreNum) jdScoreNum.textContent = spec.score;
+        if (jdRoleTitle) jdRoleTitle.textContent = spec.title;
+        if (jdRoleSummary) jdRoleSummary.textContent = spec.summary;
+        if (jdTextarea) jdTextarea.value = spec.jdText;
+
+        jdMatchedSkills.innerHTML = spec.skills.map(s =>
+            `<span class="skill-proj-pill" style="cursor:default;"><i class="fas fa-check" style="color:#22c55e;"></i> ${s}</span>`
+        ).join('');
+
+        jdMatchedProjects.innerHTML = spec.projects.map(pTitle =>
+            `<button type="button" class="skill-proj-pill" data-jd-proj="${pTitle}"><i class="fas fa-arrow-up-right-from-square"></i> ${pTitle}</button>`
+        ).join('');
+
+        jdMatchedProjects.querySelectorAll('[data-jd-proj]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTitle = btn.dataset.jdProj;
+                const card = Array.from(document.querySelectorAll('.project-card')).find(
+                    c => c.querySelector('.p-title')?.textContent?.trim() === targetTitle
+                );
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => card.click(), 420);
+                }
+            });
+        });
+    };
+
+    jdPresetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            jdPresetBtns.forEach(b => b.classList.toggle('active', b === btn));
+            const spec = ROLE_PRESETS[btn.dataset.jd] || ROLE_PRESETS.google_ml;
+            renderJdResult(spec);
+            playSound('click');
+        });
+    });
+
+    if (jdAnalyzeBtn && jdTextarea) {
+        jdAnalyzeBtn.addEventListener('click', () => {
+            const raw = (jdTextarea.value || '').toLowerCase();
+            if (!raw.trim()) {
+                renderJdResult(ROLE_PRESETS.google_ml);
+                return;
+            }
+            const KEYWORD_CATALOG = [
+                { kw: ['pytorch', 'densenet', 'torch'], skill: 'PyTorch', proj: 'MangoCare AI' },
+                { kw: ['tensorflow', 'keras', 'u-net', 'unet', 'ultrasound', 'segmentation'], skill: 'TensorFlow & U-Net', proj: 'Breast Lesion AI' },
+                { kw: ['yolo', 'opencv', 'vision', 'x-ray', 'image'], skill: 'YOLOv8 & OpenCV', proj: 'Pneumonia Classification' },
+                { kw: ['xgboost', 'lightgbm', 'catboost', 'scikit', 'regression', 'tabular'], skill: 'XGBoost & Ensembles', proj: 'Concrete Strength Prediction' },
+                { kw: ['next', 'react', 'typescript', 'tailwind', 'frontend'], skill: 'Next.js 16 & React 19', proj: 'DSA House' },
+                { kw: ['nest', 'rbac', 'jwt', 'postgres', 'sql', 'backend', 'api'], skill: 'NestJS 10 & PostgreSQL', proj: 'Ecommerce Admin Dashboard' },
+                { kw: ['docker', 'mlops', 'deploy', 'cloud', 'ci/cd'], skill: 'Docker & MLOps', proj: 'MangoCare AI' },
+                { kw: ['c++', 'c#', '.net', 'algorithm', 'dsa'], skill: 'C++ & Algorithms', proj: 'DSA House' }
+            ];
+            const matchedSkills = [];
+            const matchedProjs = new Set();
+            KEYWORD_CATALOG.forEach(item => {
+                if (item.kw.some(k => raw.includes(k))) {
+                    matchedSkills.push(item.skill);
+                    matchedProjs.add(item.proj);
+                }
+            });
+            if (matchedSkills.length === 0) {
+                matchedSkills.push('PyTorch', 'TensorFlow', 'Next.js 16', 'TypeScript', 'PostgreSQL', 'Docker');
+                matchedProjs.add('Breast Lesion AI').add('MangoCare AI').add('DSA House');
+            }
+            const scorePct = Math.min(99, 89 + matchedSkills.length * 2);
+            renderJdResult({
+                title: 'Custom Job Description Alignment Report',
+                score: `${scorePct}%`,
+                jdText: jdTextarea.value,
+                summary: `Matched ${matchedSkills.length} core technical competencies and ${matchedProjs.size} production projects directly against your pasted job description.`,
+                skills: matchedSkills,
+                projects: Array.from(matchedProjs),
+                cvFocus: raw.includes('nest') || raw.includes('react') ? 'fullstack' : 'ai'
+            });
+            playSound('click');
+        });
+    }
+
+    if (jdTailorCvBtn) {
+        jdTailorCvBtn.addEventListener('click', () => {
+            generateTailoredCvPdf(activeRoleSpec);
+            playSound('click');
+        });
+    }
+
+    renderJdResult(ROLE_PRESETS.google_ml);
+}
+
+/* --- 5. GLOBAL ⌘K / CTRL+K DEVELOPER COMMAND PALETTE (#cmdk-modal) --- */
+const cmdkTrigger = document.getElementById('cmdk-trigger');
+const cmdkModal = document.getElementById('cmdk-modal');
+const cmdkInput = document.getElementById('cmdk-input');
+const cmdkList = document.getElementById('cmdk-list');
+
+if (cmdkModal && cmdkInput && cmdkList) {
+    const COMMAND_ITEMS = [
+        { label: 'Start 60-Second Guided Recruiter Tour', tag: 'Autopilot', icon: 'fas fa-play-circle', action: () => document.getElementById('autopilot-tour-btn')?.click() },
+        { label: 'Analyze Job Description (JD) Role-Fit %', tag: 'AI Matcher', icon: 'fas fa-wand-magic-sparkles', action: () => document.getElementById('jd-matcher')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'Inspect Explainable AI (XAI) Grad-CAM Slider', tag: 'Medical AI', icon: 'fas fa-eye', action: () => document.getElementById('xai-lab')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'Simulate 50,000 RPS MLOps Auto-Scaling', tag: 'System Design', icon: 'fas fa-gauge-high', action: () => document.getElementById('mlops-scaler')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'Run Live Code & API Terminal Emulator', tag: 'Terminal', icon: 'fas fa-terminal', action: () => document.getElementById('terminal-lab')?.scrollIntoView({ behavior: 'smooth' }) },
+        { label: 'Generate 1-Page AI / ML Tailored Resume PDF', tag: 'PDF Export', icon: 'fas fa-file-pdf', action: () => generateTailoredCvPdf(ROLE_PRESETS.google_ml) },
+        { label: 'Generate 1-Page Full-Stack Tailored Resume PDF', tag: 'PDF Export', icon: 'fas fa-file-code', action: () => generateTailoredCvPdf(ROLE_PRESETS.fullstack) },
+        { label: 'Book 15-Minute Google Calendar Intro Call', tag: 'Meeting', icon: 'fas fa-calendar-check', action: () => document.getElementById('open-calendar-modal')?.click() },
+        { label: 'Copy Email (ruhittanvir14@gmail.com)', tag: 'Clipboard', icon: 'fas fa-copy', action: () => document.getElementById('copy-email-btn')?.click() },
+        { label: 'Toggle Dark / Light Luxury Mode', tag: 'Appearance', icon: 'fas fa-moon', action: () => document.getElementById('mode-toggle')?.click() }
+    ];
+
+    // Also index all 18 projects into Command Palette
+    document.querySelectorAll('.project-card').forEach(card => {
+        const title = card.querySelector('.p-title')?.textContent?.trim();
+        if (title) {
+            COMMAND_ITEMS.push({
+                label: `Open Project: ${title}`,
+                tag: 'Project Sandbox',
+                icon: 'fas fa-cube',
+                action: () => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => card.click(), 380);
+                }
+            });
+        }
+    });
+
+    let filteredCmds = COMMAND_ITEMS;
+    let activeCmdIdx = 0;
+
+    const closeCmdk = () => {
+        cmdkModal.hidden = true;
+        document.body.style.overflow = '';
+    };
+
+    const renderCmdList = () => {
+        cmdkList.innerHTML = filteredCmds.map((item, idx) => `
+            <button type="button" class="cmdk-item ${idx === activeCmdIdx ? 'active' : ''}" data-cidx="${idx}">
+                <span class="cmdk-item-left"><i class="${item.icon}" aria-hidden="true"></i> <span>${item.label}</span></span>
+                <span class="cmdk-item-tag">${item.tag}</span>
+            </button>
+        `).join('');
+
+        cmdkList.querySelectorAll('.cmdk-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = filteredCmds[Number(btn.dataset.cidx)];
+                closeCmdk();
+                if (target) target.action();
+                playSound('click');
+            });
+        });
+    };
+
+    const openCmdk = () => {
+        cmdkModal.hidden = false;
+        cmdkInput.value = '';
+        filteredCmds = COMMAND_ITEMS;
+        activeCmdIdx = 0;
+        renderCmdList();
+        setTimeout(() => cmdkInput.focus(), 40);
+    };
+
+    if (cmdkTrigger) cmdkTrigger.addEventListener('click', openCmdk);
+    cmdkModal.addEventListener('click', (e) => { if (e.target === cmdkModal) closeCmdk(); });
+
+    cmdkInput.addEventListener('input', () => {
+        const q = cmdkInput.value.toLowerCase().trim();
+        filteredCmds = COMMAND_ITEMS.filter(c => c.label.toLowerCase().includes(q) || c.tag.toLowerCase().includes(q));
+        activeCmdIdx = 0;
+        renderCmdList();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (cmdkModal.hidden) openCmdk(); else closeCmdk();
+        } else if (!cmdkModal.hidden) {
+            if (e.key === 'Escape') closeCmdk();
+            else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeCmdIdx = (activeCmdIdx + 1) % Math.max(1, filteredCmds.length);
+                renderCmdList();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeCmdIdx = (activeCmdIdx - 1 + Math.max(1, filteredCmds.length)) % Math.max(1, filteredCmds.length);
+                renderCmdList();
+            } else if (e.key === 'Enter' && filteredCmds[activeCmdIdx]) {
+                e.preventDefault();
+                const target = filteredCmds[activeCmdIdx];
+                closeCmdk();
+                target.action();
+            }
+        }
+    });
+}
+
+/* --- 6. 60-SECOND RECRUITER AUTOPILOT TOUR (#autopilot-hud) --- */
+const apStartBtn = document.getElementById('autopilot-tour-btn');
+const apHud = document.getElementById('autopilot-hud');
+const apStepCount = document.getElementById('ap-step-count');
+const apTitle = document.getElementById('ap-title');
+const apDesc = document.getElementById('ap-desc');
+const apFill = document.getElementById('ap-progress-fill');
+const apNextBtn = document.getElementById('ap-next-btn');
+const apStopBtn = document.getElementById('ap-stop-btn');
+
+if (apStartBtn && apHud) {
+    const TOUR_STOPS = [
+        { sel: '#xai-lab', title: '1. Explainable AI & Medical Research', desc: '91.0% Dice breast ultrasound segmentation with interactive Grad-CAM attention & mathematical calibration.' },
+        { sel: '#work', title: '2. 18 Shipped Projects with Live Sandboxes', desc: 'Every project features Problem → Approach → Result, 5-metric telemetry, SVG data-flow, and downloadable PDF case studies.' },
+        { sel: '#terminal-lab', title: '3. Live Code & API Terminal Emulator', desc: 'Inspect production PyTorch DenseNet-121, U-Net ResNet-50, and NestJS RBAC guards with live endpoint execution.' },
+        { sel: '#mlops-scaler', title: '4. MLOps & System Scaling Simulator', desc: 'Interactive system design scaling from single-container CPU inference to 50,000 RPS Kubernetes TensorRT clusters.' },
+        { sel: '#jd-matcher', title: '5. AI Job Description Matcher & Fast-Track', desc: 'Compute instant role-fit percentage, generate a 1-page tailored CV, or book a 15-minute intro call in one click.' }
+    ];
+
+    let tourIdx = 0;
+    let tourTimer = null;
+
+    const renderTourStop = (idx) => {
+        const stop = TOUR_STOPS[idx];
+        if (!stop) return;
+        if (apStepCount) apStepCount.textContent = `STOP ${idx + 1} / ${TOUR_STOPS.length}`;
+        if (apTitle) apTitle.textContent = stop.title;
+        if (apDesc) apDesc.textContent = stop.desc;
+        if (apFill) apFill.style.width = `${((idx + 1) / TOUR_STOPS.length) * 100}%`;
+        const el = document.querySelector(stop.sel);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    const endTour = () => {
+        if (tourTimer) clearInterval(tourTimer);
+        tourTimer = null;
+        apHud.hidden = true;
+    };
+
+    apStartBtn.addEventListener('click', () => {
+        tourIdx = 0;
+        apHud.hidden = false;
+        renderTourStop(0);
+        if (tourTimer) clearInterval(tourTimer);
+        tourTimer = setInterval(() => {
+            tourIdx++;
+            if (tourIdx >= TOUR_STOPS.length) {
+                endTour();
+                return;
+            }
+            renderTourStop(tourIdx);
+        }, 6500);
+        playSound('click');
+    });
+
+    if (apNextBtn) {
+        apNextBtn.addEventListener('click', () => {
+            tourIdx = (tourIdx + 1) % TOUR_STOPS.length;
+            renderTourStop(tourIdx);
+            playSound('click');
+        });
+    }
+
+    if (apStopBtn) apStopBtn.addEventListener('click', endTour);
+}
