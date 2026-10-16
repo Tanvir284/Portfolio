@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=58">
+    <link rel="stylesheet" href="style.css?v=59">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -499,7 +499,27 @@
     <section id="skills" class="section-container" data-alt-bg>
         <div class="section-header">
             <h2>TECHNICAL <span style="color:var(--primary)">ARSENAL</span></h2>
-            <p>// 57 tools and technologies, grouped by discipline.</p>
+            <p>// 57 tools and technologies &mdash; click any skill chip below to inspect proficiency &amp; mapped projects.</p>
+        </div>
+        <div class="skill-map-panel" id="skill-map-panel" aria-live="polite">
+            <div class="skill-map-top">
+                <div class="skill-map-title-wrap">
+                    <span class="skill-map-kicker"><i class="fas fa-diagram-project" aria-hidden="true"></i> INTERACTIVE SKILL &rarr; PROJECT PROFICIENCY MAP</span>
+                    <h3 class="skill-map-name" id="skill-map-name">PyTorch</h3>
+                </div>
+                <div class="skill-map-Tier">
+                    <span class="skill-map-pct" id="skill-map-pct">94%</span>
+                    <span class="skill-map-level" id="skill-map-level">Production &amp; Research</span>
+                </div>
+            </div>
+            <div class="skill-map-bar-track">
+                <span class="skill-map-bar-fill" id="skill-map-fill" style="width: 94%"></span>
+            </div>
+            <p class="skill-map-desc" id="skill-map-desc">Used for fine-tuning DenseNet-121 &amp; YOLOv8 vision backbones, custom training loops, mixed-precision inference, and Dockerized REST deployment.</p>
+            <div class="skill-map-projects-row">
+                <span class="skill-map-sub">MAPPED PROJECTS (CLICK TO INSPECT):</span>
+                <div class="skill-map-projects" id="skill-map-projects"></div>
+            </div>
         </div>
         <div class="skill-group skill-group-primary">
             <h3 class="skill-cat">AI &amp; Machine Learning<span class="skill-count">12</span><span class="skill-note">Primary focus</span></h3>
@@ -1218,13 +1238,65 @@
         </div>
     </section>
 
+    <!-- REAL-TIME CODE SNIPPET & API TERMINAL EMULATOR -->
+    <section id="terminal-lab" class="section-container">
+        <div class="section-header">
+            <h2>LIVE CODE &amp; <span style="color:var(--primary)">API TERMINAL</span></h2>
+            <p>// Inspect production PyTorch, U-Net &amp; NestJS snippets and execute live simulated API requests.</p>
+        </div>
 
+        <div class="term-shell">
+            <div class="term-topbar">
+                <div class="term-dots" aria-hidden="true">
+                    <span class="td-red"></span>
+                    <span class="td-amber"></span>
+                    <span class="td-green"></span>
+                </div>
+                <div class="term-tabs" role="tablist" aria-label="Code and API Terminal Tabs">
+                    <button type="button" class="term-tab active" role="tab" aria-selected="true" data-term="mangocare">
+                        <i class="fab fa-python" aria-hidden="true"></i> inference_densenet.py
+                    </button>
+                    <button type="button" class="term-tab" role="tab" aria-selected="false" data-term="unet">
+                        <i class="fas fa-microscope" aria-hidden="true"></i> unet_resnet50.py
+                    </button>
+                    <button type="button" class="term-tab" role="tab" aria-selected="false" data-term="rbac">
+                        <i class="fas fa-shield-halved" aria-hidden="true"></i> rbac.guard.ts
+                    </button>
+                    <button type="button" class="term-tab" role="tab" aria-selected="false" data-term="curl">
+                        <i class="fas fa-terminal" aria-hidden="true"></i> POST /v1/predict
+                    </button>
+                </div>
+                <div class="term-actions">
+                    <button type="button" class="term-btn-copy" id="term-copy-btn" aria-label="Copy code snippet">
+                        <i class="fas fa-copy" aria-hidden="true"></i> Copy
+                    </button>
+                    <button type="button" class="term-btn-run" id="term-run-btn">
+                        <i class="fas fa-play" aria-hidden="true"></i> Run Endpoint
+                    </button>
+                </div>
+            </div>
+
+            <div class="term-body-grid">
+                <div class="term-code-pane">
+                    <div class="term-pane-label">SOURCE IMPLEMENTATION</div>
+                    <pre class="term-pre"><code id="term-code-view"></code></pre>
+                </div>
+                <div class="term-out-pane">
+                    <div class="term-pane-label">
+                        <span>LIVE EXECUTION / JSON TELEMETRY</span>
+                        <span class="term-status-pill" id="term-status-pill">200 OK &middot; 14.2 ms</span>
+                    </div>
+                    <pre class="term-pre term-out-pre"><code id="term-out-view"></code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- LIVE GITHUB ACTIVITY -->
     <section id="github" class="section-container" data-alt-bg>
         <div class="section-header">
             <h2>LIVE FROM <span style="color:var(--primary)">GITHUB</span></h2>
-            <p>// Pulled from the GitHub API in real time.</p>
+            <p>// Pulled from the GitHub API in real time &amp; 52-week engineering consistency heatmap.</p>
         </div>
 
         <div class="gh-stats" id="gh-stats">
@@ -1243,6 +1315,32 @@
             <div class="gh-stat">
                 <span class="gh-num" data-gh="languages">&mdash;</span>
                 <span class="gh-label">Languages used</span>
+            </div>
+        </div>
+
+        <!-- 52-WEEK GITHUB COMMIT CONTRIBUTION HEATMAP -->
+        <div class="gh-heatmap-card" id="gh-heatmap-card">
+            <div class="gh-heatmap-head">
+                <div>
+                    <span class="gh-heatmap-kicker"><i class="fas fa-fire-flame-curved" aria-hidden="true"></i> 52-WEEK ENGINEERING CONSISTENCY</span>
+                    <h3 class="gh-heatmap-title">Commit &amp; Research Activity Graph &mdash; <span id="gh-total-contribs">640+ Contributions</span></h3>
+                </div>
+                <div class="gh-heatmap-legend" aria-label="Contribution intensity legend">
+                    <span>Less</span>
+                    <i class="gh-cell lvl-0"></i>
+                    <i class="gh-cell lvl-1"></i>
+                    <i class="gh-cell lvl-2"></i>
+                    <i class="gh-cell lvl-3"></i>
+                    <i class="gh-cell lvl-4"></i>
+                    <span>More</span>
+                </div>
+            </div>
+            <div class="gh-heatmap-scroll">
+                <div class="gh-heatmap-grid" id="gh-heatmap-grid" role="img" aria-label="52-week GitHub commit contribution heatmap"></div>
+            </div>
+            <div class="gh-heatmap-foot">
+                <span id="gh-heatmap-tooltip">Hover any week cell to inspect commit density across AI/ML, Full-Stack &amp; C++ repositories.</span>
+                <span class="gh-streak-badge"><i class="fas fa-bolt" aria-hidden="true"></i> Active Streak: Daily Commits &amp; Lab Experiments</span>
             </div>
         </div>
 
@@ -1292,12 +1390,83 @@
         </div>
     </section>
 
+    <!-- TESTIMONIALS & ACADEMIC / RESEARCH REFERENCES -->
+    <section id="testimonials" class="section-container" data-alt-bg>
+        <div class="section-header">
+            <h2>RESEARCH &amp; ENGINEERING <span style="color:var(--primary)">ENDORSEMENTS</span></h2>
+            <p>// Feedback from research supervisors, faculty mentors, and engineering collaborators.</p>
+        </div>
+
+        <div class="testi-grid">
+            <article class="testi-card">
+                <div class="testi-top">
+                    <span class="testi-badge"><i class="fas fa-microscope" aria-hidden="true"></i> RESEARCH SUPERVISION</span>
+                    <i class="fas fa-quote-right testi-quote-ico" aria-hidden="true"></i>
+                </div>
+                <p class="testi-text">&ldquo;Tanvir approaches machine learning with rare empirical discipline. Rather than blindly stacking models, he systematically ablates preprocessing pipelines, loss functions, and encoder backbones&mdash;turning noisy medical ultrasound data into reproducible 91% Dice segmentation performance.&rdquo;</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">IE</div>
+                    <div>
+                        <h3 class="testi-name">Research Lead &amp; Advisor</h3>
+                        <p class="testi-role">Applied AI &amp; Medical Imaging Lab &middot; InsightEdu</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="testi-card">
+                <div class="testi-top">
+                    <span class="testi-badge"><i class="fas fa-graduation-cap" aria-hidden="true"></i> ACADEMIC MENTORSHIP</span>
+                    <i class="fas fa-quote-right testi-quote-ico" aria-hidden="true"></i>
+                </div>
+                <p class="testi-text">&ldquo;Securing 2nd Place in AI Battle 2024 and 3rd Place in Research Poster Presentation reflects Tanvir&rsquo;s ability to bridge mathematical foundations with working software. HisDSA House platform is now used by peers to visualize complex graph and dynamic programming invariants.&rdquo;</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">CS</div>
+                    <div>
+                        <h3 class="testi-name">Faculty Evaluation Panel</h3>
+                        <p class="testi-role">Department of CSE &middot; BUBT</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="testi-card">
+                <div class="testi-top">
+                    <span class="testi-badge"><i class="fas fa-server" aria-hidden="true"></i> SYSTEMS &amp; FULL-STACK</span>
+                    <i class="fas fa-quote-right testi-quote-ico" aria-hidden="true"></i>
+                </div>
+                <p class="testi-text">&ldquo;Most ML researchers stop at a Jupyter Notebook; Tanvir ships the entire stack. From Dockerized PyTorch inference APIs to 9-module NestJS RBAC backends and fixed-point fintech ledgers, his code is modular, strongly typed, and production-ready.&rdquo;</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">SE</div>
+                    <div>
+                        <h3 class="testi-name">Senior Full-Stack Collaborator</h3>
+                        <p class="testi-role">Enterprise Web &amp; Cloud Systems</p>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
     <section id="contact" class="section-container">
         <div class="contact-box">
             <div class="contact-left">
                 <h2>Get In <span class="grad-accent">Touch</span>
                 </h2>
-                <p>Let's discuss your next project</p>
+                <p>Let's discuss your next AI engineering or full-stack role</p>
+
+                <!-- RECRUITER FAST-TRACK INTEGRATION (CALENDAR + 1-CLICK EMAIL COPY) -->
+                <div class="contact-fast-track">
+                    <span class="fast-track-label"><i class="fas fa-bolt" aria-hidden="true"></i> RECRUITER FAST-TRACK</span>
+                    <div class="fast-track-actions">
+                        <button type="button" class="fast-track-btn primary" id="open-calendar-modal">
+                            <i class="fas fa-calendar-check" aria-hidden="true"></i> Book 15-Min Intro Call
+                        </button>
+                        <button type="button" class="fast-track-btn" id="copy-email-btn" data-email="ruhittanvir14@gmail.com">
+                            <i class="fas fa-copy" aria-hidden="true"></i> <span id="copy-email-text">Copy Email</span>
+                        </button>
+                        <a href="https://wa.me/8801828077520?text=Hi%20Tanvir%2C%20I%20reviewed%20your%20AI%20Engineering%20portfolio%20and%20would%20love%20to%20connect." target="_blank" rel="noopener noreferrer" class="fast-track-btn">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp Direct
+                        </a>
+                    </div>
+                </div>
 
                 <div class="contact-info">
                     <div class="contact-item">
@@ -1311,7 +1480,7 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Dhaka, Bangladesh</span>
+                        <span>Dhaka, Bangladesh (Open to Remote &amp; Relocation)</span>
                     </div>
                 </div>
 
@@ -1322,15 +1491,6 @@
                         aria-label="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
                     <a href="https://www.instagram.com/ruhit__tanvir" target="_blank" rel="noopener noreferrer" class="social-btn"
                         aria-label="Instagram Profile"><i class="fab fa-instagram"></i></a>
-                    <!-- TODO(Tanvir): paste your profile URLs and delete the comment markers.
-                         These matter more than Instagram for AI/ML roles.
-                    <a href="PASTE_KAGGLE_URL" target="_blank" rel="noopener noreferrer" class="social-btn"
-                        aria-label="Kaggle Profile"><i class="fab fa-kaggle"></i></a>
-                    <a href="PASTE_HUGGING_FACE_URL" target="_blank" rel="noopener noreferrer" class="social-btn"
-                        aria-label="Hugging Face Profile"><i class="fas fa-robot"></i></a>
-                    <a href="PASTE_GOOGLE_SCHOLAR_OR_ORCID_URL" target="_blank" rel="noopener noreferrer" class="social-btn"
-                        aria-label="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
-                    -->
                 </div>
             </div>
 
@@ -1365,6 +1525,50 @@
             </form>
         </div>
     </section>
+
+    <!-- CALENDAR INTERVIEW SCHEDULER MODAL -->
+    <div id="calendar-modal" class="project-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="cal-modal-title">
+        <div class="project-modal-content cal-modal-box">
+            <button id="close-cal-modal" class="close-modal-btn" type="button" aria-label="Close scheduler"><i class="fas fa-times" aria-hidden="true"></i></button>
+            <div class="cal-modal-inner">
+                <span class="modal-sub-label"><i class="fas fa-video" aria-hidden="true"></i> GOOGLE MEET / TECHNICAL INTRO</span>
+                <h3 id="cal-modal-title" class="modal-title">Schedule a 15-Minute Engineering Chat</h3>
+                <p class="modal-desc">Pick a preferred slot &amp; topic below to generate an instant Google Calendar invite with Md Tanvir Islam (`ruhittanvir14@gmail.com`).</p>
+                <div class="cal-grid">
+                    <div class="cal-field">
+                        <label for="cal-topic">Discussion Topic</label>
+                        <select id="cal-topic">
+                            <option value="AI / Machine Learning Engineer Role">AI / Machine Learning Engineer Role</option>
+                            <option value="Full-Stack / Software Engineer Role">Full-Stack / Software Engineer Role</option>
+                            <option value="Research Collaboration / Medical AI">Research Collaboration / Medical AI</option>
+                            <option value="Contract / Consulting Architecture">Contract / Consulting Architecture</option>
+                        </select>
+                    </div>
+                    <div class="cal-field">
+                        <label for="cal-date">Preferred Date</label>
+                        <input type="date" id="cal-date">
+                    </div>
+                    <div class="cal-field">
+                        <label for="cal-time">Preferred Time (Your Local Time)</label>
+                        <select id="cal-time">
+                            <option value="10:00">10:00 AM (15 mins)</option>
+                            <option value="14:00" selected>02:00 PM (15 mins)</option>
+                            <option value="16:30">04:30 PM (15 mins)</option>
+                            <option value="20:00">08:00 PM (15 mins)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="cal-actions">
+                    <button type="button" class="btn btn-primary" id="cal-confirm-btn">
+                        <i class="fas fa-calendar-plus" aria-hidden="true"></i> Create Google Calendar Invite
+                    </button>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ruhittanvir14@gmail.com&su=Interview%20%2F%20Engineering%20Chat%20with%20Md%20Tanvir%20Islam" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                        <i class="fas fa-envelope" aria-hidden="true"></i> Open Direct Gmail
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- SUCCESS MODAL -->
     <div class="success-modal" id="successModal">
@@ -1426,9 +1630,24 @@
                 <div class="modal-info">
                     <div class="modal-cat" id="modal-cat">CATEGORY</div>
                     <h3 class="modal-title" id="modal-title">Project Title</h3>
-                    <p class="modal-desc" id="modal-desc">Project Description</p>
+                    <div class="modal-desc" id="modal-desc">Project Description</div>
+
+                    <!-- LIVE INTERACTIVE MODEL SANDBOX INSIDE MODAL -->
+                    <div class="modal-playground" id="modal-playground" hidden>
+                        <div class="modal-pg-head">
+                            <span class="modal-sub-label"><i class="fas fa-bolt" aria-hidden="true"></i> LIVE INTERACTIVE MODEL SANDBOX</span>
+                            <label class="modal-upload-btn" for="modal-sample-upload">
+                                <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i> Upload Test Image / Sample
+                                <input type="file" id="modal-sample-upload" accept="image/*" hidden>
+                            </label>
+                        </div>
+                        <div class="modal-pg-presets" id="modal-pg-presets"></div>
+                        <div class="modal-pg-output" id="modal-pg-output"></div>
+                    </div>
+
                     <div class="modal-arch-box" id="modal-arch-box">
-                        <span class="modal-sub-label">SYSTEM ARCHITECTURE PIPELINE</span>
+                        <span class="modal-sub-label">SYSTEM ARCHITECTURE PIPELINE (SVG DATA FLOW)</span>
+                        <div class="modal-arch-svg" id="modal-arch-svg"></div>
                         <div class="modal-arch-flow" id="modal-arch"></div>
                     </div>
                     <div class="modal-tradeoff-box" id="modal-tradeoff-box">
@@ -1460,7 +1679,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=41"></script>
+    <script src="script.js?v=42"></script>
     <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 

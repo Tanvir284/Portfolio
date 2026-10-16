@@ -5185,6 +5185,862 @@ html.preloader-skip #preloader {
     margin: 0;
 }
 
+/* ==========================================================================
+   10-POINT AI ENGINEERING HUB UPGRADE (APPLE PRO TITANIUM AESTHETIC)
+   ========================================================================== */
 
+/* --- 1. Problem -> Approach -> Result (PAR) Format on Project Cards --- */
+.p-par-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 4px 0 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
+}
 
+.p-par-row {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 8px;
+    align-items: baseline;
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
 
+.p-par-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 5px;
+    text-align: center;
+    background: color-mix(in srgb, var(--dc, var(--primary)) 14%, transparent);
+    color: var(--dc, var(--primary));
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 28%, transparent);
+}
+
+.p-par-row.is-result .p-par-badge {
+    background: color-mix(in srgb, #22c55e 16%, transparent);
+    color: #22c55e;
+    border-color: color-mix(in srgb, #22c55e 34%, transparent);
+}
+
+.p-par-text {
+    color: var(--text-gray);
+}
+
+.p-par-row.is-result .p-par-text {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* --- 2. Inline SVG System Architecture Pipeline on Project Cards & Modal --- */
+.p-arch-svg-wrap {
+    margin: 2px 0 10px;
+    padding: 8px 10px;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--text) 2.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.p-arch-svg-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--text-gray);
+    margin-bottom: 4px;
+}
+
+.p-arch-svg-label span:last-child {
+    color: var(--dc, var(--primary));
+}
+
+.p-arch-svg,
+.modal-arch-svg svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.modal-arch-svg {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+/* --- 3. 5-Metric Engineering Dashboard on Project Cards --- */
+.p-eng-metrics {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+    margin: 0 0 12px;
+    padding: 0;
+    list-style: none;
+}
+
+.p-eng-metrics li {
+    padding: 6px 4px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.p-eng-metrics .em-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.p-eng-metrics .em-key {
+    font-size: 0.56rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-gray);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- 4. Interactive Demo & Case Study PDF Buttons on Cards --- */
+.p-hub-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.p-demo-btn,
+.p-pdf-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 5px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.p-demo-btn {
+    background: color-mix(in srgb, var(--dc, var(--primary)) 16%, transparent);
+    color: var(--dc, var(--primary));
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 38%, transparent);
+}
+
+.p-demo-btn:hover {
+    background: var(--dc, var(--primary));
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.p-pdf-btn {
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    color: var(--text-gray);
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+}
+
+.p-pdf-btn:hover {
+    color: var(--text);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+/* --- 5. Live Interactive Model Sandbox inside Modal (#modal-playground) --- */
+.modal-playground {
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--dc, var(--primary)) 10%, var(--card-bg)), color-mix(in srgb, var(--bg) 85%, transparent));
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 32%, transparent);
+}
+
+.modal-pg-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.modal-pg-head .modal-sub-label {
+    margin-bottom: 0;
+}
+
+.modal-upload-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 5px 11px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--dc, var(--primary)) 18%, transparent);
+    color: var(--text);
+    border: 1px dashed color-mix(in srgb, var(--dc, var(--primary)) 50%, transparent);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-upload-btn:hover {
+    background: color-mix(in srgb, var(--dc, var(--primary)) 28%, transparent);
+}
+
+.modal-pg-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 12px;
+}
+
+.pg-sample-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 6px 11px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    color: var(--text-gray);
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.pg-sample-btn.active,
+.pg-sample-btn:hover {
+    color: var(--text);
+    border-color: var(--dc, var(--primary));
+    background: color-mix(in srgb, var(--dc, var(--primary)) 16%, transparent);
+}
+
+.modal-pg-output {
+    padding: 11px 13px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+}
+
+.pg-out-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.pg-out-lat {
+    font-size: 0.66rem;
+    color: #22c55e;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: color-mix(in srgb, #22c55e 14%, transparent);
+}
+
+.pg-conf-bar {
+    height: 7px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+    overflow: hidden;
+    margin: 6px 0;
+}
+
+.pg-conf-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--dc, var(--primary)), #22c55e);
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pg-out-meta {
+    font-size: 0.68rem;
+    color: var(--text-gray);
+}
+
+/* --- 6. Interactive Skill-to-Project Proficiency Map (#skill-map-panel) --- */
+.skill-map-panel {
+    margin: 0 0 28px;
+    padding: 22px 24px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--primary) 8%, var(--card-bg)), var(--card-bg));
+    border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent);
+    box-shadow: 0 18px 42px -18px rgba(0, 0, 0, 0.45);
+}
+
+.skill-map-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.skill-map-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.skill-map-name {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0;
+}
+
+.skill-map-Tier {
+    text-align: right;
+}
+
+.skill-map-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+}
+
+.skill-map-level {
+    font-size: 0.74rem;
+    color: var(--text-gray);
+}
+
+.skill-map-bar-track {
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 9%, transparent);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.skill-map-bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.skill-map-desc {
+    font-size: 0.88rem;
+    color: var(--text-gray);
+    line-height: 1.55;
+    margin: 0 0 14px;
+}
+
+.skill-map-projects-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.skill-map-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-gray);
+}
+
+.skill-map-projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill-proj-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.skill-proj-pill:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.skill-chip {
+    cursor: pointer;
+}
+
+.skill-chip.is-selected {
+    border-color: var(--primary) !important;
+    background: color-mix(in srgb, var(--primary) 16%, var(--card-bg)) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 28%, transparent);
+}
+
+/* --- 7. Real-Time Code Snippet & API Terminal Emulator (#terminal-lab) --- */
+.term-shell {
+    border-radius: 20px;
+    background: #07080d;
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.65);
+    overflow: hidden;
+}
+
+.term-topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.term-dots {
+    display: flex;
+    gap: 7px;
+}
+
+.term-dots span {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+}
+
+.td-red { background: #ff5f56; }
+.td-amber { background: #ffbd2e; }
+.td-green { background: #27c93f; }
+
+.term-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.term-tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.73rem;
+    padding: 6px 12px;
+    border-radius: 9px;
+    background: transparent;
+    color: #9898a6;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.term-tab.active,
+.term-tab:hover {
+    color: #f5f5f7;
+    background: rgba(99, 132, 255, 0.14);
+    border-color: rgba(99, 132, 255, 0.36);
+}
+
+.term-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.term-btn-copy,
+.term-btn-run {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 6px 13px;
+    border-radius: 9px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.term-btn-copy {
+    background: rgba(255, 255, 255, 0.06);
+    color: #d1d1db;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.term-btn-run {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: none;
+}
+
+.term-body-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+}
+
+.term-code-pane,
+.term-out-pane {
+    padding: 18px 20px;
+}
+
+.term-code-pane {
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.term-pane-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #8b8b99;
+    margin-bottom: 10px;
+}
+
+.term-status-pill {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.term-pre {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    line-height: 1.6;
+    color: #e4e4ef;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.term-out-pre {
+    color: #a7f3d0;
+}
+
+/* --- 8. 52-Week GitHub Commit Contribution Heatmap (.gh-heatmap-card) --- */
+.gh-heatmap-card {
+    margin: 0 0 28px;
+    padding: 22px 24px;
+    border-radius: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+}
+
+.gh-heatmap-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.gh-heatmap-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--primary);
+}
+
+.gh-heatmap-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 4px 0 0;
+}
+
+.gh-heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-gray);
+}
+
+.gh-heatmap-scroll {
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.gh-heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(52, minmax(11px, 1fr));
+    grid-template-rows: repeat(7, 11px);
+    grid-auto-flow: column;
+    gap: 4px;
+    min-width: 680px;
+}
+
+.gh-cell {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    display: inline-block;
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    transition: transform 0.15s ease;
+}
+
+.gh-cell:hover {
+    transform: scale(1.35);
+    outline: 1px solid var(--text);
+}
+
+.gh-cell.lvl-1 { background: color-mix(in srgb, var(--primary) 28%, transparent); }
+.gh-cell.lvl-2 { background: color-mix(in srgb, var(--primary) 52%, transparent); }
+.gh-cell.lvl-3 { background: color-mix(in srgb, var(--primary) 78%, transparent); }
+.gh-cell.lvl-4 { background: var(--primary); box-shadow: 0 0 8px color-mix(in srgb, var(--primary) 55%, transparent); }
+
+.gh-heatmap-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-gray);
+}
+
+.gh-streak-badge {
+    color: #22c55e;
+    font-weight: 700;
+}
+
+/* --- 9. Testimonials & Academic / Research Endorsements (#testimonials) --- */
+.testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.testi-card {
+    padding: 26px 24px;
+    border-radius: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.testi-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--primary) 42%, transparent);
+}
+
+.testi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.testi-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--primary);
+    border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.testi-quote-ico {
+    font-size: 1.2rem;
+    color: color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.testi-text {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+.testi-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.testi-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.testi-name {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.testi-role {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    margin: 2px 0 0;
+}
+
+/* --- 10. Recruiter Fast-Track Contact & Calendar Booking Modal --- */
+.contact-fast-track {
+    margin: 18px 0 22px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--primary) 8%, var(--card-bg));
+    border: 1px solid color-mix(in srgb, var(--primary) 26%, transparent);
+}
+
+.fast-track-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.fast-track-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.fast-track-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 8px 13px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.fast-track-btn.primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border-color: transparent;
+}
+
+.fast-track-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+}
+
+.cal-modal-box {
+    max-width: 560px;
+    padding: 30px;
+}
+
+.cal-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 18px 0 22px;
+}
+
+.cal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cal-field label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-gray);
+}
+
+.cal-field select,
+.cal-field input {
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.88rem;
+}
+
+.cal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 960px) {
+    .term-body-grid,
+    .testi-grid {
+        grid-template-columns: 1fr;
+    }
+    .term-code-pane {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .p-eng-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
