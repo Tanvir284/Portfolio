@@ -6842,3 +6842,98 @@ html.preloader-skip #preloader {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* ==========================================================================
+   3D BLACK-BLAZER SCULPTED MODEL & HOLOGRAPHIC STAGE (#hero-3d-stage)
+   ========================================================================== */
+#hero-3d-stage {
+    position: relative;
+    height: 540px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+}
+
+#hero-3d-stage .main-img {
+    width: 390px;
+    height: 510px;
+    object-fit: contain;
+    border: none;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    filter: drop-shadow(0 28px 48px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 28px color-mix(in srgb, var(--primary) 26%, transparent));
+    transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+/* On desktop when Three.js 3D WebGL model is active in #webgl-container, hide the static fallback img so the live 3D mesh shines directly in the stage */
+@media (min-width: 981px) {
+    html.webgl-3d-active #hero-3d-stage .main-img {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+.hero-3d-pedestal {
+    position: absolute;
+    bottom: 22px;
+    width: 340px;
+    height: 68px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--primary) 38%, transparent) 0%, color-mix(in srgb, var(--secondary) 16%, transparent) 48%, transparent 74%);
+    filter: blur(12px);
+    transform: rotateX(68deg);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.hero-3d-controls {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 7px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    box-shadow: 0 18px 38px -12px rgba(0, 0, 0, 0.75);
+    z-index: 35;
+}
+
+.hero-3d-btn {
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-gray);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.22s ease;
+    white-space: nowrap;
+}
+
+.hero-3d-btn:hover {
+    color: var(--text);
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.hero-3d-btn.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 65%, var(--secondary)));
+    border-color: color-mix(in srgb, #ffffff 25%, var(--primary));
+    box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--primary) 75%, transparent);
+}
+

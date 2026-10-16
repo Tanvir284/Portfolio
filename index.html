@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=60">
+    <link rel="stylesheet" href="style.css?v=61">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -318,11 +318,12 @@
                 </div>
             </div>
 
-            <div class="hero-visual">
+            <div class="hero-visual" id="hero-3d-stage">
                 <div class="circle-text" id="circleText"></div>
-                <!-- Optimized image with WebP support -->
-                <img src="profile.jpg" width="420" height="420" fetchpriority="high"
-                    alt="MD Tanvir Islam - AI Architect Profile" class="main-img">
+                <div class="hero-3d-pedestal" aria-hidden="true"></div>
+                <!-- Fallback / 3D Cutout Portrait (Black Blazer Edition) -->
+                <img src="tanvir-3d-cutout.webp" width="420" height="520" fetchpriority="high"
+                    alt="MD Tanvir Islam - 3D Black Blazer Model" class="main-img">
 
                 <div class="float-card fc-1">
                     <i class="fas fa-microscope fc-icon" aria-hidden="true"></i>
@@ -337,6 +338,12 @@
                         <div style="font-weight: 700;">6 Live Deployments</div>
                         <div style="font-size: 0.75rem; color: var(--text-gray);">HF Spaces &middot; Vercel &middot; Netlify</div>
                     </div>
+                </div>
+
+                <div class="hero-3d-controls" role="group" aria-label="3D Avatar Render Mode">
+                    <button type="button" class="hero-3d-btn active" data-3d-mode="0"><i class="fas fa-cube" aria-hidden="true"></i> 3D STUDIO</button>
+                    <button type="button" class="hero-3d-btn" data-3d-mode="1"><i class="fas fa-atom" aria-hidden="true"></i> HOLOGRAM</button>
+                    <button type="button" class="hero-3d-btn" data-3d-mode="2"><i class="fas fa-project-diagram" aria-hidden="true"></i> WIREFRAME</button>
                 </div>
             </div>
         </div>
@@ -2003,7 +2010,8 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=44"></script>
+    <script src="tanvir-3d-assets.js?v=1"></script>
+    <script src="script.js?v=45"></script>
     <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 

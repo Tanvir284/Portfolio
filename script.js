@@ -194,78 +194,322 @@ if (circleText) {
 }
 
 
-/* --- 3D WEBGL NEURAL SPHERE (THREE.JS) --- */
+/* --- 3D WEBGL BLACK-BLAZER SCULPTED MODEL & HOLOGRAPHIC RELIEF (THREE.JS) --- */
 const container = document.getElementById('webgl-container');
-let scene, camera, renderer, particlesMesh, coreMesh;
+let scene, camera, renderer;
+let avatarGroup, avatarMesh, wireframeMesh, pedestalGroup, ambientMotes;
+let avatarUniforms = null;
 
 function syncThreeColors() {
     const rootStyle = getComputedStyle(document.documentElement);
-    const primary = rootStyle.getPropertyValue('--primary').trim();
-    const secondary = rootStyle.getPropertyValue('--secondary').trim();
-    if (particlesMesh && particlesMesh.material && primary) {
-        particlesMesh.material.color.set(primary);
+    const primary = rootStyle.getPropertyValue('--primary').trim() || '#6384ff';
+    const secondary = rootStyle.getPropertyValue('--secondary').trim() || '#a78bfa';
+    if (avatarUniforms) {
+        avatarUniforms.uPrimaryColor.value.set(primary);
+        avatarUniforms.uSecondaryColor.value.set(secondary);
     }
-    if (coreMesh && coreMesh.material && (secondary || primary)) {
-        coreMesh.material.color.set(secondary || primary);
+    if (wireframeMesh && wireframeMesh.material && wireframeMesh.material.uniforms) {
+        wireframeMesh.material.uniforms.uWireColor.value.set(primary);
+    }
+    if (ambientMotes && ambientMotes.material) {
+        ambientMotes.material.color.set(primary);
+    }
+    if (pedestalGroup) {
+        pedestalGroup.children.forEach((ring, idx) => {
+            if (ring.material) ring.material.color.set(idx % 2 === 0 ? primary : secondary);
+        });
+    }
+}
+
+function updateAvatarStagePosition() {
+    if (!avatarGroup || !camera) return;
+    const isDesktop = window.innerWidth > 980;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const vh = Math.max(window.innerHeight, 600);
+    const scrollProgress = Math.min(1, scrollY / (vh * 0.85));
+
+    if (isDesktop) {
+        // In Hero: sits cleanly on the right stage (where .hero-visual is); scrolls smoothly into background
+        const heroX = Math.min(5.2, Math.max(3.6, (window.innerWidth / window.innerHeight) * 2.65));
+        avatarGroup.position.x = heroX * (1 - scrollProgress * 0.15);
+        avatarGroup.position.y = -0.35 + scrollProgress * 0.55;
+        const s = 1.0 - scrollProgress * 0.08;
+        avatarGroup.scale.set(s, s, s);
+        if (avatarUniforms) {
+            avatarUniforms.uOpacity.value = 1.0 - scrollProgress * 0.58;
+        }
+    } else {
+        // On tablet/mobile: subtle background 3D model centered behind content
+        avatarGroup.position.x = 0;
+        avatarGroup.position.y = -0.5 + scrollProgress * 0.4;
+        avatarGroup.scale.set(0.84, 0.84, 0.84);
+        if (avatarUniforms) {
+            avatarUniforms.uOpacity.value = 0.28 - scrollProgress * 0.12;
+        }
     }
 }
 
 function initThreeJS() {
+    if (!container) return;
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 15;
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 19.5;
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Create Particle Sphere
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 2000;
-    const posArray = new Float32Array(particlesCount * 3);
+    avatarGroup = new THREE.Group();
+    scene.add(avatarGroup);
 
-    for (let i = 0; i < particlesCount * 3; i += 3) {
-        // Spherical distribution
-        const radius = 10;
-        const theta = Math.random() * 2 * Math.PI;
-        const phi = Math.acos((Math.random() * 2) - 1);
+    const loader = new THREE.TextureLoader();
+    const colorSrc = window.TANVIR_3D_COLOR_URI || 'tanvir-3d-cutout.webp';
+    const depthSrc = window.TANVIR_3D_DEPTH_URI || 'tanvir-3d-depth.png';
 
-        posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
-        posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-        posArray[i + 2] = radius * Math.cos(phi);
-    }
-
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-    const material = new THREE.PointsMaterial({
-        size: 0.045,
-        color: 0x6384ff,
-        transparent: true,
-        opacity: 0.65,
-        blending: THREE.AdditiveBlending
+    const colorTex = loader.load(colorSrc, () => {
+        document.documentElement.classList.add('webgl-3d-active');
+        renderer.render(scene, camera);
+    });
+    const depthTex = loader.load(depthSrc, () => {
+        renderer.render(scene, camera);
     });
 
-    particlesMesh = new THREE.Points(particlesGeometry, material);
-    scene.add(particlesMesh);
+    colorTex.minFilter = THREE.LinearFilter;
+    colorTex.magFilter = THREE.LinearFilter;
+    depthTex.minFilter = THREE.LinearFilter;
+    depthTex.magFilter = THREE.LinearFilter;
 
-    // Inner Neural Lattice Core (counter-rotating wireframe geodesic sphere)
-    const coreGeo = new THREE.IcosahedronGeometry(5.2, 2);
-    const coreMat = new THREE.MeshBasicMaterial({
-        color: 0xa78bfa,
+    avatarUniforms = {
+        uColorMap: { value: colorTex },
+        uDepthMap: { value: depthTex },
+        uTime: { value: 0 },
+        uMouse: { value: new THREE.Vector2(0, 0) },
+        uPrimaryColor: { value: new THREE.Color(0x6384ff) },
+        uSecondaryColor: { value: new THREE.Color(0xa78bfa) },
+        uMode: { value: 0.0 },
+        uOpacity: { value: 1.0 }
+    };
+
+    // High-density 3D sculpted relief geometry (41,600 vertices)
+    const bustGeo = new THREE.PlaneGeometry(9.8, 14.7, 160, 240);
+
+    const vertexShader = `
+        uniform sampler2D uDepthMap;
+        uniform sampler2D uColorMap;
+        uniform float uTime;
+        varying vec2 vUv;
+        varying float vDepth;
+        varying vec3 vViewPos;
+
+        void main() {
+            vUv = uv;
+            float d = texture2D(uDepthMap, uv).r;
+            float a = texture2D(uColorMap, uv).a;
+            vDepth = d;
+
+            vec3 pos = position;
+            // True 3D Z-extrusion sculpted from Tanvir's facial & black-blazer depth map
+            float mask = smoothstep(0.02, 0.25, a);
+            pos.z += d * 2.65 * mask;
+
+            // Subtle organic 3D breathing & posture micro-motion
+            float breath = sin(uTime * 1.6) * 0.07 * d;
+            pos.y += breath;
+            pos.z += cos(uTime * 1.6) * 0.05 * d;
+
+            vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+            vViewPos = -mvPosition.xyz;
+            gl_Position = projectionMatrix * mvPosition;
+        }
+    `;
+
+    const fragmentShader = `
+        uniform sampler2D uColorMap;
+        uniform sampler2D uDepthMap;
+        uniform float uTime;
+        uniform vec2 uMouse;
+        uniform vec3 uPrimaryColor;
+        uniform vec3 uSecondaryColor;
+        uniform float uMode;
+        uniform float uOpacity;
+        varying vec2 vUv;
+        varying float vDepth;
+        varying vec3 vViewPos;
+
+        void main() {
+            vec4 tex = texture2D(uColorMap, vUv);
+            if (tex.a < 0.03) discard;
+
+            // Compute 3D surface normal from depth gradients for studio lighting on black blazer & glasses
+            vec2 eps = vec2(1.0 / 270.0, 1.0 / 405.0);
+            float dL = texture2D(uDepthMap, vUv - vec2(eps.x, 0.0)).r;
+            float dR = texture2D(uDepthMap, vUv + vec2(eps.x, 0.0)).r;
+            float dD = texture2D(uDepthMap, vUv - vec2(0.0, eps.y)).r;
+            float dU = texture2D(uDepthMap, vUv + vec2(0.0, eps.y)).r;
+            vec3 N = normalize(vec3((dL - dR) * 7.5, (dD - dU) * 7.5, 1.0));
+
+            // Cursor-interactive 3D studio key light + rim light
+            vec3 L = normalize(vec3(uMouse.x * 1.8 + sin(uTime * 0.7) * 0.35, -uMouse.y * 1.5 + 0.5, 1.15));
+            vec3 V = normalize(vViewPos);
+            vec3 H = normalize(L + V);
+
+            float diff = max(dot(N, L), 0.0);
+            float spec = pow(max(dot(N, H), 0.0), 28.0);
+            float fresnel = pow(1.0 - max(dot(N, vec3(0.0, 0.0, 1.0)), 0.0), 2.1);
+
+            // Base studio 3D shaded black-blazer portrait
+            vec3 studioCol = tex.rgb * (0.86 + diff * 0.24);
+            studioCol += uPrimaryColor * (fresnel * 0.55 + spec * 0.26);
+            studioCol += uSecondaryColor * (pow(fresnel, 3.0) * 0.32);
+
+            // Mode 1: 3D Hologram X-Ray projection
+            float scanline = 0.5 + 0.5 * sin(vUv.y * 260.0 - uTime * 5.0);
+            float contour = smoothstep(0.42, 0.5, abs(fract(vDepth * 14.0 - uTime * 0.35) - 0.5));
+            float luma = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
+            vec3 holoCol = mix(uPrimaryColor, uSecondaryColor, vUv.y) * (luma * 1.15 + fresnel * 0.95 + 0.18);
+            holoCol += uPrimaryColor * contour * 0.55;
+            holoCol *= (0.78 + scanline * 0.28);
+
+            // Mode 2: 3D Wireframe + Topological Studio Hybrid
+            float gridX = smoothstep(0.93, 0.99, cos(vUv.x * 190.0));
+            float gridY = smoothstep(0.93, 0.99, cos(vUv.y * 280.0));
+            float wireMask = max(gridX, gridY);
+            vec3 wireHybrid = mix(studioCol * 0.72, uPrimaryColor * 1.35, wireMask * 0.78 + contour * 0.35);
+
+            vec3 finalCol = studioCol;
+            if (uMode > 0.5 && uMode < 1.5) {
+                finalCol = mix(studioCol, holoCol, clamp(uMode, 0.0, 1.0));
+            } else if (uMode >= 1.5) {
+                finalCol = wireHybrid;
+            }
+
+            // Smooth bottom pedestal fade
+            float bottomFade = smoothstep(0.01, 0.15, vUv.y);
+            gl_FragColor = vec4(finalCol, tex.a * bottomFade * uOpacity);
+        }
+    `;
+
+    const avatarMat = new THREE.ShaderMaterial({
+        uniforms: avatarUniforms,
+        vertexShader,
+        fragmentShader,
+        transparent: true,
+        depthWrite: true
+    });
+
+    avatarMesh = new THREE.Mesh(bustGeo, avatarMat);
+    avatarGroup.add(avatarMesh);
+
+    // Secondary 3D Displaced Wireframe Lattice hugging Tanvir's 3D contour
+    const wireGeo = new THREE.PlaneGeometry(9.8, 14.7, 44, 66);
+    const wireMat = new THREE.ShaderMaterial({
+        uniforms: {
+            uDepthMap: { value: depthTex },
+            uColorMap: { value: colorTex },
+            uTime: avatarUniforms.uTime,
+            uWireColor: { value: new THREE.Color(0x6384ff) },
+            uMode: avatarUniforms.uMode,
+            uOpacity: avatarUniforms.uOpacity
+        },
+        vertexShader: `
+            uniform sampler2D uDepthMap;
+            uniform sampler2D uColorMap;
+            uniform float uTime;
+            varying vec2 vUv;
+            varying float vAlpha;
+            void main() {
+                vUv = uv;
+                float d = texture2D(uDepthMap, uv).r;
+                vAlpha = texture2D(uColorMap, uv).a;
+                vec3 pos = position;
+                pos.z += d * 2.75 * smoothstep(0.05, 0.3, vAlpha) - 0.08;
+                pos.y += sin(uTime * 1.6) * 0.07 * d;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform vec3 uWireColor;
+            uniform float uMode;
+            uniform float uOpacity;
+            varying vec2 vUv;
+            varying float vAlpha;
+            void main() {
+                if (vAlpha < 0.12) discard;
+                float baseAlpha = (uMode > 1.5) ? 0.36 : (uMode > 0.5 ? 0.24 : 0.07);
+                float fade = smoothstep(0.04, 0.2, vUv.y);
+                gl_FragColor = vec4(uWireColor, baseAlpha * fade * uOpacity);
+            }
+        `,
         wireframe: true,
         transparent: true,
-        opacity: 0.1
+        depthWrite: false
     });
-    coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    scene.add(coreMesh);
+    wireframeMesh = new THREE.Mesh(wireGeo, wireMat);
+    avatarGroup.add(wireframeMesh);
+
+    // Sleek Horizontal 3D Holographic Pedestal Rings beneath the 3D Bust (NO globe!)
+    pedestalGroup = new THREE.Group();
+    pedestalGroup.position.set(0, -6.35, 0.4);
+    pedestalGroup.rotation.x = Math.PI * 0.44;
+
+    const ringRadii = [3.6, 4.6, 5.5];
+    ringRadii.forEach((r, idx) => {
+        const rGeo = new THREE.RingGeometry(r, r + 0.045, 72);
+        const rMat = new THREE.MeshBasicMaterial({
+            color: idx % 2 === 0 ? 0x6384ff : 0xa78bfa,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.28 - idx * 0.06
+        });
+        const rMesh = new THREE.Mesh(rGeo, rMat);
+        pedestalGroup.add(rMesh);
+    });
+    avatarGroup.add(pedestalGroup);
+
+    // Subtle rising studio light motes around the 3D model
+    const motesGeo = new THREE.BufferGeometry();
+    const motesCount = 140;
+    const motesPos = new Float32Array(motesCount * 3);
+    for (let i = 0; i < motesCount * 3; i += 3) {
+        const angle = Math.random() * Math.PI * 2;
+        const rad = 2.8 + Math.random() * 4.2;
+        motesPos[i] = Math.cos(angle) * rad;
+        motesPos[i + 1] = (Math.random() - 0.5) * 13.0;
+        motesPos[i + 2] = Math.sin(angle) * 1.8;
+    }
+    motesGeo.setAttribute('position', new THREE.BufferAttribute(motesPos, 3));
+    const motesMat = new THREE.PointsMaterial({
+        size: 0.065,
+        color: 0x6384ff,
+        transparent: true,
+        opacity: 0.45,
+        blending: THREE.AdditiveBlending
+    });
+    ambientMotes = new THREE.Points(motesGeo, motesMat);
+    avatarGroup.add(ambientMotes);
 
     syncThreeColors();
+    updateAvatarStagePosition();
 
     window.addEventListener('resize', onWindowResize);
-
-    // Mouse Interaction
+    window.addEventListener('scroll', updateAvatarStagePosition, { passive: true });
     document.addEventListener('mousemove', onDocumentMouseMove);
+
+    // Wire up Hero 3D Mode Switcher buttons (3D STUDIO | HOLOGRAM | WIREFRAME)
+    document.querySelectorAll('.hero-3d-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.hero-3d-btn').forEach(b => b.classList.toggle('active', b === btn));
+            const targetMode = parseFloat(btn.getAttribute('data-3d-mode') || '0');
+            if (avatarUniforms) {
+                if (typeof gsap !== 'undefined') {
+                    gsap.to(avatarUniforms.uMode, { value: targetMode, duration: 0.45, ease: 'power2.out' });
+                } else {
+                    avatarUniforms.uMode.value = targetMode;
+                }
+            }
+        });
+    });
 
     animateThreeJS();
 }
@@ -274,21 +518,25 @@ let mouseX3D = 0;
 let mouseY3D = 0;
 
 function onDocumentMouseMove(event) {
-    mouseX3D = (event.clientX - window.innerWidth / 2) * 0.001;
-    mouseY3D = (event.clientY - window.innerHeight / 2) * 0.001;
+    mouseX3D = (event.clientX / window.innerWidth - 0.5) * 2.0;
+    mouseY3D = (event.clientY / window.innerHeight - 0.5) * 2.0;
+    if (avatarUniforms) {
+        avatarUniforms.uMouse.value.set(mouseX3D, mouseY3D);
+    }
 }
 
 function onWindowResize() {
+    if (!camera || !renderer) return;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    updateAvatarStagePosition();
 }
 
 let clock = new THREE.Clock();
 
 function animateThreeJS() {
-    // A slowly rotating particle field is decorative motion; draw it once
-    // and stop when the visitor has asked for reduced motion.
+    if (!renderer || !scene || !camera) return;
     if (prefersReducedMotion) {
         renderer.render(scene, camera);
         return;
@@ -297,23 +545,25 @@ function animateThreeJS() {
     requestAnimationFrame(animateThreeJS);
 
     const elapsedTime = clock.getElapsedTime();
-
-    // Base Rotation
-    particlesMesh.rotation.y = elapsedTime * 0.1;
-    particlesMesh.rotation.z = elapsedTime * 0.05;
-
-    if (coreMesh) {
-        coreMesh.rotation.y = -elapsedTime * 0.07;
-        coreMesh.rotation.x = elapsedTime * 0.04;
+    if (avatarUniforms) {
+        avatarUniforms.uTime.value = elapsedTime;
     }
 
-    // Mouse Interaction Parallax
-    gsap.to(particlesMesh.rotation, {
-        x: mouseY3D * 0.5,
-        y: mouseX3D * 0.5 + (elapsedTime * 0.1),
-        duration: 2,
-        ease: "power2.out"
-    });
+    if (avatarGroup) {
+        // Interactive 3D turn towards cursor + gentle idle 3D oscillation
+        const targetRotY = mouseX3D * 0.34 + Math.sin(elapsedTime * 0.65) * 0.07;
+        const targetRotX = -mouseY3D * 0.18 + Math.cos(elapsedTime * 0.5) * 0.03;
+        avatarGroup.rotation.y += (targetRotY - avatarGroup.rotation.y) * 0.06;
+        avatarGroup.rotation.x += (targetRotX - avatarGroup.rotation.x) * 0.06;
+    }
+
+    if (pedestalGroup) {
+        pedestalGroup.rotation.z = elapsedTime * 0.25;
+    }
+
+    if (ambientMotes) {
+        ambientMotes.rotation.y = -elapsedTime * 0.08;
+    }
 
     renderer.render(scene, camera);
 }
