@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=61">
+    <link rel="stylesheet" href="style.css?v=62">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -246,8 +246,12 @@
 
     <div class="grid-overlay"></div>
 
-    <!-- 3D WebGL Container -->
-    <div id="webgl-container"></div>
+    <!-- 3D WebGL Signal Scene Backdrop (Sarthak Reference Architecture) -->
+    <div id="webgl-container" class="scene-backdrop" aria-hidden="true">
+        <div class="artifact-fallback webgl-active">
+            <img id="signal-fallback-img" src="tanvir-signal.webp" alt="" width="1000" height="1250" fetchpriority="high" decoding="async">
+        </div>
+    </div>
 
     <!-- Luxury Theme Switcher -->
     <div class="theme-switcher" role="group" aria-label="Accent colour">
@@ -2003,8 +2007,8 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="tanvir-3d-assets.js?v=6"></script>
-    <script src="script.js?v=53"></script>
+    <script src="tanvir-3d-assets.js?v=7"></script>
+    <script src="script.js?v=54"></script>
     <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 

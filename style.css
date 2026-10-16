@@ -1,5 +1,5 @@
 :root {
-    --bg: #090a0f;
+    --bg: #030303;
     --surface: rgba(20, 23, 34, 0.72);
     --primary: #6384ff;
     --secondary: #a78bfa;
@@ -118,13 +118,8 @@ body {
     color: var(--text);
     font-family: 'Outfit', sans-serif;
     overflow-x: hidden;
-    background-image:
-        radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.08), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(0, 243, 255, 0.08), transparent 25%);
+    background-image: none;
     cursor: none;
-    /* No transition here: animating background-color/color while their values
-       come from custom properties leaves the theme switch stuck part-way, so
-       light mode never fully applied. Theme changes are instant instead. */
 }
 
 :root.light-mode body {
@@ -133,8 +128,10 @@ body {
         radial-gradient(circle at 85% 30%, rgba(0, 136, 255, 0.04), transparent 30%);
 }
 
-/* --- 3D GLOBE FULLSCREEN BACKGROUND --- */
+/* --- 3D SIGNAL SCENE BACKDROP (SARTHAK REFERENCE ARCHITECTURE) --- */
 #webgl-container canvas {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100% !important;
     height: 100% !important;
@@ -201,39 +198,76 @@ body {
     height: 100vh;
     pointer-events: none;
     z-index: 9998;
-    /* Just below cursor */
-    opacity: 0.03;
-    /* Very subtle */
+    opacity: 0.025;
     background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
 }
 
 .grid-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -3;
-    /* Push way back */
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 50px 50px;
-    /* Larger, cleaner grid */
+    inset: 90px 5% 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(241, 238, 232, 0.16) 1px, transparent 1px);
+    background-size: 16.666% 100%;
+    opacity: 0.16;
+    -webkit-mask-image: linear-gradient(#000, transparent 92%);
+    mask-image: linear-gradient(#000, transparent 92%);
     pointer-events: none;
 }
 
-/* 3D WebGL Container */
-#webgl-container {
+/* 3D WebGL Signal Backdrop */
+#webgl-container,
+.scene-backdrop {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100vw;
     height: 100vh;
+    background: #030303;
     z-index: -2;
-    /* Above grid, below content */
     pointer-events: none;
-    /* Let clicks pass through to site */
+    overflow: hidden;
+}
+
+.artifact-fallback {
+    position: absolute;
+    top: 56px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 680px;
+    height: 850px;
+    opacity: 0.85;
+    -webkit-mask-image: linear-gradient(#000 50%, transparent 93%);
+    mask-image: linear-gradient(#000 50%, transparent 93%);
+    pointer-events: none;
+}
+
+.artifact-fallback img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.artifact-fallback.webgl-active {
+    opacity: 0.40;
+    display: block;
+}
+
+@media (min-width: 1600px) {
+    .artifact-fallback {
+        width: 740px;
+        height: 925px;
+        top: 64px;
+    }
+}
+
+@media (max-width: 700px) {
+    .artifact-fallback {
+        width: 430px;
+        max-width: 110vw;
+        height: 537px;
+        top: 95px;
+    }
 }
 
 /* --- 3. ELITE CURSOR --- */
@@ -3828,9 +3862,8 @@ footer a:hover {
 body {
     background-color: var(--bg);
     background-image:
-        radial-gradient(ellipse 80% 45% at 50% -8%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 70%),
-        radial-gradient(circle at 88% 22%, color-mix(in srgb, var(--secondary) 10%, transparent), transparent 40%),
-        radial-gradient(circle at 12% 65%, color-mix(in srgb, var(--primary) 8%, transparent), transparent 45%);
+        radial-gradient(ellipse 68% 48% at 50% 24%, rgba(255, 112, 46, 0.055), transparent 72%),
+        radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.03), transparent 55%);
     background-attachment: fixed;
 }
 
@@ -3840,10 +3873,10 @@ body {
         radial-gradient(circle at 88% 22%, color-mix(in srgb, var(--secondary) 6%, transparent), transparent 40%);
 }
 
-/* Quieter ambient texture — no harsh cyberpunk grid */
+/* Quieter ambient texture — matching Sarthak reference subtle architectural grid */
 .grid-overlay {
-    opacity: 0.12;
-    background-size: 72px 72px;
+    opacity: 0.22;
+    background-size: 96px 96px;
 }
 
 .noise-overlay {

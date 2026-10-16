@@ -194,304 +194,180 @@ if (circleText) {
 }
 
 
-/* --- THREE.JS 3D COMPUTER GRAPHICS CHARACTER & STAGE MODEL (HIGH-LEVEL WEBGL / GLSL PIPELINE) --- */
+/* --- THREE.JS 3D SIGNAL-PARTICLE PORTRAIT BACKDROP (EXACT SARTHAK SHARMA REFERENCE ARCHITECTURE) --- */
 const container = document.getElementById('webgl-container');
 let scene, camera, renderer;
-let masterStageGroup, portraitMesh, wireMesh, pedestalGroup, haloMesh, bgStarsMesh;
+let signalPointsMesh = null;
+let signalMaterial = null;
+let currentProgress = 0;
+let targetProgress = 0;
 
 function syncThreeColors() {
-    const rootStyle = getComputedStyle(document.documentElement);
-    const primary = rootStyle.getPropertyValue('--primary').trim() || '#6384ff';
-    if (haloMesh && haloMesh.material && haloMesh.material.uniforms) {
-        haloMesh.material.uniforms.uGlowColor.value.set(primary);
-    }
-    if (portraitMesh && portraitMesh.material && portraitMesh.material.uniforms) {
-        portraitMesh.material.uniforms.uRimColor.value.set(primary);
-    }
-    if (wireMesh && wireMesh.material && wireMesh.material.uniforms) {
-        wireMesh.material.uniforms.uWireColor.value.set(primary);
-    }
-    if (bgStarsMesh && bgStarsMesh.material) {
-        bgStarsMesh.material.color.set(primary);
-    }
+    // Colors are driven directly by the chiaroscuro silver-monochrome + warm amber rim signal shader
 }
 
 function updateStageLayout() {
-    if (!masterStageGroup || !camera || !renderer) return;
-    const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
-
-    // Fixed & stable in the middle of the webpage with full head/hair visible below navbar
-    const scale = aspect < 0.85 ? 0.88 : 1.08;
-    const posY = aspect < 0.85 ? -3.10 : -4.00;
-    masterStageGroup.position.set(0, posY, 0);
-    masterStageGroup.rotation.set(0, 0, 0);
-    masterStageGroup.scale.set(scale, scale, scale);
-    renderer.render(scene, camera);
+    if (!container || !camera || !renderer || !signalMaterial) return;
+    const vpHeight = 2 * camera.position.z * Math.tan((camera.fov * Math.PI) / 360);
+    const fallbackEl = container.querySelector('.artifact-fallback');
+    if (fallbackEl) {
+        const rect = fallbackEl.getBoundingClientRect();
+        // Use offsetHeight & offsetTop so scroll position never shifts the fixed backdrop alignment
+        const h = fallbackEl.offsetHeight || rect.height || 850;
+        const top = fallbackEl.offsetTop || 56;
+        signalMaterial.uniforms.uScale.value = (h * vpHeight) / Math.max(window.innerHeight, 1);
+        if (signalPointsMesh) {
+            signalPointsMesh.position.y = vpHeight / 2 - ((top + h / 2) * vpHeight) / Math.max(window.innerHeight, 1);
+        }
+    }
 }
 
 function initThreeJS() {
     if (!container) return;
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 17.5);
-    camera.lookAt(0, 0, 0);
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    const signalSrc = window.TANVIR_SIGNAL_URI || 'tanvir-signal.webp';
+    const fallbackImg = document.getElementById('signal-fallback-img');
+    if (fallbackImg && window.TANVIR_SIGNAL_URI) {
+        fallbackImg.src = window.TANVIR_SIGNAL_URI;
+    }
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 6);
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+    });
+    renderer.setPixelRatio(dpr);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    masterStageGroup = new THREE.Group();
-    scene.add(masterStageGroup);
-
-    // 1. Volumetric 3D Studio Aura + Concentric 3D Cyber-Grid Halo behind the 3D Model
-    const haloGeo = new THREE.PlaneGeometry(28.0, 28.0, 1, 1);
-    const haloMat = new THREE.ShaderMaterial({
+    signalMaterial = new THREE.ShaderMaterial({
         uniforms: {
-            uGlowColor: { value: new THREE.Color(0x6384ff) }
+            uTime: { value: 0 },
+            uProgress: { value: 0 },
+            uScale: { value: 3.55 },
+            uDpr: { value: dpr }
         },
         vertexShader: `
-            varying vec2 vUv;
+            attribute vec3 aColor;
+            attribute float aSeed;
+            uniform float uTime;
+            uniform float uProgress;
+            uniform float uScale;
+            uniform float uDpr;
+            varying vec3 vColor;
+            varying float vAlpha;
             void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                float p = smoothstep(0.02, 0.8, uProgress);
+                vec3 target = vec3(
+                    (aSeed - 0.5) * 2.5,
+                    sin(aSeed * 25.1327) * 0.055 + (floor(position.x * 4.0 + 2.0) - 2.0) * 0.18,
+                    sin(aSeed * 18.0) * 0.1
+                );
+                vec3 pos = mix(position, target, p);
+                float edge = smoothstep(0.18, 0.5, abs(position.x));
+                pos.x += sin(uTime * 0.3 + aSeed * 40.0) * 0.008 * (edge + p);
+                pos.z += sin(aSeed * 64.0 + uTime * 0.2) * 0.015;
+                vec4 mv = modelViewMatrix * vec4(pos * uScale, 1.0);
+                gl_Position = projectionMatrix * mv;
+                gl_PointSize = (1.15 + dot(aColor, vec3(0.299, 0.587, 0.114)) * 0.9) * uDpr;
+                vColor = mix(aColor, vec3(1.0, 0.44, 0.18), p * 0.55);
+                vAlpha = (1.0 - p * 0.35) * smoothstep(0.5, 0.36, abs(position.y));
             }
         `,
         fragmentShader: `
-            uniform vec3 uGlowColor;
-            varying vec2 vUv;
+            varying vec3 vColor;
+            varying float vAlpha;
             void main() {
-                vec2 p = vUv - vec2(0.5, 0.56);
-                float dist = length(p);
-                float glow = pow(max(0.0, 1.0 - dist * 2.15), 2.2) * 0.24;
-                gl_FragColor = vec4(uGlowColor, glow);
+                float d = length(gl_PointCoord - 0.5);
+                float alpha = smoothstep(0.5, 0.27, d) * vAlpha;
+                if (alpha < 0.025) discard;
+                gl_FragColor = vec4(vColor * 1.25, alpha);
             }
         `,
         transparent: true,
         depthWrite: false
     });
-    haloMesh = new THREE.Mesh(haloGeo, haloMat);
-    haloMesh.position.set(0, 0.5, -1.2);
-    masterStageGroup.add(haloMesh);
 
-    // 2. High-Density 3D Sculpted Character Mesh (48,600 vertices / 97,200 triangles)
-    // Uses Perspective-Invariant 3D Relief Projection so real 3D Z-depth never warps the nose/face
-    const loader = new THREE.TextureLoader();
-    const colorSrc = window.TANVIR_3D_COLOR_URI || 'tanvir-3d-cutout.webp';
-    const depthSrc = window.TANVIR_3D_DEPTH_URI || 'tanvir-3d-depth.webp';
+    // Sample portrait image into 3D Signal Point-Cloud (300 x 375 grid)
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+        const cols = window.innerWidth < 700 ? 180 : 300;
+        const rows = Math.round(cols * 1.25);
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = cols;
+        offCanvas.height = rows;
+        const ctx = offCanvas.getContext('2d');
+        if (!ctx) return;
 
-    let loadedCount = 0;
-    const onTexLoad = (tex) => {
-        tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-        loadedCount++;
-        if (loadedCount >= 1) renderer.render(scene, camera);
+        ctx.drawImage(img, 0, 0, cols, rows);
+        const data = ctx.getImageData(0, 0, cols, rows).data;
+
+        const positions = [];
+        const colors = [];
+        const seeds = [];
+
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const idx = (y * cols + x) * 4;
+                if (data[idx + 3] < 20) continue;
+                const r = data[idx];
+                const g = data[idx + 1];
+                const b = data[idx + 2];
+                const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+                if (lum < 0.035) continue;
+
+                positions.push((x / cols - 0.5) * 0.8, 0.5 - y / rows, 0.025 * lum);
+                colors.push(r / 255, g / 255, b / 255);
+                seeds.push(((127 * x + 311 * y) % 997) / 997);
+            }
+        }
+
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+        geo.setAttribute('aColor', new THREE.Float32BufferAttribute(colors, 3));
+        geo.setAttribute('aSeed', new THREE.Float32BufferAttribute(seeds, 1));
+
+        signalPointsMesh = new THREE.Points(geo, signalMaterial);
+        scene.add(signalPointsMesh);
+        updateStageLayout();
+        renderer.render(scene, camera);
     };
+    img.src = signalSrc;
 
-    const colorTex = loader.load(colorSrc, onTexLoad);
-    const depthTex = loader.load(depthSrc, onTexLoad);
-    colorTex.minFilter = THREE.LinearFilter;
-    colorTex.magFilter = THREE.LinearFilter;
-    depthTex.minFilter = THREE.LinearFilter;
-    depthTex.magFilter = THREE.LinearFilter;
+    const onScrollSignal = () => {
+        const scrollSpan = Math.max(window.innerHeight * 2.2, 1);
+        targetProgress = Math.min(Math.max(window.scrollY / scrollSpan, 0), 1);
+    };
+    window.addEventListener('scroll', onScrollSignal, { passive: true });
+    onScrollSignal();
 
-    const bustGeo = new THREE.PlaneGeometry(12.6, 18.78, 180, 270);
-    const bustMat = new THREE.ShaderMaterial({
-        uniforms: {
-            uColorMap: { value: colorTex },
-            uDepthMap: { value: depthTex },
-            uRimColor: { value: new THREE.Color(0x6384ff) },
-            uCamZ: { value: 17.5 }
-        },
-        vertexShader: `
-            uniform sampler2D uDepthMap;
-            uniform float uCamZ;
-            varying vec2 vUv;
-            varying float vDepth;
-            varying vec3 vViewPos;
-
-            void main() {
-                vUv = uv;
-                float d = texture2D(uDepthMap, uv).r;
-                vDepth = d;
-
-                // Displace vertex in 3D Z-space to form a true 3D sculpted bust
-                vec3 pos = position;
-                float zOffset = d * 1.45;
-                pos.z += zOffset;
-
-                // Perspective-Invariant XY Compensation: guarantees 0% radial nose/face distortion from camera viewpoint
-                vec4 worldBefore = modelMatrix * vec4(position, 1.0);
-                vec4 worldAfter  = modelMatrix * vec4(pos, 1.0);
-                float perspectiveScale = (uCamZ - worldAfter.z) / max(0.1, (uCamZ - worldBefore.z));
-                worldAfter.xy = worldBefore.xy * perspectiveScale;
-
-                vec4 mvPos = viewMatrix * worldAfter;
-                vViewPos = -mvPos.xyz;
-                gl_Position = projectionMatrix * mvPos;
-            }
-        `,
-        fragmentShader: `
-            uniform sampler2D uColorMap;
-            uniform sampler2D uDepthMap;
-            uniform vec3 uRimColor;
-            varying vec2 vUv;
-            varying float vDepth;
-            varying vec3 vViewPos;
-
-            void main() {
-                vec4 tex = texture2D(uColorMap, vUv);
-                if (tex.a < 0.02) discard;
-
-                // Reconstruct 3D surface normal N from the 3D height/depth field
-                vec2 eps = vec2(1.0 / 848.0, 1.0 / 1264.0) * 2.2;
-                float dL = texture2D(uDepthMap, vUv - vec2(eps.x, 0.0)).r;
-                float dR = texture2D(uDepthMap, vUv + vec2(eps.x, 0.0)).r;
-                float dD = texture2D(uDepthMap, vUv - vec2(0.0, eps.y)).r;
-                float dU = texture2D(uDepthMap, vUv + vec2(0.0, eps.y)).r;
-                vec3 N = normalize(vec3((dL - dR) * 4.2, (dD - dU) * 4.2, 1.0));
-                vec3 V = normalize(vViewPos);
-
-                // Face protection mask: keep the user's real facial features natural & true-to-life
-                vec2 faceEll = (vUv - vec2(0.50, 0.72)) / vec2(0.16, 0.14);
-                float isFace = 1.0 - smoothstep(0.65, 1.15, length(faceEll));
-
-                // 3D Studio Directional Key Light + Rim Light + Blinn-Phong Specular BRDF
-                vec3 L_key = normalize(vec3(0.42, 0.52, 0.88));
-                vec3 H_key = normalize(L_key + V);
-                float diff = max(dot(N, L_key), 0.0);
-                float spec = pow(max(dot(N, H_key), 0.0), 30.0);
-
-                // 3D Fresnel Rim Shading on shoulders, black blazer, and hair contour
-                float fresnel = pow(1.0 - max(N.z, 0.0), 2.6);
-                float bodyZone = 1.0 - isFace * 0.85;
-
-                // Apply 3D PBR shading: studio fidelity on face, rich 3D CGI sculptural lighting on blazer & torso
-                vec3 baseCol = tex.rgb;
-                vec3 litCol = baseCol * mix(0.92 + 0.18 * diff, 1.0, isFace * 0.85);
-                litCol += vec3(0.85, 0.90, 1.0) * spec * 0.15 * bodyZone;
-                litCol += uRimColor * fresnel * 0.38 * bodyZone;
-
-                float bottomFade = smoothstep(0.02, 0.16, vUv.y);
-                gl_FragColor = vec4(litCol, tex.a * bottomFade * 0.93);
-            }
-        `,
-        transparent: true,
-        depthWrite: true
-    });
-
-    portraitMesh = new THREE.Mesh(bustGeo, bustMat);
-    portraitMesh.position.set(0, 0, 0);
-    masterStageGroup.add(portraitMesh);
-
-    // 3. Subtle 3D Fresnel Rim-Edge Polygon Mesh on Outer Shoulders/Sleeves Only
-    const wireGeo = new THREE.PlaneGeometry(12.6, 18.78, 72, 108);
-    const wireMat = new THREE.ShaderMaterial({
-        uniforms: {
-            uColorMap: { value: colorTex },
-            uDepthMap: { value: depthTex },
-            uWireColor: { value: new THREE.Color(0x6384ff) },
-            uCamZ: { value: 17.5 }
-        },
-        vertexShader: `
-            uniform sampler2D uDepthMap;
-            uniform float uCamZ;
-            varying vec2 vUv;
-            varying float vDepth;
-            void main() {
-                vUv = uv;
-                float d = texture2D(uDepthMap, uv).r;
-                vDepth = d;
-                vec3 pos = position;
-                pos.z += d * 1.45 + 0.02;
-
-                vec4 worldBefore = modelMatrix * vec4(position, 1.0);
-                vec4 worldAfter  = modelMatrix * vec4(pos, 1.0);
-                float perspectiveScale = (uCamZ - worldAfter.z) / max(0.1, (uCamZ - worldBefore.z));
-                worldAfter.xy = worldBefore.xy * perspectiveScale;
-
-                gl_Position = projectionMatrix * viewMatrix * worldAfter;
-            }
-        `,
-        fragmentShader: `
-            uniform sampler2D uColorMap;
-            uniform vec3 uWireColor;
-            varying vec2 vUv;
-            varying float vDepth;
-            void main() {
-                vec4 tex = texture2D(uColorMap, vUv);
-                if (tex.a < 0.15) discard;
-                // Only show subtle 3D mesh along the outer 3D rim/edges of the lower blazer (where depth < 0.38)
-                float torsoMask = (1.0 - smoothstep(0.32, 0.48, vUv.y)) * smoothstep(0.04, 0.16, vUv.y);
-                float rimOnly = 1.0 - smoothstep(0.15, 0.42, vDepth);
-                float alpha = torsoMask * rimOnly * 0.14;
-                if (alpha < 0.01) discard;
-                gl_FragColor = vec4(uWireColor, alpha);
-            }
-        `,
-        wireframe: true,
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending
-    });
-    wireMesh = new THREE.Mesh(wireGeo, wireMat);
-    masterStageGroup.add(wireMesh);
-
-    // 4. 3D Procedural Holographic Pedestal & Emitter Rings at the Base of the 3D Bust
-    pedestalGroup = new THREE.Group();
-    pedestalGroup.position.set(0, -7.85, 0.4);
-    pedestalGroup.rotation.x = -Math.PI / 2.25;
-
-    const ringMat1 = new THREE.MeshBasicMaterial({
-        color: 0x6384ff,
-        transparent: true,
-        opacity: 0.42,
-        blending: THREE.AdditiveBlending
-    });
-    const ringMat2 = new THREE.MeshBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: 0.24,
-        wireframe: true,
-        blending: THREE.AdditiveBlending
-    });
-
-    const outerTorus = new THREE.Mesh(new THREE.TorusGeometry(4.8, 0.035, 16, 120), ringMat1);
-    const innerTorus = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.025, 12, 96), ringMat1);
-    const coreDisk   = new THREE.Mesh(new THREE.RingGeometry(1.8, 4.75, 64, 4), ringMat2);
-    pedestalGroup.add(outerTorus, innerTorus, coreDisk);
-    masterStageGroup.add(pedestalGroup);
-
-    // 5. Subtle Stationary 3D Starfield in the Deep Background
-    const bgGeo = new THREE.BufferGeometry();
-    const bgCount = 900;
-    const bgPos = new Float32Array(bgCount * 3);
-    for (let i = 0; i < bgCount * 3; i += 3) {
-        bgPos[i] = (Math.random() - 0.5) * 42.0;
-        bgPos[i + 1] = (Math.random() - 0.5) * 26.0;
-        bgPos[i + 2] = -3.0 - Math.random() * 12.0;
+    const clock = new THREE.Clock();
+    function animateSignal() {
+        requestAnimationFrame(animateSignal);
+        currentProgress += (targetProgress - currentProgress) * 0.06;
+        signalMaterial.uniforms.uTime.value = clock.getElapsedTime();
+        signalMaterial.uniforms.uProgress.value = currentProgress;
+        renderer.render(scene, camera);
     }
-    bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
-    const bgMat = new THREE.PointsMaterial({
-        size: 0.045,
-        color: 0x6384ff,
-        transparent: true,
-        opacity: 0.32,
-        blending: THREE.AdditiveBlending
-    });
-    bgStarsMesh = new THREE.Points(bgGeo, bgMat);
-    scene.add(bgStarsMesh);
-
-    syncThreeColors();
-    updateStageLayout();
+    animateSignal();
 
     window.addEventListener('resize', onWindowResize);
 }
 
 function onWindowResize() {
-    if (!camera || !renderer) return;
+    if (!camera || !renderer || !signalMaterial) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    renderer.setPixelRatio(dpr);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    signalMaterial.uniforms.uDpr.value = dpr;
     updateStageLayout();
 }
 
