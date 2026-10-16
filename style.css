@@ -147,12 +147,11 @@ body {
     left: 30px;
     display: flex;
     gap: 8px;
-    background: var(--panel);
+    background: var(--panel-strong);
     padding: 8px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 9000;
-    backdrop-filter: blur(10px);
 }
 
 .theme-btn {
@@ -194,33 +193,11 @@ body {
 /* --- 2. DECORATIVE ELEMENTS --- */
 /* Cinematic Noise Grain */
 .noise-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 9998;
-    /* Just below cursor */
-    opacity: 0.03;
-    /* Very subtle */
-    background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    display: none !important;
 }
 
 .grid-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -3;
-    /* Push way back */
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 50px 50px;
-    /* Larger, cleaner grid */
-    pointer-events: none;
+    display: none !important;
 }
 
 /* 3D WebGL Container */
@@ -231,37 +208,34 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: -2;
-    /* Above grid, below content */
     pointer-events: none;
-    /* Let clicks pass through to site */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    contain: strict;
 }
 
 /* --- 3. ELITE CURSOR --- */
 .cursor-outer {
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(0, 243, 255, 0.5);
-    /* Cyan tint */
+    border: 1px solid rgba(99, 132, 255, 0.55);
     border-radius: 50%;
     position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
     z-index: 9999;
-    mix-blend-mode: exclusion;
-    /* Cinematic inverted color effect */
-    background: rgba(255, 255, 255, 0.05);
-    /* Slight fill */
-    transition: transform 0.1s ease-out, width 0.3s, height 0.3s, background 0.3s, border 0.3s;
+    background: rgba(99, 132, 255, 0.06);
+    transition: width 0.22s ease, height 0.22s ease, background 0.22s ease, border-color 0.22s ease;
     transform: translate(-50%, -50%);
+    will-change: transform;
 }
 
 .cursor-outer.hover {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 1);
-    border: none;
-    mix-blend-mode: exclusion;
+    width: 68px;
+    height: 68px;
+    background: rgba(99, 132, 255, 0.14);
+    border: 1px solid rgba(99, 132, 255, 0.75);
 }
 
 .cursor-inner {
@@ -274,8 +248,8 @@ body {
     left: 0;
     pointer-events: none;
     z-index: 9999;
-    transition: transform 0.05s linear;
     transform: translate(-50%, -50%);
+    will-change: transform;
 }
 
 /* --- CINEMATIC PAGE TRANSITION --- */
@@ -308,11 +282,9 @@ nav {
     justify-content: space-between;
     align-items: center;
     background: var(--nav-bg);
-    /* Slightly darker for contrast */
-    backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     z-index: 1000;
-    transition: 0.3s;
+    transition: background 0.25s ease, border-color 0.25s ease;
 }
 
 .logo {
@@ -3817,27 +3789,21 @@ footer a:hover {
 }
 
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
 }
 
 body {
     background-color: var(--bg);
-    background-image:
-        radial-gradient(ellipse 80% 45% at 50% -8%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 70%),
-        radial-gradient(circle at 88% 22%, color-mix(in srgb, var(--secondary) 10%, transparent), transparent 40%),
-        radial-gradient(circle at 12% 65%, color-mix(in srgb, var(--primary) 8%, transparent), transparent 45%);
+    background-image: none;
 }
 
 :root.light-mode body {
-    background-image:
-        radial-gradient(ellipse 80% 45% at 50% -8%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 70%),
-        radial-gradient(circle at 88% 22%, color-mix(in srgb, var(--secondary) 6%, transparent), transparent 40%);
+    background-image: none;
 }
 
-/* Quieter ambient texture — no harsh cyberpunk grid */
+/* Quieter ambient texture — disabled for 120fps WebGL compositing */
 .grid-overlay {
-    opacity: 0.12;
-    background-size: 72px 72px;
+    display: none !important;
 }
 
 .noise-overlay {
@@ -3848,22 +3814,20 @@ html.preloader-skip #preloader {
     display: none !important;
 }
 
-/* --- 1. Floating VisionOS / Apple Glass Pill Navbar --- */
+/* --- 1. Floating VisionOS / Apple Glass Pill Navbar (Zero-Blur Composited) --- */
 @media (min-width: 1251px) {
     nav {
         top: 18px;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate3d(-50%, 0, 0);
         width: min(94%, 1300px);
         padding: 10px 22px;
         border-radius: 999px;
-        border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-        background: color-mix(in srgb, var(--bg) 72%, transparent);
-        backdrop-filter: blur(28px) saturate(180%);
-        -webkit-backdrop-filter: blur(28px) saturate(180%);
-        box-shadow:
-            0 20px 50px -18px rgba(0, 0, 0, 0.65),
-            inset 0 1px 0 color-mix(in srgb, var(--text) 12%, transparent);
+        border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+        background: color-mix(in srgb, var(--bg) 90%, transparent);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: 0 14px 32px -14px rgba(0, 0, 0, 0.65);
     }
 }
 
@@ -4086,7 +4050,7 @@ html.preloader-skip #preloader {
     font-weight: 700;
     font-size: 0.88rem;
     letter-spacing: 0.03em;
-    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    transition: transform var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 
 .btn-primary {
@@ -4104,9 +4068,6 @@ html.preloader-skip #preloader {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow:
-        0 20px 42px -10px color-mix(in srgb, var(--primary) 80%, transparent),
-        inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .btn-outline {
@@ -4151,20 +4112,19 @@ html.preloader-skip #preloader {
     padding: 6px;
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.03));
     border: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
-    box-shadow:
-        0 34px 80px -20px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.75);
     z-index: 10;
 }
 
 .float-card {
     border-radius: 18px;
     padding: 13px 20px;
-    background: var(--panel);
+    background: var(--panel-strong);
     border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
-    box-shadow:
-        0 22px 45px -15px rgba(0, 0, 0, 0.7),
-        inset 0 1px 0 color-mix(in srgb, var(--text) 15%, transparent);
+    box-shadow: 0 16px 32px -14px rgba(0, 0, 0, 0.65);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    animation: none;
 }
 
 .fc-1 {
@@ -4246,10 +4206,10 @@ html.preloader-skip #preloader {
     filter: none;
     border-radius: 28px;
     border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
-    box-shadow: 0 28px 65px -20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.65);
 }
 
-/* --- 4. Luxury Bento Surfaces --- */
+/* --- 4. Luxury Bento Surfaces (Zero-Lag GPU Composited) --- */
 .project-card,
 .a-card,
 .cred-card,
@@ -4257,17 +4217,12 @@ html.preloader-skip #preloader {
 .gh-card,
 .ai-row {
     border-radius: 22px;
-    background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--text) 4.5%, var(--surface)) 0%,
-        color-mix(in srgb, var(--text) 1%, var(--surface)) 100%
-    );
-    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
-    box-shadow:
-        inset 0 1px 0 color-mix(in srgb, var(--text) 11%, transparent),
-        0 18px 40px -22px rgba(0, 0, 0, 0.65);
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    box-shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.6);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .project-card:hover,
@@ -4276,10 +4231,6 @@ html.preloader-skip #preloader {
 .gh-card:hover,
 .ai-row:hover {
     border-color: color-mix(in srgb, var(--dc, var(--primary)) 48%, transparent);
-    box-shadow:
-        inset 0 1px 0 color-mix(in srgb, var(--text) 18%, transparent),
-        0 26px 56px -20px rgba(0, 0, 0, 0.8),
-        0 0 36px -14px color-mix(in srgb, var(--dc, var(--primary)) 28%, transparent);
 }
 
 /* Bento Grid for Selected Works */
@@ -4322,15 +4273,11 @@ html.preloader-skip #preloader {
     border-radius: 16px;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-    background:
-        radial-gradient(circle at 82% 22%, color-mix(in srgb, var(--dc, var(--primary)) 28%, transparent), transparent 58%),
-        radial-gradient(circle at 18% 85%, color-mix(in srgb, var(--secondary) 16%, transparent), transparent 55%),
-        linear-gradient(180deg, color-mix(in srgb, var(--bg) 65%, #111522) 0%, color-mix(in srgb, var(--bg) 92%, #090b12) 100%);
+    background: #0b0e18;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 11px 13px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 :root.light-mode .p-preview {
@@ -6846,3 +6793,24 @@ html.preloader-skip #preloader {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* --- 8. 120FPS Hardware Scroll Compositing Overrides --- */
+nav,
+.nav-items,
+.theme-switcher,
+.float-card,
+.back-to-top,
+.chatbot-window,
+.cam-stop-btn,
+.autopilot-hud {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.is-scrolling .project-card,
+body.is-scrolling .project-card .p-preview-img,
+body.is-scrolling .a-card,
+body.is-scrolling .cred-card {
+    transition: none !important;
+}
+

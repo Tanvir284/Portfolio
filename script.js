@@ -166,12 +166,15 @@ if (circleText) {
 
 /* --- PHOTOREALISTIC NASA 3D SOLAR SYSTEM & GALAXY SPACE TOUR (THREE.JS) --- */
 const container = document.getElementById('webgl-container');
-let scene, camera, renderer, particlesMesh, coreMesh, milkyWaySkyMesh;
-let farGeo, nearGeo, farCount = 1400, nearCount = 300;
+let scene, camera, renderer, milkyWaySkyMesh;
+let particlesMesh, particlesMeshB, coreMesh, coreMeshB;
+let farGeo, nearGeo, farCount = 700, nearCount = 160;
 let shootingStars = [];
 let warpSpeed = 0;
 let targetWarpSpeed = 0;
 let lastScrollYSpace = window.scrollY || 0;
+let lastScrollTimeMs = 0;
+let scrollIdleTimer = null;
 
 // Space Tour State & Objects (Real NASA Maps for Saturn, Mars, Sun, Moon, Mercury, Venus, Jupiter, Uranus, Neptune & Hubble Galaxies; Earth excluded!)
 let sunLight, ambientLight;
@@ -232,7 +235,9 @@ let texLoaderSpace = null;
 function loadSpaceTex(url) {
     if (texCacheSpace[url]) return texCacheSpace[url];
     if (!texLoaderSpace) texLoaderSpace = new THREE.TextureLoader();
-    const t = texLoaderSpace.load(url);
+    const t = texLoaderSpace.load(url, (loadedTex) => {
+        if (renderer && renderer.initTexture) renderer.initTexture(loadedTex);
+    });
     t.generateMipmaps = false;
     t.minFilter = THREE.LinearFilter;
     t.magFilter = THREE.LinearFilter;
@@ -276,7 +281,7 @@ function makeSolarCoronaTexture() {
 
 // Physically-inspired 3D Fresnel Atmospheric Scattering Rim (Interstellar / NASA style)
 function createFresnelAtmosphereMesh(radius, rgb) {
-    const geo = new THREE.SphereGeometry(radius * 1.038, 36, 36);
+    const geo = new THREE.SphereGeometry(radius * 1.038, 24, 24);
     const mat = new THREE.ShaderMaterial({
         uniforms: {
             uColor: { value: new THREE.Vector3(rgb[0], rgb[1], rgb[2]) },
@@ -308,7 +313,9 @@ function createFresnelAtmosphereMesh(radius, rgb) {
         depthWrite: false,
         blending: THREE.AdditiveBlending
     });
-    return new THREE.Mesh(geo, mat);
+    const m = new THREE.Mesh(geo, mat);
+    m.frustumCulled = false;
+    return m;
 }
 
 function createPhotorealisticGalaxy(radius, isBackground) {
@@ -327,10 +334,11 @@ function createPhotorealisticGalaxy(radius, isBackground) {
     });
     const discMesh = new THREE.Mesh(discGeo, discMat);
     discMesh.rotation.x = Math.PI / 2;
+    discMesh.frustumCulled = false;
     grp.add(discMesh);
 
     // 3D pinpoint star halo surrounding the spiral arms
-    const starCount = isBackground ? 220 : 380;
+    const starCount = isBackground ? 160 : 280;
     const pGeo = new THREE.BufferGeometry();
     const pos = new Float32Array(starCount * 3);
     const col = new Float32Array(starCount * 3);
@@ -357,6 +365,7 @@ function createPhotorealisticGalaxy(radius, isBackground) {
         depthWrite: false,
         blending: THREE.AdditiveBlending
     }));
+    pts.frustumCulled = false;
     grp.add(pts);
 
     return { group: grp, disc: discMesh, points: pts };
@@ -364,7 +373,6 @@ function createPhotorealisticGalaxy(radius, isBackground) {
 
 function populateStarColors(geo, count, isLight) {
     const cols = new Float32Array(count * 3);
-    // Natural astrophotography stellar temperatures (O/B blue-white, A/F pure white, G/K warm ivory)
     const paletteDark = [
         [0.98, 0.99, 1.00],
         [0.86, 0.92, 1.00],
@@ -392,6 +400,10 @@ function syncThreeColors() {
     const isLight = document.documentElement.classList.contains('light-mode');
     const blend = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
 
+    if (renderer) {
+        renderer.setClearColor(isLight ? 0xf8fafc : 0x05070e, 1);
+    }
+
     if (farGeo) populateStarColors(farGeo, farCount, isLight);
     if (nearGeo) populateStarColors(nearGeo, nearCount, isLight);
 
@@ -410,7 +422,6 @@ function syncThreeColors() {
         milkyWaySkyMesh.visible = !isLight;
     }
     if (ambientLight) {
-        // Real deep space has low ambient light for dramatic day/night terminator contrast
         ambientLight.intensity = isLight ? 0.75 : 0.14;
     }
     if (sunLight) {
@@ -465,8 +476,8 @@ function buildSpaceTourStop(def, index, isLight) {
         return stopObj;
     }
 
-    // Main Celestial Sphere with Real NASA Equirectangular Map + Bump Map
-    const sphereGeo = new THREE.SphereGeometry(def.radius, 44, 44);
+    // Main Celestial Sphere with Real NASA Equirectangular Map + Bump Map (28x28 segments for high FPS)
+    const sphereGeo = new THREE.SphereGeometry(def.radius, 28, 28);
     let sphereMat;
     if (def.isSun) {
         sphereMat = new THREE.MeshBasicMaterial({
@@ -479,6 +490,7 @@ function buildSpaceTourStop(def, index, isLight) {
             blending: THREE.AdditiveBlending
         }));
         coronaSprite.scale.set(def.radius * 4.6, def.radius * 4.6, 1);
+        coronaSprite.frustumCulled = false;
         group.add(coronaSprite);
         stopObj.coronaOuter = coronaSprite;
     } else {
@@ -495,6 +507,7 @@ function buildSpaceTourStop(def, index, isLight) {
     }
 
     const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+    sphereMesh.frustumCulled = false;
     group.add(sphereMesh);
     stopObj.sphere = sphereMesh;
 
@@ -518,11 +531,12 @@ function buildSpaceTourStop(def, index, isLight) {
         });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
         ringMesh.rotation.x = Math.PI / 2;
+        ringMesh.frustumCulled = false;
         group.add(ringMesh);
         stopObj.ring = ringMesh;
 
         if (isSaturn) {
-            const dustCount = 260;
+            const dustCount = 180;
             const dustGeo = new THREE.BufferGeometry();
             const dustPos = new Float32Array(dustCount * 3);
             for (let i = 0; i < dustCount; i++) {
@@ -543,6 +557,7 @@ function buildSpaceTourStop(def, index, isLight) {
                 depthWrite: false,
                 blending: THREE.AdditiveBlending
             }));
+            dustMesh.frustumCulled = false;
             group.add(dustMesh);
             stopObj.ringDust = dustMesh;
         }
@@ -552,12 +567,13 @@ function buildSpaceTourStop(def, index, isLight) {
     if (def.hasMoon) {
         const pivot = new THREE.Group();
         group.add(pivot);
-        const mGeo = new THREE.SphereGeometry(Math.max(0.16, def.radius * 0.095), 20, 20);
+        const mGeo = new THREE.SphereGeometry(Math.max(0.16, def.radius * 0.095), 16, 16);
         const mMat = new THREE.MeshStandardMaterial({
             map: loadSpaceTex('assets/space/moon.webp'),
             roughness: 0.90
         });
         const mMesh = new THREE.Mesh(mGeo, mMat);
+        mMesh.frustumCulled = false;
         mMesh.position.set(def.ringMap ? def.radius * 2.85 : def.radius * 1.85, 0.12, 0);
         pivot.add(mMesh);
         stopObj.moonPivot = pivot;
@@ -571,13 +587,15 @@ function initThreeJS() {
     camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 160);
     camera.position.z = 14;
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'high-performance' });
+    // Opaque WebGL backbuffer (alpha: false) enables Windows DirectComposition hardware plane flip with zero full-screen alpha blend cost
+    renderer = new THREE.WebGLRenderer({ alpha: false, antialias: false, powerPreference: 'high-performance', stencil: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(1);
     container.appendChild(renderer.domElement);
 
     const starSprite = makeStarSprite();
     const isLight = document.documentElement.classList.contains('light-mode');
+    renderer.setClearColor(isLight ? 0xf8fafc : 0x05070e, 1);
 
     // Deep-Space Chiaroscuro Lighting (Strong directional sunlight + deep space shadow)
     ambientLight = new THREE.AmbientLight(0xdbeafe, isLight ? 0.75 : 0.14);
@@ -587,7 +605,7 @@ function initThreeJS() {
     scene.add(sunLight);
 
     // Layer 0: Real Astrophotography Milky Way Panorama Sky Sphere
-    const skyGeo = new THREE.SphereGeometry(135, 28, 28);
+    const skyGeo = new THREE.SphereGeometry(135, 20, 20);
     const skyMat = new THREE.MeshBasicMaterial({
         map: loadSpaceTex('assets/space/milkyway_sky.webp'),
         side: THREE.BackSide,
@@ -596,20 +614,21 @@ function initThreeJS() {
         depthWrite: false
     });
     milkyWaySkyMesh = new THREE.Mesh(skyGeo, skyMat);
+    milkyWaySkyMesh.frustumCulled = false;
     scene.add(milkyWaySkyMesh);
 
-    // Layer 1: Crisp Pinpoint Far Starfield
+    // Layer 1: Static-VRAM Far Starfield Conveyor (Zero CPU vertex loop / zero bufferSubData per frame)
     farGeo = new THREE.BufferGeometry();
     const farPos = new Float32Array(farCount * 3);
     for (let i = 0; i < farCount * 3; i += 3) {
         farPos[i] = (Math.random() - 0.5) * 115;
         farPos[i + 1] = (Math.random() - 0.5) * 70;
-        farPos[i + 2] = -75 + Math.random() * 88;
+        farPos[i + 2] = (Math.random() - 0.5) * 90;
     }
     farGeo.setAttribute('position', new THREE.BufferAttribute(farPos, 3));
     populateStarColors(farGeo, farCount, isLight);
 
-    particlesMesh = new THREE.Points(farGeo, new THREE.PointsMaterial({
+    const farMat = new THREE.PointsMaterial({
         size: 0.19,
         map: starSprite,
         vertexColors: true,
@@ -617,21 +636,29 @@ function initThreeJS() {
         opacity: 0.88,
         depthWrite: false,
         blending: THREE.AdditiveBlending
-    }));
+    });
+    particlesMesh = new THREE.Points(farGeo, farMat);
+    particlesMesh.position.z = -31;
+    particlesMesh.frustumCulled = false;
     scene.add(particlesMesh);
 
-    // Layer 2: Foreground Pinpoint Bright Stars
+    particlesMeshB = new THREE.Points(farGeo, farMat);
+    particlesMeshB.position.z = -121;
+    particlesMeshB.frustumCulled = false;
+    scene.add(particlesMeshB);
+
+    // Layer 2: Static-VRAM Foreground Bright Stars Conveyor (Zero CPU vertex loop per frame)
     nearGeo = new THREE.BufferGeometry();
     const nearPos = new Float32Array(nearCount * 3);
     for (let i = 0; i < nearCount * 3; i += 3) {
         nearPos[i] = (Math.random() - 0.5) * 78;
         nearPos[i + 1] = (Math.random() - 0.5) * 48;
-        nearPos[i + 2] = -52 + Math.random() * 64;
+        nearPos[i + 2] = (Math.random() - 0.5) * 64;
     }
     nearGeo.setAttribute('position', new THREE.BufferAttribute(nearPos, 3));
     populateStarColors(nearGeo, nearCount, isLight);
 
-    coreMesh = new THREE.Points(nearGeo, new THREE.PointsMaterial({
+    const nearMat = new THREE.PointsMaterial({
         size: 0.34,
         map: starSprite,
         vertexColors: true,
@@ -639,8 +666,16 @@ function initThreeJS() {
         opacity: 0.95,
         depthWrite: false,
         blending: THREE.AdditiveBlending
-    }));
+    });
+    coreMesh = new THREE.Points(nearGeo, nearMat);
+    coreMesh.position.z = -18;
+    coreMesh.frustumCulled = false;
     scene.add(coreMesh);
+
+    coreMeshB = new THREE.Points(nearGeo, nearMat);
+    coreMeshB.position.z = -82;
+    coreMeshB.frustumCulled = false;
+    scene.add(coreMeshB);
 
     // Layer 3: Distant Hubble Spiral Galaxies in Deep Space
     bgGalaxies = [];
@@ -671,6 +706,7 @@ function initThreeJS() {
             blending: THREE.AdditiveBlending
         });
         const line = new THREE.Line(lineGeo, lineMat);
+        line.frustumCulled = false;
         scene.add(line);
         const sObj = { line, geo: lineGeo };
         resetShootingStar(sObj, true);
@@ -679,7 +715,6 @@ function initThreeJS() {
     }
 
     syncThreeColors();
-    // Pre-compile all shaders up front so scrolling never triggers a shader compile pause
     if (renderer.compile) renderer.compile(scene, camera);
 
     window.addEventListener('resize', onWindowResize, { passive: true });
@@ -688,7 +723,18 @@ function initThreeJS() {
         const cur = window.scrollY || 0;
         const delta = Math.abs(cur - lastScrollYSpace);
         lastScrollYSpace = cur;
-        targetWarpSpeed = Math.min(0.24, targetWarpSpeed + Math.min(delta, 100) * 0.0005);
+        lastScrollTimeMs = performance.now();
+        targetWarpSpeed = Math.min(0.22, targetWarpSpeed + Math.min(delta, 90) * 0.00045);
+
+        if (!scrollIdleTimer) {
+            document.body.classList.add('is-scrolling');
+        } else {
+            clearTimeout(scrollIdleTimer);
+        }
+        scrollIdleTimer = setTimeout(() => {
+            document.body.classList.remove('is-scrolling');
+            scrollIdleTimer = null;
+        }, 90);
     }, { passive: true });
 
     animateThreeJS();
@@ -724,32 +770,27 @@ function animateThreeJS() {
     const dt = Math.min(0.033, elapsedTime - prevTimeSpace || 0.016);
     prevTimeSpace = elapsedTime;
 
-    // Smoothly filter scroll warp speed (no jerky jumps on wheel ticks)
+    // Smoothly filter scroll warp speed
     targetWarpSpeed *= 0.90;
     warpSpeed += (targetWarpSpeed - warpSpeed) * 0.08;
-    const stepFar = (0.020 + warpSpeed * 0.28);
-    const stepNear = (0.038 + warpSpeed * 0.48);
+    const stepFar = (1.2 + warpSpeed * 16.0) * dt;
+    const stepNear = (2.3 + warpSpeed * 26.0) * dt;
 
     // Slowly rotate the Milky Way panorama sky
     if (milkyWaySkyMesh) {
         milkyWaySkyMesh.rotation.y = elapsedTime * 0.006;
     }
 
-    // Stream Far Stars toward camera
-    const fArr = farGeo.attributes.position.array;
-    for (let i = 2; i < fArr.length; i += 3) {
-        fArr[i] += stepFar;
-        if (fArr[i] > 14) fArr[i] = -75;
-    }
-    farGeo.attributes.position.needsUpdate = true;
+    // Stream Far & Near Starfield Chunks purely via object Z transform (Zero CPU vertex buffer uploads)
+    particlesMesh.position.z += stepFar;
+    if (particlesMesh.position.z > 59) particlesMesh.position.z -= 180;
+    particlesMeshB.position.z += stepFar;
+    if (particlesMeshB.position.z > 59) particlesMeshB.position.z -= 180;
 
-    // Stream Near Bright Stars toward camera
-    const nArr = nearGeo.attributes.position.array;
-    for (let i = 2; i < nArr.length; i += 3) {
-        nArr[i] += stepNear;
-        if (nArr[i] > 14) nArr[i] = -52;
-    }
-    nearGeo.attributes.position.needsUpdate = true;
+    coreMesh.position.z += stepNear;
+    if (coreMesh.position.z > 46) coreMesh.position.z -= 128;
+    coreMeshB.position.z += stepNear;
+    if (coreMeshB.position.z > 46) coreMeshB.position.z -= 128;
 
     // Rotate distant Hubble Spiral Galaxies
     for (let g = 0; g < bgGalaxies.length; g++) {
@@ -771,9 +812,10 @@ function animateThreeJS() {
             b.zPos -= TOTAL_TRACK_LEN;
         }
 
-        // Park far-queue planets behind camera far plane (-180) instead of toggling visible=false
+        // Keep far-queue planets inside camera frustum (-145) at 0.001 scale so GPU textures & shaders stay 100% warm in VRAM
         if (b.zPos < -115) {
-            b.group.position.set(0, 0, -180);
+            b.group.position.set(0, 0, -145);
+            b.group.scale.setScalar(0.001);
             continue;
         }
 
@@ -784,7 +826,7 @@ function animateThreeJS() {
 
         b.group.position.set(xPos, yPos, b.zPos);
 
-        const distScale = b.zPos < -88 ? Math.max(0.01, (b.zPos + 115) / 27) : 1.0;
+        const distScale = b.zPos < -88 ? Math.max(0.005, (b.zPos + 115) / 27) : 1.0;
         b.group.scale.setScalar(bodyScale * distScale);
 
         if (b.sphere) b.sphere.rotation.y = elapsedTime * (b.def.isSun ? 0.06 : 0.18);
@@ -1271,6 +1313,7 @@ function getAudioCtx() {
 
 function playSound(type) {
     if (prefersReducedMotion) return; // respect the OS-level preference
+    if (type === 'hover' && (performance.now() - lastScrollTimeMs < 220)) return;
     const audioCtx = getAudioCtx();
     if (!audioCtx) return;
     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -1315,8 +1358,13 @@ document.querySelectorAll('.btn-primary, .project-card')
 const backToTopBtn = document.getElementById('backToTop');
 
 if (backToTopBtn) {
+    let bttVisible = false;
     window.addEventListener('scroll', () => {
-        backToTopBtn.classList.toggle('active', window.scrollY > 500);
+        const shouldShow = window.scrollY > 500;
+        if (shouldShow !== bttVisible) {
+            bttVisible = shouldShow;
+            backToTopBtn.classList.toggle('active', shouldShow);
+        }
     }, { passive: true });
 
     backToTopBtn.addEventListener('click', () => {
@@ -1484,7 +1532,7 @@ document.querySelectorAll('.project-card').forEach(card => {
     const iconCls = DOMAIN_ICONS[domain] || 'fas fa-cube';
     const svgArt = PREVIEW_SVGS[domain] || PREVIEW_SVGS.ai;
     const artMarkup = imgSrc
-        ? `<img class="p-preview-img" src="${imgSrc}" alt="${titleText}" loading="lazy" decoding="async">`
+        ? `<img class="p-preview-img" src="${imgSrc}" alt="${titleText}" width="480" height="252" decoding="async">`
         : svgArt;
 
     const preview = document.createElement('div');
@@ -1502,6 +1550,8 @@ document.querySelectorAll('.project-card').forEach(card => {
         </div>
     `;
     card.prepend(preview);
+    const imgEl = preview.querySelector('.p-preview-img');
+    if (imgEl && imgEl.decode) imgEl.decode().catch(() => {});
 });
 
 /* --- PROJECT FILTERING --- */
