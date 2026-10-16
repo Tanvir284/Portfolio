@@ -279,8 +279,8 @@ function initThreeJS() {
     colorTex.minFilter = THREE.LinearFilter;
     colorTex.magFilter = THREE.LinearFilter;
 
-    // Large commanding size across the background (aspect ratio 848:1264 = 1 : 1.4905)
-    const bustGeo = new THREE.PlaneGeometry(12.6, 18.78, 1, 1);
+    // Large commanding size across the background (exact original photo aspect ratio 852:1280 = 1 : 1.5023)
+    const bustGeo = new THREE.PlaneGeometry(12.6, 18.93, 1, 1);
     const bustMat = new THREE.ShaderMaterial({
         uniforms: {
             uColorMap: { value: colorTex }
