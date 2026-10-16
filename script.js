@@ -36,7 +36,7 @@ if (modeToggleBtn) {
     const modeIcon = modeToggleBtn.querySelector('i') || document.createElement('i');
 
     // Check local storage for preference
-    if (storage.get('theme') === 'light' || location.search.includes('theme=light')) {
+    if (storage.get('theme') === 'light') {
         document.documentElement.classList.add('light-mode');
         // applied before paint, so no transition to suppress
         modeIcon.classList.replace('fa-moon', 'fa-sun');
@@ -194,193 +194,128 @@ if (circleText) {
 }
 
 
-/* --- THREE.JS 3D SIGNAL-PARTICLE PORTRAIT BACKDROP (EXACT SARTHAK SHARMA REFERENCE ARCHITECTURE) --- */
+/* --- 3D WEBGL NEURAL SPHERE (THREE.JS) --- */
 const container = document.getElementById('webgl-container');
-let scene, camera, renderer;
-let signalPointsMesh = null;
-let signalMaterial = null;
-let currentProgress = 0;
-let targetProgress = 0;
+let scene, camera, renderer, particlesMesh, coreMesh;
 
 function syncThreeColors() {
-    if (!signalMaterial || !signalMaterial.uniforms) return;
-    const isLight = document.documentElement.classList.contains('light-mode') ? 1.0 : 0.0;
-    signalMaterial.uniforms.uLightMode.value = isLight;
-    if (renderer && scene && camera) {
-        renderer.render(scene, camera);
+    const rootStyle = getComputedStyle(document.documentElement);
+    const primary = rootStyle.getPropertyValue('--primary').trim();
+    const secondary = rootStyle.getPropertyValue('--secondary').trim();
+    if (particlesMesh && particlesMesh.material && primary) {
+        particlesMesh.material.color.set(primary);
     }
-}
-
-function updateStageLayout() {
-    if (!container || !camera || !renderer || !signalMaterial) return;
-    const vpHeight = 2 * camera.position.z * Math.tan((camera.fov * Math.PI) / 360);
-    const fallbackEl = container.querySelector('.artifact-fallback');
-    if (fallbackEl) {
-        const rect = fallbackEl.getBoundingClientRect();
-        // Use offsetHeight & offsetTop so scroll position never shifts the fixed backdrop alignment
-        const h = fallbackEl.offsetHeight || rect.height || 850;
-        const top = fallbackEl.offsetTop || 56;
-        signalMaterial.uniforms.uScale.value = (h * vpHeight) / Math.max(window.innerHeight, 1);
-        if (signalPointsMesh) {
-            signalPointsMesh.position.y = vpHeight / 2 - ((top + h / 2) * vpHeight) / Math.max(window.innerHeight, 1);
-        }
+    if (coreMesh && coreMesh.material && (secondary || primary)) {
+        coreMesh.material.color.set(secondary || primary);
     }
 }
 
 function initThreeJS() {
-    if (!container) return;
-
-    const signalSrc = window.TANVIR_SIGNAL_URI || 'tanvir-signal.webp';
-    const fallbackImg = document.getElementById('signal-fallback-img');
-    if (fallbackImg && window.TANVIR_SIGNAL_URI) {
-        fallbackImg.src = window.TANVIR_SIGNAL_URI;
-    }
-
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 0, 6);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 15;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance'
-    });
-    renderer.setPixelRatio(dpr);
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    const isLightInit = document.documentElement.classList.contains('light-mode') ? 1.0 : 0.0;
-    signalMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-            uTime: { value: 0 },
-            uProgress: { value: 0 },
-            uScale: { value: 3.55 },
-            uDpr: { value: dpr },
-            uLightMode: { value: isLightInit }
-        },
-        vertexShader: `
-            attribute vec3 aColor;
-            attribute float aSeed;
-            uniform float uTime;
-            uniform float uProgress;
-            uniform float uScale;
-            uniform float uDpr;
-            varying vec3 vColor;
-            varying float vAlpha;
-            void main() {
-                float p = smoothstep(0.02, 0.8, uProgress);
-                vec3 target = vec3(
-                    (aSeed - 0.5) * 2.5,
-                    sin(aSeed * 25.1327) * 0.055 + (floor(position.x * 4.0 + 2.0) - 2.0) * 0.18,
-                    sin(aSeed * 18.0) * 0.1
-                );
-                vec3 pos = mix(position, target, p);
-                float edge = smoothstep(0.18, 0.5, abs(position.x));
-                pos.x += sin(uTime * 0.3 + aSeed * 40.0) * 0.008 * (edge + p);
-                pos.z += sin(aSeed * 64.0 + uTime * 0.2) * 0.015;
-                vec4 mv = modelViewMatrix * vec4(pos * uScale, 1.0);
-                gl_Position = projectionMatrix * mv;
-                gl_PointSize = (1.15 + dot(aColor, vec3(0.299, 0.587, 0.114)) * 0.9) * uDpr;
-                vColor = mix(aColor, vec3(1.0, 0.44, 0.18), p * 0.55);
-                vAlpha = (1.0 - p * 0.35) * smoothstep(0.5, 0.36, abs(position.y));
-            }
-        `,
-        fragmentShader: `
-            uniform float uLightMode;
-            varying vec3 vColor;
-            varying float vAlpha;
-            void main() {
-                float d = length(gl_PointCoord - 0.5);
-                float alpha = smoothstep(0.5, 0.27, d) * vAlpha;
-                if (alpha < 0.025) discard;
-                vec3 darkCol = vColor * 1.25;
-                float isWarm = clamp((vColor.r - vColor.b) * 2.2, 0.0, 1.0);
-                vec3 lightCol = mix(vec3(0.18, 0.21, 0.28) + vColor * 0.32, vec3(0.86, 0.36, 0.06), isWarm * 0.85);
-                float finalAlpha = alpha * mix(1.0, 0.72, uLightMode);
-                gl_FragColor = vec4(mix(darkCol, lightCol, uLightMode), finalAlpha);
-            }
-        `,
+    // Create Particle Sphere
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 2000;
+    const posArray = new Float32Array(particlesCount * 3);
+
+    for (let i = 0; i < particlesCount * 3; i += 3) {
+        // Spherical distribution
+        const radius = 10;
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos((Math.random() * 2) - 1);
+
+        posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
+        posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        posArray[i + 2] = radius * Math.cos(phi);
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+    const material = new THREE.PointsMaterial({
+        size: 0.045,
+        color: 0x6384ff,
         transparent: true,
-        depthWrite: false
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending
     });
 
-    // Sample portrait image into 3D Signal Point-Cloud (300 x 375 grid)
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-        const cols = window.innerWidth < 700 ? 180 : 300;
-        const rows = Math.round(cols * 1.25);
-        const offCanvas = document.createElement('canvas');
-        offCanvas.width = cols;
-        offCanvas.height = rows;
-        const ctx = offCanvas.getContext('2d');
-        if (!ctx) return;
+    particlesMesh = new THREE.Points(particlesGeometry, material);
+    scene.add(particlesMesh);
 
-        ctx.drawImage(img, 0, 0, cols, rows);
-        const data = ctx.getImageData(0, 0, cols, rows).data;
+    // Inner Neural Lattice Core (counter-rotating wireframe geodesic sphere)
+    const coreGeo = new THREE.IcosahedronGeometry(5.2, 2);
+    const coreMat = new THREE.MeshBasicMaterial({
+        color: 0xa78bfa,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.1
+    });
+    coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    scene.add(coreMesh);
 
-        const positions = [];
-        const colors = [];
-        const seeds = [];
-
-        for (let y = 0; y < rows; y++) {
-            for (let x = 0; x < cols; x++) {
-                const idx = (y * cols + x) * 4;
-                if (data[idx + 3] < 20) continue;
-                const r = data[idx];
-                const g = data[idx + 1];
-                const b = data[idx + 2];
-                const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-                if (lum < 0.035) continue;
-
-                positions.push((x / cols - 0.5) * 0.8, 0.5 - y / rows, 0.025 * lum);
-                colors.push(r / 255, g / 255, b / 255);
-                seeds.push(((127 * x + 311 * y) % 997) / 997);
-            }
-        }
-
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-        geo.setAttribute('aColor', new THREE.Float32BufferAttribute(colors, 3));
-        geo.setAttribute('aSeed', new THREE.Float32BufferAttribute(seeds, 1));
-
-        signalPointsMesh = new THREE.Points(geo, signalMaterial);
-        scene.add(signalPointsMesh);
-        updateStageLayout();
-        renderer.render(scene, camera);
-    };
-    img.src = signalSrc;
-
-    const onScrollSignal = () => {
-        const scrollSpan = Math.max(window.innerHeight * 2.2, 1);
-        targetProgress = Math.min(Math.max(window.scrollY / scrollSpan, 0), 1);
-    };
-    window.addEventListener('scroll', onScrollSignal, { passive: true });
-    onScrollSignal();
-
-    const clock = new THREE.Clock();
-    function animateSignal() {
-        requestAnimationFrame(animateSignal);
-        currentProgress += (targetProgress - currentProgress) * 0.06;
-        signalMaterial.uniforms.uTime.value = clock.getElapsedTime();
-        signalMaterial.uniforms.uProgress.value = currentProgress;
-        renderer.render(scene, camera);
-    }
-    animateSignal();
+    syncThreeColors();
 
     window.addEventListener('resize', onWindowResize);
+
+    // Mouse Interaction
+    document.addEventListener('mousemove', onDocumentMouseMove);
+
+    animateThreeJS();
+}
+
+let mouseX3D = 0;
+let mouseY3D = 0;
+
+function onDocumentMouseMove(event) {
+    mouseX3D = (event.clientX - window.innerWidth / 2) * 0.001;
+    mouseY3D = (event.clientY - window.innerHeight / 2) * 0.001;
 }
 
 function onWindowResize() {
-    if (!camera || !renderer || !signalMaterial) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(dpr);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    signalMaterial.uniforms.uDpr.value = dpr;
-    updateStageLayout();
+}
+
+let clock = new THREE.Clock();
+
+function animateThreeJS() {
+    // A slowly rotating particle field is decorative motion; draw it once
+    // and stop when the visitor has asked for reduced motion.
+    if (prefersReducedMotion) {
+        renderer.render(scene, camera);
+        return;
+    }
+
+    requestAnimationFrame(animateThreeJS);
+
+    const elapsedTime = clock.getElapsedTime();
+
+    // Base Rotation
+    particlesMesh.rotation.y = elapsedTime * 0.1;
+    particlesMesh.rotation.z = elapsedTime * 0.05;
+
+    if (coreMesh) {
+        coreMesh.rotation.y = -elapsedTime * 0.07;
+        coreMesh.rotation.x = elapsedTime * 0.04;
+    }
+
+    // Mouse Interaction Parallax
+    gsap.to(particlesMesh.rotation, {
+        x: mouseY3D * 0.5,
+        y: mouseX3D * 0.5 + (elapsedTime * 0.1),
+        duration: 2,
+        ease: "power2.out"
+    });
+
+    renderer.render(scene, camera);
 }
 
 // Initialize only if Three is loaded
@@ -1428,7 +1363,7 @@ const startPreloader = () => {
 
     if (!preloader || !percentageElement) return;
 
-    if (document.documentElement.classList.contains('preloader-skip') || location.search.includes('skip_intro=1')) {
+    if (document.documentElement.classList.contains('preloader-skip')) {
         preloader.remove();
         document.body.style.overflow = '';
         return;
