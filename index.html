@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=53">
+    <link rel="stylesheet" href="style.css?v=54">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -400,7 +400,7 @@
                             <i class="fas fa-graduation-cap a-card-icon"></i>
                             <h4 class="a-card-title">Education</h4>
                         </div>
-                        <p class="a-card-desc">B.Sc. in Computer Science</p>
+                        <p class="a-card-desc">B.Sc. in CSE &middot; BUBT (3.36 CGPA)</p>
                     </div>
 
                     <div class="a-card">
@@ -452,12 +452,15 @@
                     <div class="corner-tr"></div>
                     <div class="corner-bl"></div>
                     <div class="corner-br"></div>
-                    <button id="start-cam-btn" class="btn btn-primary">
-                        <i class="fas fa-camera"></i> INITIALIZE NEURAL NET
+                    <button id="start-cam-btn" class="btn btn-primary" type="button">
+                        <i class="fas fa-camera" aria-hidden="true"></i> INITIALIZE NEURAL NET
+                    </button>
+                    <button id="stop-cam-btn" class="cam-stop-btn" type="button" hidden aria-label="Stop camera">
+                        <i class="fas fa-stop" aria-hidden="true"></i> STOP CAMERA
                     </button>
                     <div id="loader-cam"
                         style="display: none; color: var(--primary); font-family: 'JetBrains Mono'; margin-top: 15px;">
-                        <i class="fas fa-spinner fa-spin"></i> LOADING MODEL...
+                        <i class="fas fa-spinner fa-spin" aria-hidden="true"></i> LOADING MODEL...
                     </div>
                 </div>
             </div>
@@ -1202,6 +1205,12 @@
                 make things up.
             </div>
         </div>
+        <div class="chat-prompts" role="group" aria-label="Suggested questions">
+            <button type="button" class="chat-prompt-chip" data-prompt="Medical imaging & deep learning research">Medical AI</button>
+            <button type="button" class="chat-prompt-chip" data-prompt="Full-stack web apps deployed live">Full-Stack</button>
+            <button type="button" class="chat-prompt-chip" data-prompt="What technologies and AI frameworks does Tanvir know?">Skills</button>
+            <button type="button" class="chat-prompt-chip" data-prompt="Education, certifications and research experience">Background</button>
+        </div>
         <div class="chat-input-area">
             <input type="text" id="chat-input" aria-label="Message the AI assistant"
                 placeholder="Ask me about Tanvir's skills...">
@@ -1210,7 +1219,7 @@
     </div>
 
     <!-- Project Modal Overlay -->
-    <div id="project-modal" class="project-modal-overlay">
+    <div id="project-modal" class="project-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="project-modal-content">
             <button id="close-modal" class="close-modal-btn" type="button" aria-label="Close project details"><i
                     class="fas fa-times" aria-hidden="true"></i></button>
@@ -1220,9 +1229,12 @@
                     <div class="modal-cat" id="modal-cat">CATEGORY</div>
                     <h3 class="modal-title" id="modal-title">Project Title</h3>
                     <p class="modal-desc" id="modal-desc">Project Description</p>
-                    <div class="modal-tags" id="modal-tags"></div>
-                    <a href="#" id="modal-link" target="_blank" rel="noopener noreferrer" class="modal-btn btn btn-primary">VIEW SOURCE <i
-                            class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
+                    <ul class="p-metrics modal-metrics" id="modal-metrics"></ul>
+                    <div class="modal-tags p-tags" id="modal-tags"></div>
+                    <div class="modal-actions p-actions" id="modal-actions">
+                        <a href="#" id="modal-link" target="_blank" rel="noopener noreferrer" class="modal-btn btn btn-primary">VIEW SOURCE <i
+                                class="fas fa-arrow-right" style="margin-left: 8px;" aria-hidden="true"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1242,8 +1254,8 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=36"></script>
-    <script type="module" src="ai-ui.js?v=2"></script>
+    <script src="script.js?v=37"></script>
+    <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 
 </html>

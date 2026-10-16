@@ -46,6 +46,11 @@
             --border: rgba(0, 0, 0, 0.14);
         }
 
+        :root[data-accent="emerald"] { --primary: #00ff9d; --secondary: #00b8ff; }
+        :root.light-mode[data-accent="emerald"] { --primary: #008250; --secondary: #007bab; }
+        :root[data-accent="crimson"] { --primary: #ff0055; --secondary: #ff9d00; }
+        :root.light-mode[data-accent="crimson"] { --primary: #de004a; --secondary: #a36400; }
+
         * {
             margin: 0;
             padding: 0;
@@ -401,14 +406,16 @@
 
             <div class="item">
                 <div class="item-head">
-                    <h3>Personal Portfolio Website</h3>
-                    <span class="links"><a href="https://github.com/Tanvir284/Portfolio" target="_blank"
-                            rel="noopener noreferrer">GitHub</a> &middot; <a href="index.html">Live</a></span>
+                    <h3>DSA House &mdash; Interactive Algorithms &amp; Interview Platform</h3>
+                    <span class="links"><a href="https://github.com/Tanvir284/Dsa-house" target="_blank"
+                            rel="noopener noreferrer">GitHub</a> &middot; <a href="https://dsa-house.vercel.app"
+                            target="_blank" rel="noopener noreferrer">Live</a></span>
                 </div>
-                <div class="stack">HTML5 &middot; CSS3 &middot; JavaScript &middot; Three.js &middot; GitHub Pages</div>
-                <p>Designed and developed a responsive personal portfolio with an interactive 3D brain model rendered
-                    via Three.js/WebGL, dynamic project fetching from the GitHub API, and a custom preloader animation.
-                    Deployed on GitHub Pages with a fully custom domain setup.</p>
+                <div class="stack">Next.js 16 &middot; React 19 &middot; TypeScript &middot; Tailwind CSS v4 &middot;
+                    Vercel</div>
+                <p>Engineered an interactive learning platform covering a <strong>150-topic</strong> data structures and
+                    algorithms curriculum, <strong>16 step-through visualisers</strong>, <strong>600 curated
+                        problems</strong>, and timed mock technical interviews.</p>
             </div>
 
             <div class="item">
@@ -418,10 +425,35 @@
                             href="https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network"
                             target="_blank" rel="noopener noreferrer">GitHub</a></span>
                 </div>
-                <div class="stack">Python &middot; TensorFlow &middot; Transfer Learning &middot; Computer Vision</div>
+                <div class="stack">Python &middot; TensorFlow &middot; U-Net &middot; ResNet-50 &middot; Computer Vision</div>
                 <p>Developed a deep learning pipeline using U-Net with a ResNet-50 backbone to segment and classify
                     breast lesions from ultrasound images. Achieved a <strong>91% Dice coefficient</strong>,
                     outperforming the baseline CNN by 7 percentage points.</p>
+            </div>
+
+            <div class="item">
+                <div class="item-head">
+                    <h3>Pneumonia Classification from Chest X-Rays</h3>
+                    <span class="links"><a href="https://github.com/Tanvir284/Pneumonia-Classification-with-YOLOv8"
+                            target="_blank" rel="noopener noreferrer">GitHub</a></span>
+                </div>
+                <div class="stack">YOLOv8 &middot; PyTorch &middot; Ultralytics &middot; OpenCV</div>
+                <p>Trained and evaluated a YOLOv8 medical imaging classifier distinguishing normal from
+                    pneumonia-affected chest X-rays across a 70/15/15 split with augmentation, achieving
+                    <strong>95%+ accuracy</strong> tracked across precision, recall, F1 and mAP.</p>
+            </div>
+
+            <div class="item">
+                <div class="item-head">
+                    <h3>Enterprise Ecommerce Admin Dashboard</h3>
+                    <span class="links"><a href="https://github.com/Tanvir284/ecommerce-admin-dashboard" target="_blank"
+                            rel="noopener noreferrer">GitHub</a> &middot; <a
+                            href="https://ecommerce-admin-dashboard-seven.vercel.app" target="_blank"
+                            rel="noopener noreferrer">Live</a></span>
+                </div>
+                <div class="stack">NestJS 10 &middot; TypeScript &middot; React &middot; PostgreSQL &middot; JWT + RBAC</div>
+                <p>Built an end-to-end enterprise admin system across <strong>9 domain modules</strong> with a global
+                    JWT authentication guard, granular role-based permission checks, and a Swagger-documented REST API.</p>
             </div>
 
             <div class="item">
@@ -431,7 +463,7 @@
                             href="https://github.com/Tanvir284/Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms"
                             target="_blank" rel="noopener noreferrer">GitHub</a></span>
                 </div>
-                <div class="stack">Python &middot; Scikit-learn &middot; Pandas &middot; Regression</div>
+                <div class="stack">Python &middot; Scikit-learn &middot; XGBoost &middot; Pandas &middot; Regression</div>
                 <p>Built and compared five regression models (Linear, Ridge, Random Forest, Gradient Boosting, XGBoost)
                     to predict concrete strength. Random Forest achieved the lowest <strong>RMSE of 4.2 MPa</strong>,
                     with the water-cement ratio identified as the dominant predictor.</p>
@@ -454,19 +486,19 @@
             <h2>Technical Skills</h2>
             <dl class="skills">
                 <dt>Programming Languages</dt>
-                <dd>Python, SQL, JavaScript, Java, C++, C#</dd>
+                <dd>Python, SQL, JavaScript, TypeScript, Java, C++, C#, PHP, Dart</dd>
                 <dt>AI / Machine Learning</dt>
-                <dd>PyTorch, TensorFlow, Scikit-learn, Transformers (Hugging Face), LLMs, NLP, Computer Vision, OpenCV
-                </dd>
+                <dd>PyTorch, TensorFlow, Scikit-learn, Hugging Face Transformers, OpenCV, YOLOv8, XGBoost, LightGBM,
+                    CatBoost, LLMs, NLP, Computer Vision</dd>
                 <dt>Web Development &amp; APIs</dt>
-                <dd>React.js, Node.js, Django, Flask, FastAPI, REST APIs, HTML, CSS, PHP</dd>
+                <dd>React.js, Next.js, Node.js, NestJS, Django, Flask, FastAPI, REST APIs, HTML5, CSS3, Tailwind CSS</dd>
                 <dt>Databases</dt>
-                <dd>MySQL, SQL Server, Oracle SQL, PostgreSQL, MongoDB, Vector Databases</dd>
+                <dd>PostgreSQL, MySQL, SQL Server, Oracle SQL, MongoDB, SQLite, Vector Databases</dd>
                 <dt>Data Analysis &amp; Visualisation</dt>
                 <dd>Pandas, NumPy, Matplotlib, Seaborn, Power BI, Tableau</dd>
-                <dt>Tools &amp; Technologies</dt>
-                <dd>Git, GitHub, GitLab, Linux, Jupyter Notebook, VS Code, Docker, GitHub Actions, Jenkins, Terraform,
-                    Postman</dd>
+                <dt>Tools &amp; DevOps</dt>
+                <dd>Git, GitHub, GitLab, Docker, GitHub Actions, Jenkins, Terraform, Linux, Jupyter, VS Code, Postman,
+                    Vercel</dd>
             </dl>
         </section>
 

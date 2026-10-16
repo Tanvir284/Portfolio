@@ -46,7 +46,10 @@ const status = (el, msg) => { if (el) el.textContent = msg; };
             } else {
                 const items = res.hits.map(h => {
                     const snippet = h.text.length > 190 ? h.text.slice(0, 190).trim() + '…' : h.text;
-                    const link = h.href ? ` <a href="${esc(h.href)}">open</a>` : '';
+                    const ext = h.href && /^https?:\/\//i.test(h.href)
+                        ? ' target="_blank" rel="noopener noreferrer"'
+                        : '';
+                    const link = h.href ? ` <a href="${esc(h.href)}"${ext}>open</a>` : '';
                     return `<li><strong>${esc(h.title)}</strong>` +
                            `<span class="chat-score">${Math.round(h.score * 100)}% match</span>` +
                            `<br>${esc(snippet)}${link}</li>`;
@@ -68,11 +71,27 @@ const status = (el, msg) => { if (el) el.textContent = msg; };
 
     send.addEventListener('click', handle);
     input.addEventListener('keydown', e => { if (e.key === 'Enter') handle(); });
+
+    document.querySelectorAll('.chat-prompt-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            if (busy) return;
+            input.value = chip.dataset.prompt || chip.textContent;
+            handle();
+        });
+    });
 })();
 
 /* -------------------------------------------------- semantic project search */
 (function projectSearch() {
     const box = document.getElementById('project-search');
+    document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            if (!box) return;
+            e.preventDefault();
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            box.focus({ preventScroll: true });
+        }
+    });
     const note = document.getElementById('project-search-status');
     const grid = document.querySelector('.project-grid');
     if (!box || !grid) return;

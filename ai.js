@@ -108,13 +108,14 @@ function buildKnowledgeBase() {
     });
 
     document.querySelectorAll('.timeline-item').forEach(item => {
+        const secId = item.closest('section')?.id || 'experience';
         push(item.querySelector('.t-title')?.textContent,
              `${clean(item.querySelector('.t-date')?.textContent)}. ${clean(item.querySelector('.t-desc')?.textContent)}`,
-             '#experience', 'experience');
+             `#${secId}`, 'experience');
     });
 
     document.querySelectorAll('.cred-card').forEach(c => {
-        push(c.querySelector('.cred-title')?.textContent, c.textContent, '#credentials', 'credential');
+        push(c.querySelector('.cred-title, h3')?.textContent, c.textContent, '#credentials', 'credential');
     });
 
     document.querySelectorAll('#research .a-card').forEach(c => {
