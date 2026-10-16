@@ -214,11 +214,11 @@ function updateStageLayout() {
     if (!masterStageGroup || !camera || !renderer) return;
     const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
 
-    // Always fixed and stable in the exact middle of the background (x = 0)
-    masterStageGroup.position.set(0, -1.10, 0);
+    // Always fixed and stable in the middle of the webpage with full head visible below navbar
+    const scale = aspect < 0.85 ? 0.88 : 1.08;
+    const posY = aspect < 0.85 ? -3.10 : -4.00;
+    masterStageGroup.position.set(0, posY, 0);
     masterStageGroup.rotation.set(0, 0, 0);
-
-    const scale = aspect < 0.85 ? 0.92 : 1.14;
     masterStageGroup.scale.set(scale, scale, scale);
     renderer.render(scene, camera);
 }
