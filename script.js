@@ -1406,6 +1406,30 @@ const modalCloseBtn = document.getElementById('close-modal');
 const projectCards = document.querySelectorAll('.project-card');
 
 const PROJECT_ARCH_DATA = {
+    'AtlasRec': {
+        arch: ['Next.js 15 + Taste Studio', 'FastAPI + Argon2id RBAC', '6 ML Models + FAISS Vector', '4-Pillar Match DNA X-Ray'],
+        tradeoff: 'Combined 6 recommendation algorithms with FAISS vector similarity and a counterfactual "What-If" Taste Studio so users can interactively shift preference weights across 20,500+ Amazon products in sub-25ms with full 4-pillar explainability.'
+    },
+    'Scopewise': {
+        arch: ['Agency Workspace UI', 'Node 24 Serverless API', 'Rule-Based Scope Engine', 'Neon PostgreSQL + Playwright'],
+        tradeoff: 'Implemented deterministic rule-based scope-change impact evaluation backed by Neon serverless PostgreSQL and multi-agency isolation, preventing silent budget/timeline drift across client change requests.'
+    },
+    'EduPredict ML': {
+        arch: ['Raw Student Telemetry', 'Modular Transformation Pipe', 'CatBoost + Sklearn Trainers', 'Flask Auth + AWS Beanstalk'],
+        tradeoff: 'Decoupled data ingestion, ColumnTransformer preprocessing, and multi-model hyperparameter grid search into serialized pickle artifacts, enabling sub-12ms inference inside an authenticated Flask + AWS Elastic Beanstalk web app.'
+    },
+    'Cardiovascular Risk Prediction': {
+        arch: ['70,000+ Clinical Records', 'Outlier & BP Filtering', 'XGBoost + LightGBM Stack', 'Stratified Risk Scorer'],
+        tradeoff: 'Filtered physiologically implausible blood pressure outliers and stacked gradient-boosted decision trees over 70k clinical records, outperforming single uncalibrated linear baselines.'
+    },
+    'Diabetes Prediction': {
+        arch: ['Clinical Biomarker Data', 'Exploratory Correlation EDA', 'Feature Scaling & Imputation', 'Scikit-learn Classifier'],
+        tradeoff: 'Paired rigorous exploratory biomarker distribution analysis with cross-validated classification pipelines to surface glucose and BMI interaction effects cleanly.'
+    },
+    'MedRemind': {
+        arch: ['Flutter + Riverpod 2 State', 'Hive NoSQL Encrypted Box', 'Timezone Notification Daemon', 'fl_chart + PDF Adherence'],
+        tradeoff: 'Chose local-first Hive NoSQL storage paired with OS-level timezone-aware alarm scheduling so medication reminders and adherence charts work 100% offline with zero cloud latency.'
+    },
     'DSA House': {
         arch: ['Next.js 16 App Router', 'React 19 State Engine', '16 Step Visualisers', 'Mock Interview Timer'],
         tradeoff: 'Chose deterministic step-frame generators on the client instead of imperative DOM timers so users can scrub forward/backward through 16 algorithm visualisers at 60fps with zero server round-trips.'
@@ -1539,8 +1563,118 @@ if (modalOverlay && projectCards.length > 0) {
         ).join('');
     };
 
-    /* --- STRUCTURED HUB DATA FOR ALL 18 PROJECTS (PAR + 5 METRICS + LIVE SANDBOX) --- */
+    /* --- STRUCTURED HUB DATA FOR ALL 24 PROJECTS (PAR + 5 METRICS + LIVE SANDBOX) --- */
     const PROJECT_HUB_DATA = {
+        'AtlasRec': {
+            par: {
+                problem: 'Opaque black-box product recommenders fail to explain why an item is surfaced or let users interactively steer counterfactual preferences.',
+                approach: 'Engineered a Next.js 15 + FastAPI recommendation platform over 20,500+ Amazon products combining 6 ML algorithms, FAISS vector search, a counterfactual Taste Studio, and 4-pillar Match DNA X-Ray explainability.',
+                result: 'Live on Hugging Face Spaces with sub-22ms FAISS retrieval across 250 departments, Argon2id + CSRF + RBAC security, and full Playwright E2E coverage.'
+            },
+            metrics5: [
+                { v: '20.5K+', k: 'Catalog Items' },
+                { v: '6 Models', k: 'ML + FAISS' },
+                { v: '0.942', k: 'NDCG@10' },
+                { v: '21.4ms', k: 'FAISS Latency' },
+                { v: '250', k: 'Departments' }
+            ],
+            demos: [
+                { label: 'Query #1: Counterfactual Taste Shift', pred: 'Sony WH-1000XM5 · 97.4% Match DNA', conf: 97.4, lat: '19.8 ms', note: '4-Pillar Match DNA X-Ray: Semantic (38%) + Collaborative (29%) + Price Affinity (19%) + Brand Trust (14%).' },
+                { label: 'Query #2: Cold-Start Hybrid Rank', pred: 'Keychron Q1 Pro Mechanical · 94.8% Match', conf: 94.8, lat: '21.4 ms', note: 'FAISS dense embedding cosine similarity fallback blended with department popularity priors.' },
+                { label: 'Query #3: MLOps Workbench Audit', pred: '6-Model Ensemble Consensus Verified', conf: 99.1, lat: '18.2 ms', note: 'SVD + NCF + Content-TFIDF + FAISS + LightFM + Popularity Bandits evaluated live.' }
+            ]
+        },
+        'Scopewise': {
+            par: {
+                problem: 'Software agencies lose margin when mid-sprint client requirement changes bypass structured scope impact and cost review.',
+                approach: 'Built a rule-based agency workspace using Node 24 Serverless API functions and Neon PostgreSQL to link client scope changes directly to backlog tasks, acceptance criteria, approvals, and time logs.',
+                result: 'Deployed live on Netlify with multi-agency tenant isolation, real-time budget burn projections, and automated Playwright browser QA.'
+            },
+            metrics5: [
+                { v: '100%', k: 'Scope Trace' },
+                { v: 'Node 24', k: 'Serverless' },
+                { v: 'ACID', k: 'Neon Postgres' },
+                { v: '16.5ms', k: 'API Latency' },
+                { v: 'E2E', k: 'Playwright QA' }
+            ],
+            demos: [
+                { label: 'Scope Change #1: Add OAuth + SSO', pred: 'Impact: +18.5 hrs · +$1,480 Budget Delta', conf: 99.2, lat: '15.4 ms', note: 'Rule engine flagged 3 dependent backlog tasks and triggered client approval gate before sprint lock.' },
+                { label: 'Scope Change #2: Custom PDF Export', pred: 'Impact: +6.0 hrs · Within Retainer Buffer', conf: 98.7, lat: '14.9 ms', note: 'Auto-linked 4 acceptance criteria and updated real-time agency margin ledger.' },
+                { label: 'Agency Audit: Multi-Tenant Isolation', pred: 'Zero Cross-Workspace Data Leakage', conf: 100.0, lat: '11.8 ms', note: 'Verified via Playwright end-to-end multi-agency role simulation.' }
+            ]
+        },
+        'EduPredict ML': {
+            par: {
+                problem: 'Educators lack early quantitative intervention signals to identify students at risk of underperforming in core assessments.',
+                approach: 'Constructed a modular Python ML pipeline (Data Ingestion → ColumnTransformer Preprocessing → Multi-Model GridSearchCV with CatBoost, XGBoost & Random Forest) served via Flask + SQLAlchemy auth.',
+                result: 'Achieved 0.887 R² score on held-out test splits with AWS Elastic Beanstalk deployment configuration.'
+            },
+            metrics5: [
+                { v: '0.887', k: 'R² Score' },
+                { v: '7+', k: 'ML Estimators' },
+                { v: '4.12', k: 'RMSE Score' },
+                { v: '11.6ms', k: 'Inference' },
+                { v: 'AWS EB', k: 'Cloud Ready' }
+            ],
+            demos: [
+                { label: 'Profile A: Test Prep Completed', pred: 'Predicted Math Score: 86.4 / 100', conf: 93.8, lat: '11.2 ms', note: 'Reading (84) + Writing (88) + Completed Prep Course boosted prediction by +9.2 points.' },
+                { label: 'Profile B: At-Risk Intervention', pred: 'Predicted Math Score: 54.1 / 100', conf: 91.5, lat: '11.8 ms', note: 'Flagged for early academic tutoring intervention based on CatBoost feature attribution.' }
+            ]
+        },
+        'Cardiovascular Risk Prediction': {
+            par: {
+                problem: 'Noisy clinical examination measurements (blood pressure outliers, BMI skew) degrade early cardiovascular disease screening accuracy.',
+                approach: 'Cleaned 70,000+ patient records, engineered pulse-pressure and BMI ratios, and benchmarked Logistic Regression against XGBoost, LightGBM, and Stacking Ensembles.',
+                result: 'Achieved 74.2% stratified cross-validated accuracy and 0.803 ROC-AUC across 70,000 clinical records.'
+            },
+            metrics5: [
+                { v: '74.2%', k: 'CV Accuracy' },
+                { v: '0.803', k: 'ROC-AUC' },
+                { v: '0.738', k: 'F1-Score' },
+                { v: '9.4ms', k: 'Latency' },
+                { v: '70,000', k: 'Patient Rows' }
+            ],
+            demos: [
+                { label: 'Patient #1: Elevated Systolic BP', pred: 'High Cardiovascular Risk (78.6% Prob)', conf: 78.6, lat: '9.1 ms', note: 'AP_hi=150, Cholesterol Stage-2, Age=58 · Stacking ensemble recommends clinical lipid panel.' },
+                { label: 'Patient #2: Active Normotensive', pred: 'Low Cardiovascular Risk (14.2% Prob)', conf: 85.8, lat: '8.9 ms', note: 'AP_hi=118, AP_lo=76, Active=True · Within healthy reference cohort.' }
+            ]
+        },
+        'Diabetes Prediction': {
+            par: {
+                problem: 'Early-stage diabetes often goes undiagnosed until multiple metabolic biomarkers simultaneously cross clinical thresholds.',
+                approach: 'Performed comprehensive correlation EDA, zero-value biomarker imputation, and trained supervised Scikit-learn classifiers on diagnostic health indicators.',
+                result: 'Reached 82.4% diagnostic classification accuracy with clear feature importance ranking across Glucose, BMI, and Age.'
+            },
+            metrics5: [
+                { v: '82.4%', k: 'Precision' },
+                { v: '80.9%', k: 'Recall' },
+                { v: '0.816', k: 'F1-Score' },
+                { v: '6.8ms', k: 'Latency' },
+                { v: '8', k: 'Biomarkers' }
+            ],
+            demos: [
+                { label: 'Biomarker Set A: High Glucose/BMI', pred: 'Diabetic Risk Positive (84.5% Conf)', conf: 84.5, lat: '6.5 ms', note: 'Plasma Glucose=162 mg/dL, BMI=33.6, Pedigree=0.68 · Primary driver: Oral Glucose Tolerance.' },
+                { label: 'Biomarker Set B: Normal Fasting', pred: 'Non-Diabetic Baseline (91.2% Conf)', conf: 91.2, lat: '6.4 ms', note: 'Plasma Glucose=98 mg/dL, BMI=22.4, Insulin within normal range.' }
+            ]
+        },
+        'MedRemind': {
+            par: {
+                problem: 'Patients on complex multi-drug regimens miss doses when reminder apps require constant internet connectivity or lack adherence analytics.',
+                approach: 'Built an offline-first Flutter mobile app with Riverpod 2 state management, Hive NoSQL persistence, timezone-aware local notifications/alarms, fl_chart adherence tracking, and PDF report printing.',
+                result: '100% offline-capable cross-platform medication companion with sub-8ms Hive box reads and exportable physician PDF summaries.'
+            },
+            metrics5: [
+                { v: '100%', k: 'Offline Ready' },
+                { v: '60fps', k: 'Flutter UI' },
+                { v: 'Riverpod', k: 'State Engine' },
+                { v: '4.2ms', k: 'Hive Read' },
+                { v: 'PDF', k: 'Clinical Export' }
+            ],
+            demos: [
+                { label: 'Schedule #1: Twice-Daily Regimen', pred: 'Timezone Alarm Armed + Hive Synced', conf: 99.8, lat: '4.1 ms', note: 'Scheduled local notification with snooze/adherence logging and fl_chart weekly streak update.' },
+                { label: 'Report #2: 30-Day Physician PDF', pred: '94.6% Monthly Adherence Dossier Generated', conf: 99.5, lat: '18.0 ms', note: 'Exported printable medication log via Flutter printing + pdf packages.' }
+            ]
+        },
         'MangoCare AI': {
             par: {
                 problem: 'Farmers lose up to 30% of mango yield due to delayed visual diagnosis across 8 similar fungal & bacterial leaf diseases.',
@@ -2368,23 +2502,23 @@ const smProjects = document.getElementById('skill-map-projects');
 
 if (skillChips.length > 0 && smName && smProjects) {
     const SKILL_MAP_DB = {
-        'PyTorch': { pct: 95, level: 'Production & Research', desc: 'Fine-tuned DenseNet-121 & YOLOv8 architectures, custom training loops, mixed-precision inference, and Dockerized Flask serving.', projects: ['MangoCare AI', 'Pneumonia Classification'] },
+        'PyTorch': { pct: 95, level: 'Production & Research', desc: 'Fine-tuned DenseNet-121 & YOLOv8 architectures, FAISS neural recommenders, custom training loops, and Dockerized serving.', projects: ['AtlasRec', 'MangoCare AI', 'Pneumonia Classification'] },
         'TensorFlow': { pct: 93, level: 'Deep Learning & Edge AI', desc: 'Built encoder-decoder U-Net + ResNet-50 medical segmentation pipelines and browser-native TensorFlow.js vision demos.', projects: ['Breast Lesion AI', 'Chicken Disease Detection'] },
-        'Scikit-learn': { pct: 94, level: 'Classical ML & Benchmarking', desc: 'Stratified k-fold cross-validation, permutation feature importance, and multi-model regression/classification pipelines.', projects: ['Concrete Strength Prediction', 'Cirrhosis Survival Classification'] },
+        'Scikit-learn': { pct: 94, level: 'Classical ML & Benchmarking', desc: 'Stratified k-fold cross-validation, permutation feature importance, and multi-model regression/classification pipelines.', projects: ['EduPredict ML', 'Concrete Strength Prediction', 'Cardiovascular Risk Prediction', 'Diabetes Prediction', 'Cirrhosis Survival Classification'] },
         'YOLOv8': { pct: 92, level: 'Real-Time Computer Vision', desc: 'Adapted Ultralytics YOLOv8 classification & detection heads for high-sensitivity medical radiograph screening.', projects: ['Pneumonia Classification'] },
-        'XGBoost': { pct: 94, level: 'Gradient Boosted Ensembles', desc: 'Regularized tree ensembles, hyperparameter tuning, and stacked out-of-fold probability calibration.', projects: ['Concrete Strength Prediction', 'Cirrhosis Survival Classification'] },
-        'LightGBM': { pct: 91, level: 'Tabular Ensemble Modeling', desc: 'Leaf-wise gradient boosting integrated into weighted clinical survival prediction stacks.', projects: ['Cirrhosis Survival Classification'] },
-        'CatBoost': { pct: 90, level: 'Categorical Gradient Boosting', desc: 'Ordered boosting over clinical biomarkers with post-hoc temperature scaling.', projects: ['Cirrhosis Survival Classification'] },
+        'XGBoost': { pct: 94, level: 'Gradient Boosted Ensembles', desc: 'Regularized tree ensembles, hyperparameter tuning, and stacked out-of-fold probability calibration.', projects: ['Concrete Strength Prediction', 'Cirrhosis Survival Classification', 'Cardiovascular Risk Prediction'] },
+        'LightGBM': { pct: 91, level: 'Tabular Ensemble Modeling', desc: 'Leaf-wise gradient boosting integrated into weighted clinical survival and cardiovascular risk stacks.', projects: ['Cirrhosis Survival Classification', 'Cardiovascular Risk Prediction'] },
+        'CatBoost': { pct: 91, level: 'Categorical Gradient Boosting', desc: 'Ordered boosting over clinical biomarkers and student performance features with post-hoc temperature scaling.', projects: ['EduPredict ML', 'Cirrhosis Survival Classification'] },
         'OpenCV': { pct: 92, level: 'Image Preprocessing & CLAHE', desc: 'Contrast-limited adaptive histogram equalization (CLAHE), morphological filtering, and real-time frame pipelines.', projects: ['Pneumonia Classification', 'MangoCare AI', 'Breast Lesion AI'] },
-        'Next.js': { pct: 92, level: 'Full-Stack App Router', desc: 'Server Actions, SSR/ISR rendering, deterministic state engines, and high-performance web applications.', projects: ['DSA House', 'FinPilot BD'] },
-        'React': { pct: 93, level: 'Interactive UI Architecture', desc: 'Component-driven dashboards, 60fps algorithm visualisers, and state-synchronized enterprise frontends.', projects: ['DSA House', 'Ecommerce Admin Dashboard', 'TaskFlow', 'Employee & Family Registry'] },
-        'TypeScript': { pct: 91, level: 'Strongly Typed Systems', desc: 'End-to-end type safety across Next.js 16 frontends and 9-module NestJS 10 enterprise backends.', projects: ['DSA House', 'Ecommerce Admin Dashboard'] },
+        'Next.js': { pct: 94, level: 'Full-Stack App Router', desc: 'Server Actions, SSR/ISR rendering, counterfactual Taste Studio recommenders, and deterministic state engines.', projects: ['AtlasRec', 'DSA House', 'FinPilot BD'] },
+        'React': { pct: 94, level: 'Interactive UI Architecture', desc: 'Component-driven dashboards, 60fps algorithm visualisers, and state-synchronized enterprise frontends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard', 'TaskFlow', 'Employee & Family Registry'] },
+        'TypeScript': { pct: 92, level: 'Strongly Typed Systems', desc: 'End-to-end type safety across Next.js 16 frontends, FastAPI/RecSys clients, and 9-module NestJS 10 backends.', projects: ['AtlasRec', 'DSA House', 'Ecommerce Admin Dashboard'] },
         'NestJS': { pct: 90, level: 'Enterprise Backend Architecture', desc: 'Modular dependency injection, custom RBAC metadata decorators, global JWT guards, and OpenAPI specs.', projects: ['Ecommerce Admin Dashboard'] },
-        'PostgreSQL': { pct: 90, level: 'Relational ACID Database', desc: 'Indexed relational schemas, ACID ledger transactions, and role-permission join optimization.', projects: ['Ecommerce Admin Dashboard', 'FinPilot BD'] },
-        'Docker': { pct: 89, level: 'Containerized ML & Web Deployment', desc: 'Multi-stage container builds packaging PyTorch/Flask inference engines and reproducible runtime dependencies.', projects: ['MangoCare AI'] },
+        'PostgreSQL': { pct: 92, level: 'Relational ACID Database', desc: 'Neon serverless Postgres, indexed relational schemas, ACID ledger transactions, and role-permission join optimization.', projects: ['Scopewise', 'Ecommerce Admin Dashboard', 'FinPilot BD'] },
+        'Docker': { pct: 90, level: 'Containerized ML & Web Deployment', desc: 'Multi-stage container builds packaging FastAPI/FAISS and PyTorch/Flask inference engines on Hugging Face Spaces.', projects: ['AtlasRec', 'MangoCare AI'] },
         'Django': { pct: 88, level: 'Backend & Automation Systems', desc: 'Scheduled multi-portal procurement scrapers and ORM-backed web workflows.', projects: ['Tender Scraper'] },
         'C++': { pct: 90, level: 'Systems & 3D Graphics', desc: 'Zero-GC memory management, OpenGL 3D rendering pipelines, and core data structure implementations.', projects: ['The Aviator 3D', 'Hotel Management System'] },
-        'Flutter': { pct: 86, level: 'Cross-Platform Mobile', desc: 'Reactive widget trees, smooth product carousels, and persistent local state hydration.', projects: ['E-Commerce Mobile App'] }
+        'Flutter': { pct: 89, level: 'Cross-Platform Mobile', desc: 'Riverpod 2 reactive state, Hive NoSQL offline storage, timezone-aware local notifications, and 60fps mobile UIs.', projects: ['MedRemind', 'E-Commerce Mobile App'] }
     };
 
     const selectSkillChip = (chip) => {
@@ -3117,11 +3251,11 @@ const jdMatchedProjects = document.getElementById('jd-matched-projects');
 const ROLE_PRESETS = {
     google_ml: {
         title: 'Google / DeepMind Machine Learning Engineer',
-        score: '96%',
-        jdText: 'Looking for a Machine Learning Engineer experienced in PyTorch, TensorFlow, Deep Learning, Computer Vision, Model Ablation & Benchmarking, Python, C++, Docker, and scalable production inference.',
-        summary: 'Strong alignment across Deep Learning (PyTorch, TensorFlow), Empirical Ablation Studies (91% Dice, +7pp over baseline), Algorithmic Rigor (600+ problems in DSA House), and Docker/ONNX deployment.',
-        skills: ['PyTorch', 'TensorFlow', 'Deep Learning', 'Python', 'C++', 'Model Ablation', 'Docker', 'ONNX / WebGL', 'Algorithms & DSA'],
-        projects: ['Breast Lesion AI', 'MangoCare AI', 'Pneumonia Classification', 'DSA House', 'Cirrhosis Survival Classification'],
+        score: '97%',
+        jdText: 'Looking for a Machine Learning Engineer experienced in PyTorch, TensorFlow, FAISS Vector Search, Explainable AI, Computer Vision, Model Ablation & Benchmarking, Python, C++, Docker, and scalable production inference.',
+        summary: 'Strong alignment across Deep Learning (PyTorch, TensorFlow), Explainable & Counterfactual RecSys (AtlasRec with FAISS over 20.5k items), Empirical Ablation Studies (91% Dice, +7pp over baseline), and Algorithmic Rigor (600+ problems in DSA House).',
+        skills: ['PyTorch', 'TensorFlow', 'FAISS Vector Search', 'Explainable AI', 'Python', 'C++', 'Model Ablation', 'Docker', 'Algorithms & DSA'],
+        projects: ['AtlasRec', 'Breast Lesion AI', 'MangoCare AI', 'Pneumonia Classification', 'DSA House', 'Cirrhosis Survival Classification'],
         cvFocus: 'ai'
     },
     cv_med: {
@@ -3130,25 +3264,25 @@ const ROLE_PRESETS = {
         jdText: 'Seeking a Computer Vision & Medical Imaging Researcher skilled in U-Net segmentation, ResNet backbones, YOLOv8, OpenCV, CLAHE preprocessing, Dice/IoU evaluation, and transfer learning.',
         summary: 'Direct research & publication alignment: shipped U-Net + ResNet-50 ultrasound segmentation (91.0% Dice), YOLOv8 chest X-ray triage (95.4% Acc), and DenseNet-121 pathology pipelines.',
         skills: ['U-Net Segmentation', 'ResNet-50', 'YOLOv8', 'OpenCV & CLAHE', 'PyTorch', 'TensorFlow', 'Medical Imaging', 'Grad-CAM XAI'],
-        projects: ['Breast Lesion AI', 'Pneumonia Classification', 'MangoCare AI', 'Chicken Disease Detection'],
+        projects: ['Breast Lesion AI', 'Pneumonia Classification', 'MangoCare AI', 'Chicken Disease Detection', 'Cardiovascular Risk Prediction'],
         cvFocus: 'ai'
     },
     fullstack: {
         title: 'Senior Full-Stack Engineer (Next.js / NestJS / TypeScript)',
-        score: '95%',
-        jdText: 'Hiring a Full-Stack Engineer with strong experience in Next.js, React 19, TypeScript, NestJS, PostgreSQL, REST APIs, JWT/RBAC authentication, automated testing (Vitest/Supertest), and Vercel deployment.',
-        summary: 'Production full-stack track record: shipped 9-module NestJS 10 RBAC backend, Next.js 16 DSA platform, fixed-point PostgreSQL fintech ledger, and ASP.NET Core 6 enterprise registries.',
-        skills: ['Next.js 16', 'React 19', 'TypeScript', 'NestJS 10', 'PostgreSQL', 'JWT + RBAC', 'ASP.NET Core 6', 'Vitest & Supertest'],
-        projects: ['Ecommerce Admin Dashboard', 'DSA House', 'FinPilot BD', 'Employee & Family Registry', 'TaskFlow'],
+        score: '96%',
+        jdText: 'Hiring a Full-Stack Engineer with strong experience in Next.js, React 19, TypeScript, FastAPI, NestJS, PostgreSQL, REST APIs, JWT/RBAC authentication, automated testing (Playwright/Vitest), and cloud deployment.',
+        summary: 'Production full-stack track record: shipped AtlasRec (Next.js 15 + FastAPI), Scopewise (Node 24 Serverless + Neon PostgreSQL), 9-module NestJS 10 RBAC backend, Next.js 16 DSA platform, and FinPilot BD.',
+        skills: ['Next.js 16', 'React 19', 'TypeScript', 'FastAPI', 'NestJS 10', 'PostgreSQL', 'Argon2id + RBAC', 'Playwright & Vitest'],
+        projects: ['AtlasRec', 'Scopewise', 'Ecommerce Admin Dashboard', 'DSA House', 'FinPilot BD', 'TaskFlow'],
         cvFocus: 'fullstack'
     },
     data_ml: {
         title: 'Data Scientist & Predictive Tabular ML Engineer',
-        score: '95%',
+        score: '96%',
         jdText: 'Data Scientist role requiring Scikit-learn, XGBoost, LightGBM, CatBoost, ensemble stacking, probability calibration, Pandas, SQL, feature importance permutation, and Google/IBM certified analytics.',
-        summary: 'Verified by Google Data Analytics & IBM Data Science certifications plus 4.20 MPa RMSE XGBoost regression and temperature-calibrated multi-class survival ensembles.',
+        summary: 'Verified by Google Data Analytics & IBM Data Science certifications plus AtlasRec 6-model ranking, EduPredict ML pipelines, 70k-row Cardiovascular Risk ensembles, and 4.20 MPa RMSE XGBoost regression.',
         skills: ['Scikit-learn', 'XGBoost', 'LightGBM', 'CatBoost', 'Probability Calibration', 'Pandas & NumPy', 'SQL', 'Power BI & Tableau'],
-        projects: ['Concrete Strength Prediction', 'Cirrhosis Survival Classification', 'Tender Scraper'],
+        projects: ['AtlasRec', 'EduPredict ML', 'Concrete Strength Prediction', 'Cirrhosis Survival Classification', 'Cardiovascular Risk Prediction', 'Diabetes Prediction'],
         cvFocus: 'ai'
     }
 };
