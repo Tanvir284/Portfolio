@@ -215,10 +215,10 @@ function updateStageLayout() {
     const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
 
     // Always fixed and stable in the exact middle of the background (x = 0)
-    masterStageGroup.position.set(0, -0.35, 0);
+    masterStageGroup.position.set(0, -1.10, 0);
     masterStageGroup.rotation.set(0, 0, 0);
 
-    const scale = aspect < 0.85 ? 0.85 : 1.05;
+    const scale = aspect < 0.85 ? 0.92 : 1.14;
     masterStageGroup.scale.set(scale, scale, scale);
     renderer.render(scene, camera);
 }
@@ -227,7 +227,7 @@ function initThreeJS() {
     if (!container) return;
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 18.0);
+    camera.position.set(0, 0, 17.5);
     camera.lookAt(0, 0, 0);
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
@@ -238,8 +238,8 @@ function initThreeJS() {
     masterStageGroup = new THREE.Group();
     scene.add(masterStageGroup);
 
-    // 1. Soft 3D Studio Volumetric Halo behind the Black-Blazer Model (100% seamless radial falloff)
-    const haloGeo = new THREE.PlaneGeometry(24.0, 24.0, 1, 1);
+    // 1. Wide 3D Studio Volumetric Halo behind the Black-Blazer Model (100% seamless radial falloff)
+    const haloGeo = new THREE.PlaneGeometry(28.0, 28.0, 1, 1);
     const haloMat = new THREE.ShaderMaterial({
         uniforms: {
             uGlowColor: { value: new THREE.Color(0x6384ff) }
@@ -257,24 +257,19 @@ function initThreeJS() {
             void main() {
                 float dist = length(vUv - vec2(0.5, 0.5));
                 float glow = pow(max(0.0, 1.0 - dist * 2.25), 2.2);
-                gl_FragColor = vec4(uGlowColor, glow * 0.18);
+                gl_FragColor = vec4(uGlowColor, glow * 0.20);
             }
         `,
         transparent: true,
         depthWrite: false
     });
     haloMesh = new THREE.Mesh(haloGeo, haloMat);
-    haloMesh.position.set(0, -0.2, -1.2);
+    haloMesh.position.set(0, 0.0, -1.2);
     masterStageGroup.add(haloMesh);
 
-    // 2. Full-HD 3D Sculpted Black-Blazer Portrait Model (100% Sharp Face, Zero Distortion, Completely Stationary)
+    // 2. Large Full-HD Studio-Retouched Black-Blazer Model (Zero Perspective Face Warping, 100% Stationary)
     const loader = new THREE.TextureLoader();
     const colorSrc = window.TANVIR_3D_COLOR_URI || 'tanvir-3d-cutout.webp';
-    const depthSrc = window.TANVIR_3D_DEPTH_URI || 'tanvir-3d-depth.png';
-
-    const depthTex = loader.load(depthSrc, () => {
-        renderer.render(scene, camera);
-    });
 
     const colorTex = loader.load(colorSrc, (tex) => {
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -283,28 +278,18 @@ function initThreeJS() {
 
     colorTex.minFilter = THREE.LinearFilter;
     colorTex.magFilter = THREE.LinearFilter;
-    depthTex.minFilter = THREE.LinearFilter;
-    depthTex.magFilter = THREE.LinearFilter;
 
-    // Aspect ratio 848:1264 = 1 : 1.4905
-    const bustGeo = new THREE.PlaneGeometry(9.6, 14.3, 96, 144);
+    // Large commanding size across the background (aspect ratio 848:1264 = 1 : 1.4905)
+    const bustGeo = new THREE.PlaneGeometry(12.6, 18.78, 1, 1);
     const bustMat = new THREE.ShaderMaterial({
         uniforms: {
-            uColorMap: { value: colorTex },
-            uDepthMap: { value: depthTex }
+            uColorMap: { value: colorTex }
         },
         vertexShader: `
-            uniform sampler2D uDepthMap;
-            uniform sampler2D uColorMap;
             varying vec2 vUv;
             void main() {
                 vUv = uv;
-                float d = texture2D(uDepthMap, uv).r;
-                float a = texture2D(uColorMap, uv).a;
-                vec3 pos = position;
-                // Gentle, undistorted 3D Z-relief facing straight ahead
-                pos.z += d * 0.85 * smoothstep(0.05, 0.3, a);
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
             }
         `,
         fragmentShader: `
@@ -313,9 +298,8 @@ function initThreeJS() {
             void main() {
                 vec4 tex = texture2D(uColorMap, vUv);
                 if (tex.a < 0.02) discard;
-                // Preserve 100% natural, crystal-clear face & jet-black blazer colors
                 float bottomFade = smoothstep(0.0, 0.14, vUv.y);
-                gl_FragColor = vec4(tex.rgb, tex.a * bottomFade * 0.82);
+                gl_FragColor = vec4(tex.rgb, tex.a * bottomFade * 0.90);
             }
         `,
         transparent: true,
