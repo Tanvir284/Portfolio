@@ -46,7 +46,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css?v=57">
+    <link rel="stylesheet" href="style.css?v=58">
 
     <!-- Structured data: helps recruiters and search engines parse who you are.
          TODO(Tanvir): add your Kaggle / Hugging Face / Google Scholar URLs to "sameAs" below. -->
@@ -629,6 +629,53 @@
             </div>
         </div>
 
+        <!-- INTERACTIVE ML BENCHMARK & ABLATION SUITE (Google Research Signal) -->
+        <div class="ablation-suite" id="benchmarks">
+            <div class="ablation-header">
+                <div>
+                    <span class="eyebrow">EMPIRICAL VALIDATION &bull; ABLATION STUDIES</span>
+                    <h3 class="ablation-title">Model Benchmarks vs. Baselines</h3>
+                </div>
+                <div class="ablation-tabs" role="tablist" aria-label="Select benchmark study">
+                    <button type="button" class="ablation-tab active" data-bench="lesion" role="tab" aria-selected="true">Ultrasound U-Net</button>
+                    <button type="button" class="ablation-tab" data-bench="pneumonia" role="tab" aria-selected="false">Chest X-Ray YOLOv8</button>
+                    <button type="button" class="ablation-tab" data-bench="concrete" role="tab" aria-selected="false">Strength XGBoost</button>
+                </div>
+            </div>
+
+            <div class="ablation-body" id="ablation-body" aria-live="polite">
+                <div class="ablation-rows" id="ablation-rows">
+                    <div class="ablation-row is-winner">
+                        <div class="ablation-meta">
+                            <span class="ablation-model">U-Net + ResNet-50 Encoder <span class="ablation-badge">SHIPPED PIPELINE</span></span>
+                            <span class="ablation-score">91.0% Dice &middot; 84.2% IoU</span>
+                        </div>
+                        <div class="ablation-track"><span class="ablation-fill" style="width: 91%"></span></div>
+                    </div>
+                    <div class="ablation-row">
+                        <div class="ablation-meta">
+                            <span class="ablation-model">Vanilla U-Net (No Pretrained Backbone)</span>
+                            <span class="ablation-score">86.8% Dice &middot; 77.9% IoU</span>
+                        </div>
+                        <div class="ablation-track"><span class="ablation-fill" style="width: 86.8%"></span></div>
+                    </div>
+                    <div class="ablation-row">
+                        <div class="ablation-meta">
+                            <span class="ablation-model">Baseline Custom CNN</span>
+                            <span class="ablation-score">84.0% Dice &middot; 73.5% IoU</span>
+                        </div>
+                        <div class="ablation-track"><span class="ablation-fill" style="width: 84%"></span></div>
+                    </div>
+                </div>
+                <div class="ablation-note" id="ablation-note">
+                    <i class="fas fa-flask" aria-hidden="true"></i>
+                    <div>
+                        <strong>Ablation Takeaway (+7.0pp Dice over Baseline):</strong> Replacing standard encoder blocks with ImageNet-pretrained ResNet-50 residual stages preserved spatial boundary gradients under heavy ultrasound speckle noise while converging in 38% fewer epochs.
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="skill-group" style="margin-top:44px">
             <h3 class="skill-cat">Soft Skills &amp; Ways of Working<span class="skill-count">8</span></h3>
             <ul class="skill-chips soft-chips">
@@ -1022,6 +1069,155 @@
         <p class="no-results" hidden>No projects in this category. <button type="button" class="linklike" data-filter-reset>Show all projects</button></p>
     </section>
 
+    <!-- ALGORITHMIC RIGOR & INTERACTIVE DSA SANDBOX (Google SWE L3/L4 Signal) -->
+    <section id="algorithms" class="section-container">
+        <div class="section-header">
+            <p class="eyebrow">DATA STRUCTURES &amp; ALGORITHMS &bull; COMPLEXITY ANALYSIS</p>
+            <h2>ALGORITHMIC <span style="color:var(--primary)">RIGOR</span></h2>
+            <p>Interactive step-through algorithm sandbox and curriculum mastery powering DSA House.</p>
+        </div>
+
+        <div class="dsa-bento">
+            <!-- Left Bento: Interactive Algorithm Visualizer -->
+            <div class="dsa-card dsa-sandbox">
+                <div class="dsa-card-top">
+                    <div class="p-preview-dots"><span></span><span></span><span></span></div>
+                    <div class="dsa-algo-tabs" role="tablist" aria-label="Choose algorithm">
+                        <button type="button" class="dsa-algo-btn active" data-algo="bsearch">Binary Search</button>
+                        <button type="button" class="dsa-algo-btn" data-algo="quicksort">QuickSort</button>
+                        <button type="button" class="dsa-algo-btn" data-algo="sliding">Sliding Window</button>
+                    </div>
+                </div>
+
+                <div class="dsa-complexity-bar">
+                    <span class="dsa-comp-pill">Time: <strong id="dsa-time">O(log n)</strong></span>
+                    <span class="dsa-comp-pill">Space: <strong id="dsa-space">O(1)</strong></span>
+                    <span class="dsa-comp-pill">Target / Mode: <strong id="dsa-target">Find 42</strong></span>
+                </div>
+
+                <div class="dsa-bars" id="dsa-bars" aria-label="Algorithm array visualization"></div>
+
+                <div class="dsa-log" id="dsa-log" role="status" aria-live="polite">
+                    Click <strong>Step</strong> or <strong>Auto-Run</strong> to trace pointer movement and invariants in real time.
+                </div>
+
+                <div class="dsa-controls">
+                    <button type="button" id="dsa-step-btn" class="p-link"><i class="fas fa-forward-step" aria-hidden="true"></i> STEP</button>
+                    <button type="button" id="dsa-run-btn" class="p-link p-link-live"><i class="fas fa-play" aria-hidden="true"></i> AUTO-RUN</button>
+                    <button type="button" id="dsa-reset-btn" class="p-link"><i class="fas fa-rotate-left" aria-hidden="true"></i> RESET</button>
+                    <a href="https://dsa-house.vercel.app" target="_blank" rel="noopener noreferrer" class="p-link" style="margin-left:auto">
+                        OPEN ALL 16 VISUALISERS <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Bento: Problem Solving & Topic Mastery -->
+            <div class="dsa-card dsa-stats-card">
+                <div class="dsa-stats-head">
+                    <span class="eyebrow">PROBLEM-SOLVING ARCHITECTURE</span>
+                    <h3>600+ Curated Problems &amp; Complexity Patterns</h3>
+                    <p>Built in C++, Python, and TypeScript with strict time/space complexity constraints.</p>
+                </div>
+
+                <div class="dsa-topic-list">
+                    <div class="dsa-topic-item">
+                        <div class="dsa-topic-meta">
+                            <span>Graphs, Shortest Path (Dijkstra/BFS/DFS) &amp; Trees</span>
+                            <strong>140 Problems &middot; O((V+E) log V)</strong>
+                        </div>
+                        <div class="ablation-track"><span class="ablation-fill" style="width: 94%"></span></div>
+                    </div>
+                    <div class="dsa-topic-item">
+                        <div class="dsa-topic-meta">
+                            <span>Dynamic Programming &amp; State Transitions</span>
+                            <strong>125 Problems &middot; Memo &amp; Tabulation</strong>
+                        </div>
+                        <div class="ablation-track"><span class="ablation-fill" style="width: 89%"></span></div>
+                    </div>
+                    <div class="dsa-topic-item">
+                        <div class="dsa-topic-meta">
+                            <span>Arrays, Two Pointers, Sliding Window &amp; Binary Search</span>
+                            <strong>185 Problems &middot; O(n) / O(log n)</strong>
+                        </div>
+                        <div class="ablation-track"><span class="ablation-fill" style="width: 96%"></span></div>
+                    </div>
+                    <div class="dsa-topic-item">
+                        <div class="dsa-topic-meta">
+                            <span>Heaps, Tries, Union-Find &amp; Segment Trees</span>
+                            <strong>150 Problems &middot; Amortized O(&alpha;(n))</strong>
+                        </div>
+                        <div class="ablation-track"><span class="ablation-fill" style="width: 86%"></span></div>
+                    </div>
+                </div>
+
+                <div class="dsa-badges-footer">
+                    <span class="dsa-mini-stat"><strong>150</strong> Topics</span>
+                    <span class="dsa-mini-stat"><strong>16</strong> Step Visualisers</span>
+                    <span class="dsa-mini-stat"><strong>C++ / Python</strong> Core</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ENGINEERING DEEP-DIVES / TECHNICAL CASE STUDIES (Google System Design Signal) -->
+    <section id="case-studies" class="section-container" data-alt-bg>
+        <div class="section-header">
+            <p class="eyebrow">SYSTEM DESIGN &bull; PRODUCTION POST-MORTEMS</p>
+            <h2>ENGINEERING <span style="color:var(--primary)">CASE STUDIES</span></h2>
+            <p>Architectural decisions, bottlenecks solved, and measurable production trade-offs.</p>
+        </div>
+
+        <div class="case-grid">
+            <article class="case-card" data-case="ultrasound" tabindex="0" role="button" aria-label="Read case study: +7pp Dice Gain on Ultrasound Lesion Segmentation">
+                <div class="case-top">
+                    <span class="case-num">CASE STUDY 01 &bull; MEDICAL AI</span>
+                    <span class="case-impact">+7.0pp Dice Gain</span>
+                </div>
+                <h3 class="case-title">Overcoming Speckle Noise in Ultrasound Lesion Segmentation with ResNet-50 U-Net</h3>
+                <p class="case-summary">Why standard CNN encoders collapsed on low-contrast breast ultrasound boundaries, and how residual skip pathways lifted Dice from 84.0% to 91.0%.</p>
+                <div class="case-arch-mini">
+                    <span>DICOM / PNG</span> <i class="fas fa-arrow-right"></i>
+                    <span>ResNet-50 Stage 1-4</span> <i class="fas fa-arrow-right"></i>
+                    <span>U-Net Decoder</span> <i class="fas fa-arrow-right"></i>
+                    <span>Mask + Class</span>
+                </div>
+                <span class="case-cta">Read Architectural Breakdown <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </article>
+
+            <article class="case-card" data-case="edgeai" tabindex="0" role="button" aria-label="Read case study: Zero-Server Browser AI Inference">
+                <div class="case-top">
+                    <span class="case-num">CASE STUDY 02 &bull; EDGE ML &amp; WEBGL</span>
+                    <span class="case-impact">0ms Network Latency</span>
+                </div>
+                <h3 class="case-title">Zero-Server Inference: Running Vision Transformers &amp; Semantic Search In-Browser</h3>
+                <p class="case-summary">Eliminating cold-start GPU hosting costs by compiling MobileViT and MiniLM sentence embeddings directly to WebGL/WASM with lazy web-worker hydration.</p>
+                <div class="case-arch-mini">
+                    <span>Browser Tab</span> <i class="fas fa-arrow-right"></i>
+                    <span>ONNX / TF.js</span> <i class="fas fa-arrow-right"></i>
+                    <span>WebGL Tensors</span> <i class="fas fa-arrow-right"></i>
+                    <span>Cosine Top-K</span>
+                </div>
+                <span class="case-cta">Read Architectural Breakdown <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </article>
+
+            <article class="case-card" data-case="rbac" tabindex="0" role="button" aria-label="Read case study: 9-Module Guard-Driven RBAC Architecture">
+                <div class="case-top">
+                    <span class="case-num">CASE STUDY 03 &bull; DISTRIBUTED BACKEND</span>
+                    <span class="case-impact">9 Enterprise Modules</span>
+                </div>
+                <h3 class="case-title">Designing a Guard-Driven RBAC &amp; Indexed Relational Schema in NestJS &amp; PostgreSQL</h3>
+                <p class="case-summary">How global JWT authentication guards, custom permission decorators, and composite PostgreSQL indexes prevented N+1 query bottlenecks across 9 admin domains.</p>
+                <div class="case-arch-mini">
+                    <span>Request</span> <i class="fas fa-arrow-right"></i>
+                    <span>JWT + RBAC Guard</span> <i class="fas fa-arrow-right"></i>
+                    <span>NestJS Service</span> <i class="fas fa-arrow-right"></i>
+                    <span>PostgreSQL</span>
+                </div>
+                <span class="case-cta">Read Architectural Breakdown <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </article>
+        </div>
+    </section>
+
 
 
     <!-- LIVE GITHUB ACTIVITY -->
@@ -1231,6 +1427,14 @@
                     <div class="modal-cat" id="modal-cat">CATEGORY</div>
                     <h3 class="modal-title" id="modal-title">Project Title</h3>
                     <p class="modal-desc" id="modal-desc">Project Description</p>
+                    <div class="modal-arch-box" id="modal-arch-box">
+                        <span class="modal-sub-label">SYSTEM ARCHITECTURE PIPELINE</span>
+                        <div class="modal-arch-flow" id="modal-arch"></div>
+                    </div>
+                    <div class="modal-tradeoff-box" id="modal-tradeoff-box">
+                        <span class="modal-sub-label">ENGINEERING DECISION &amp; TRADE-OFF</span>
+                        <p class="modal-tradeoff-text" id="modal-tradeoff"></p>
+                    </div>
                     <ul class="p-metrics modal-metrics" id="modal-metrics"></ul>
                     <div class="modal-tags p-tags" id="modal-tags"></div>
                     <div class="modal-actions p-actions" id="modal-actions">
@@ -1256,7 +1460,7 @@
     <!-- Load the coco-ssd model to perform object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-    <script src="script.js?v=40"></script>
+    <script src="script.js?v=41"></script>
     <script type="module" src="ai-ui.js?v=3"></script>
 </body>
 

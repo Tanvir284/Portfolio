@@ -1400,16 +1400,88 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
     window.addEventListener('load', startPreloader);
 }
 
-/* --- PROJECT MODALS --- */
+/* --- PROJECT & CASE STUDY MODALS (WITH SYSTEM ARCHITECTURE & TRADE-OFFS) --- */
 const modalOverlay = document.getElementById('project-modal');
 const modalCloseBtn = document.getElementById('close-modal');
 const projectCards = document.querySelectorAll('.project-card');
+
+const PROJECT_ARCH_DATA = {
+    'DSA House': {
+        arch: ['Next.js 16 App Router', 'React 19 State Engine', '16 Step Visualisers', 'Mock Interview Timer'],
+        tradeoff: 'Chose deterministic step-frame generators on the client instead of imperative DOM timers so users can scrub forward/backward through 16 algorithm visualisers at 60fps with zero server round-trips.'
+    },
+    'MangoCare AI': {
+        arch: ['Leaf Image Input', '224x224 Normalization', 'Fine-Tuned DenseNet-121', 'Flask Gunicorn API', 'Docker Container'],
+        tradeoff: 'Selected DenseNet-121 over ResNet-50 for dense feature reuse across subtle leaf lesion textures, reducing parameter count by ~68% while maintaining real-time CPU inference inside a Dockerized Flask service.'
+    },
+    'Ecommerce Admin Dashboard': {
+        arch: ['React Client', 'Global JWT Guard', 'RBAC Permission Decorator', 'NestJS 10 Modules (x9)', 'PostgreSQL'],
+        tradeoff: 'Enforced route-level RBAC via custom NestJS metadata decorators and a single global guard rather than controller-by-controller checks, eliminating permission drift across all 9 enterprise modules.'
+    },
+    'FinPilot BD': {
+        arch: ['Next.js 15 Server Actions', 'Decimal.js Ledger Engine', 'PostgreSQL ACID Tx', 'Taka/bKash/Bank Aggregator'],
+        tradeoff: 'Used fixed-point decimal arithmetic end-to-end instead of IEEE-754 floats to guarantee zero rounding drift across multi-account Bangladeshi Taka transfers and mobile wallet reconciliations.'
+    },
+    'Employee & Family Registry': {
+        arch: ['React SPA', 'ASP.NET Core 6 Web API', 'EF Core + SQL Server', 'QuestPDF Document Engine'],
+        tradeoff: 'Generated hierarchical employee-family dossiers server-side with QuestPDF streams instead of client HTML-to-canvas snapshots, cutting PDF generation latency and memory footprint.'
+    },
+    'TaskFlow': {
+        arch: ['React 19 UI', 'Express REST Router', 'Dual Schema Validation', 'SQLite WAL Storage', 'Vitest + Supertest'],
+        tradeoff: 'Backed the Express REST API with SQLite in WAL mode and an automated Supertest integration suite, achieving deterministic sub-5ms local read/write latency.'
+    },
+    'Tender Scraper': {
+        arch: ['Django 4.2 Scheduler', 'Headless Selenium Grid', 'BeautifulSoup Parser', 'OpenPyXL Workbook Builder'],
+        tradeoff: 'Combined headless Selenium only for dynamic JS challenges with lightweight BeautifulSoup DOM parsing for static pages, cutting 4-portal scrape duration by over 60%.'
+    },
+    'Pneumonia Classification': {
+        arch: ['Chest X-Ray Input', 'CLAHE + Augmentation', 'YOLOv8 Classification Head', 'mAP / F1 Evaluator'],
+        tradeoff: 'Adapted YOLOv8 classification backbone with targeted contrast-limited equalization and 70/15/15 stratified splitting, reaching 95%+ accuracy at ~14ms per scan.'
+    },
+    'Breast Lesion AI': {
+        arch: ['Ultrasound Scan', 'ResNet-50 Pretrained Encoder', 'U-Net Skip Connections', 'Pixel Mask + Lesion Class'],
+        tradeoff: 'Fused ImageNet-pretrained ResNet-50 encoder stages with U-Net decoder skip connections to preserve lesion boundary gradients under speckle noise, lifting Dice by +7.0pp over baseline CNN (91.0% vs 84.0%).'
+    },
+    'Concrete Strength Prediction': {
+        arch: ['8 Mix Features', 'Feature Interaction Pipeline', '5-Model Benchmark Suite', 'Tuned XGBoost (4.2 MPa RMSE)'],
+        tradeoff: 'Benchmarked 5 regression families (Linear, Ridge, RF, GBDT, XGBoost) and isolated water-cement ratio non-linearities via tree depth regularization to reach 4.2 MPa RMSE.'
+    },
+    'Cirrhosis Survival Classification': {
+        arch: ['Clinical Features', 'XGBoost + LightGBM + CatBoost', 'Weighted Stack Blender', 'Temperature Calibration'],
+        tradeoff: 'Applied post-hoc temperature scaling on top of stacked gradient-boosted ensembles so multi-class survival probability outputs are genuinely calibrated for clinical risk ranking.'
+    }
+};
+
+const DEFAULT_DOMAIN_ARCH = {
+    ai: {
+        arch: ['Raw Image Tensor', 'Augmentation & Normalization', 'Pretrained Backbone', 'Task Head & Metric Eval'],
+        tradeoff: 'Leveraged transfer learning and domain-specific data augmentation to maximize generalization on limited medical/agricultural datasets without overfitting.'
+    },
+    ml: {
+        arch: ['Tabular Dataset', 'Feature Engineering & Scaling', 'Cross-Validated Ensemble', 'Calibrated Predictions'],
+        tradeoff: 'Compared multiple model families under strict k-fold cross-validation rather than relying on a single uncalibrated estimator.'
+    },
+    web: {
+        arch: ['Client UI Layer', 'Authenticated REST / RPC API', 'Service & Validation Layer', 'Relational Database'],
+        tradeoff: 'Separated transport validation from domain business logic and indexed high-frequency foreign keys to keep p95 API latency low.'
+    },
+    mobile: {
+        arch: ['Flutter Widget Tree', 'Reactive State Layer', 'SharedPreferences Local Store', '60fps Carousel UI'],
+        tradeoff: 'Persisted cart and wishlist state locally with asynchronous hydration so the storefront remains responsive offline.'
+    },
+    systems: {
+        arch: ['Core C/C++ Loop', 'Memory-Aligned Structs', 'OpenGL / File I/O Pipeline', 'Deterministic Frame Render'],
+        tradeoff: 'Managed memory layout and rendering state directly in C/C++ with zero garbage-collection pauses.'
+    }
+};
 
 if (modalOverlay && projectCards.length > 0) {
     const mVisual = document.getElementById('modal-visual');
     const mCat = document.getElementById('modal-cat');
     const mTitle = document.getElementById('modal-title');
     const mDesc = document.getElementById('modal-desc');
+    const mArch = document.getElementById('modal-arch');
+    const mTradeoff = document.getElementById('modal-tradeoff');
     const mMetrics = document.getElementById('modal-metrics');
     const mTags = document.getElementById('modal-tags');
     const mActions = document.getElementById('modal-actions');
@@ -1422,10 +1494,17 @@ if (modalOverlay && projectCards.length > 0) {
         systems: 'SYSTEMS & GRAPHICS'
     };
 
+    const renderArchFlow = (nodes) => {
+        if (!mArch) return;
+        mArch.innerHTML = nodes.map((n, idx) =>
+            `<span class="modal-arch-node">${n}</span>` +
+            (idx < nodes.length - 1 ? `<i class="fas fa-arrow-right modal-arch-arrow" aria-hidden="true"></i>` : '')
+        ).join('');
+    };
+
     projectCards.forEach(card => {
         card.style.cursor = 'pointer';
         card.addEventListener('click', (e) => {
-            // Prevent opening modal if clicking an action link directly
             if (e.target.closest('a')) return;
 
             const pick = (sel) => {
@@ -1434,6 +1513,7 @@ if (modalOverlay && projectCards.length > 0) {
             };
             const cat = pick('.p-cat');
             const title = pick('.p-title');
+            const titleText = card.querySelector('.p-title')?.textContent?.trim() || '';
             const desc = pick('.p-desc');
             const metrics = pick('.p-metrics');
             const tags = pick('.p-tags');
@@ -1463,6 +1543,10 @@ if (modalOverlay && projectCards.length > 0) {
                 }
             }
 
+            const spec = PROJECT_ARCH_DATA[titleText] || DEFAULT_DOMAIN_ARCH[domain] || DEFAULT_DOMAIN_ARCH.ai;
+            renderArchFlow(spec.arch);
+            if (mTradeoff) mTradeoff.textContent = spec.tradeoff;
+
             if (mCat) mCat.innerHTML = cat;
             if (mTitle) mTitle.innerHTML = title;
             if (mDesc) mDesc.innerHTML = desc;
@@ -1483,10 +1567,94 @@ if (modalOverlay && projectCards.length > 0) {
                 }).join('');
             }
 
-            // Open modal & pause smooth scroll
             modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+        });
+    });
+
+    /* --- ENGINEERING CASE STUDY CARDS OPEN IN MODAL --- */
+    const CASE_STUDY_DATA = {
+        ultrasound: {
+            cat: 'CASE STUDY 01 &bull; MEDICAL IMAGING AI',
+            title: 'Overcoming Speckle Noise in Ultrasound Lesion Segmentation',
+            desc: 'Standard convolutional encoders struggle on breast ultrasound scans due to acoustic shadowing, low lesion-to-tissue contrast, and multiplicative speckle noise. By replacing the encoder with ImageNet-pretrained ResNet-50 residual stages and wiring multi-scale skip connections into a symmetric U-Net decoder, the pipeline preserved fine lesion boundaries.',
+            arch: ['Ultrasound Input', 'CLAHE + Speckle Norm', 'ResNet-50 Stage 1-4', 'U-Net Skip Decoder', '91.0% Dice Mask'],
+            tradeoff: 'Frozen early ResNet-50 stem layers during warm-up epochs before full fine-tuning: prevented catastrophic forgetting on the medical dataset and boosted Dice coefficient from 84.0% (baseline CNN) to 91.0% (+7.0pp).',
+            metrics: '<li><span class="m-val">91.0%</span><span class="m-key">Dice Score</span></li><li><span class="m-val">+7.0pp</span><span class="m-key">vs Baseline</span></li><li><span class="m-val">84.2%</span><span class="m-key">IoU</span></li>',
+            tags: '<span>TensorFlow</span><span>U-Net</span><span>ResNet-50</span><span>Medical Imaging</span>',
+            href: 'https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network',
+            icon: 'fas fa-microscope'
+        },
+        edgeai: {
+            cat: 'CASE STUDY 02 &bull; EDGE ML & WEBGL',
+            title: 'Zero-Server Inference: In-Browser Vision & Semantic Retrieval',
+            desc: 'Hosting dedicated GPU inference endpoints for portfolio demos introduces cold-start delays, recurring cloud cost, and user privacy concerns. This architecture compiles COCO-SSD (TensorFlow.js WebGL), MobileViT image classification, and all-MiniLM-L6-v2 sentence embeddings (Transformers.js ONNX/WASM) to execute 100% locally inside the visitor’s browser.',
+            arch: ['Client Browser', 'Lazy Dynamic Import', 'ONNX / WebGL Backend', '384-d Cosine Search', '0ms Server RTT'],
+            tradeoff: 'Deferred model weight downloads until first user interaction (lazy hydration) so initial page load stays fast with 0 bytes of ML weights blocking First Contentful Paint.',
+            metrics: '<li><span class="m-val">0ms</span><span class="m-key">Server RTT</span></li><li><span class="m-val">3</span><span class="m-key">In-Browser Models</span></li><li><span class="m-val">100%</span><span class="m-key">Client Privacy</span></li>',
+            tags: '<span>Transformers.js</span><span>TensorFlow.js</span><span>WebGL</span><span>ONNX Runtime</span>',
+            href: 'https://github.com/Tanvir284/Portfolio',
+            icon: 'fas fa-bolt'
+        },
+        rbac: {
+            cat: 'CASE STUDY 03 &bull; DISTRIBUTED BACKEND ARCHITECTURE',
+            title: '9-Module Guard-Driven RBAC & Relational Schema in NestJS',
+            desc: 'Enterprise admin systems often suffer from scattered authorization checks and N+1 relational query bottlenecks as modules scale. Built a unified 9-module NestJS 10 architecture backed by PostgreSQL where every endpoint declares required permissions via custom TypeScript decorators evaluated by a single global JWT + RBAC Guard.',
+            arch: ['HTTP Request', 'JWT Auth Guard', 'RBAC Metadata Reflector', 'NestJS Service Layer', 'Indexed PostgreSQL'],
+            tradeoff: 'Embedded role-permission claims inside short-lived signed JWTs with indexed relational joins in PostgreSQL, eliminating redundant per-request permission table lookups.',
+            metrics: '<li><span class="m-val">9</span><span class="m-key">Core Modules</span></li><li><span class="m-val">O(1)</span><span class="m-key">Guard Lookup</span></li><li><span class="m-val">Swagger</span><span class="m-key">OpenAPI Spec</span></li>',
+            tags: '<span>NestJS 10</span><span>TypeScript</span><span>PostgreSQL</span><span>JWT + RBAC</span>',
+            href: 'https://github.com/Tanvir284/ecommerce-admin-dashboard',
+            live: 'https://ecommerce-admin-dashboard-seven.vercel.app',
+            icon: 'fas fa-shield-halved'
+        }
+    };
+
+    document.querySelectorAll('.case-card').forEach(card => {
+        const openCase = () => {
+            const key = card.dataset.case;
+            const data = CASE_STUDY_DATA[key];
+            if (!data) return;
+
+            if (mVisual) {
+                mVisual.style.backgroundImage = '';
+                mVisual.innerHTML = `
+                    <div class="modal-emblem">
+                        <div class="modal-emblem-ring">
+                            <i class="${data.icon}" aria-hidden="true"></i>
+                        </div>
+                        <span class="modal-emblem-domain">ENGINEERING CASE STUDY</span>
+                    </div>
+                `;
+            }
+            if (mCat) mCat.innerHTML = data.cat;
+            if (mTitle) mTitle.textContent = data.title;
+            if (mDesc) mDesc.textContent = data.desc;
+            renderArchFlow(data.arch);
+            if (mTradeoff) mTradeoff.textContent = data.tradeoff;
+            if (mMetrics) {
+                mMetrics.innerHTML = data.metrics;
+                mMetrics.hidden = false;
+            }
+            if (mTags) mTags.innerHTML = data.tags;
+            if (mActions) {
+                mActions.innerHTML = `
+                    <a href="${data.href}" target="_blank" rel="noopener noreferrer" class="modal-btn btn btn-primary">VIEW REPOSITORY <i class="fas fa-arrow-right" style="margin-left: 8px;" aria-hidden="true"></i></a>
+                    ${data.live ? `<a href="${data.live}" target="_blank" rel="noopener noreferrer" class="modal-btn btn btn-outline">LIVE SYSTEM <i class="fas fa-arrow-up-right-from-square" style="margin-left: 8px;" aria-hidden="true"></i></a>` : ''}
+                `;
+            }
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+        };
+
+        card.addEventListener('click', openCase);
+        card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openCase();
+            }
         });
     });
 
@@ -1504,3 +1672,206 @@ if (modalOverlay && projectCards.length > 0) {
         if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeProjectModal();
     });
 }
+
+/* --- INTERACTIVE ML BENCHMARK & ABLATION SWITCHER --- */
+const BENCHMARK_DATA = {
+    lesion: {
+        rows: [
+            { model: 'U-Net + ResNet-50 Encoder', badge: 'SHIPPED PIPELINE', score: '91.0% Dice · 84.2% IoU', pct: 91, winner: true },
+            { model: 'Vanilla U-Net (No Pretrained Backbone)', score: '86.8% Dice · 77.9% IoU', pct: 86.8 },
+            { model: 'Baseline Custom CNN', score: '84.0% Dice · 73.5% IoU', pct: 84 }
+        ],
+        note: '<strong>Ablation Takeaway (+7.0pp Dice over Baseline):</strong> Replacing standard encoder blocks with ImageNet-pretrained ResNet-50 residual stages preserved spatial boundary gradients under heavy ultrasound speckle noise while converging in 38% fewer epochs.'
+    },
+    pneumonia: {
+        rows: [
+            { model: 'YOLOv8 Fine-Tuned Classifier', badge: 'BEST F1 & LATENCY', score: '95.4% Acc · 0.96 F1 · 14ms', pct: 95.4, winner: true },
+            { model: 'ResNet-34 Transfer Baseline', score: '91.8% Acc · 0.92 F1 · 29ms', pct: 91.8 },
+            { model: 'VGG-16 Fine-Tuned', score: '88.6% Acc · 0.89 F1 · 46ms', pct: 88.6 }
+        ],
+        note: '<strong>Ablation Takeaway (2.1x Faster Inference + 3.6pp Accuracy):</strong> YOLOv8’s CSPDarknet backbone with CLAHE contrast normalization reduced false negatives on subtle lower-lobe opacities while halving per-scan latency.'
+    },
+    concrete: {
+        rows: [
+            { model: 'Regularized XGBoost Regressor', badge: 'LOWEST ERROR (4.2 MPa)', score: '4.20 MPa RMSE · R² 0.93', pct: 93, winner: true },
+            { model: 'Random Forest Ensemble (300 Trees)', score: '5.12 MPa RMSE · R² 0.89', pct: 86 },
+            { model: 'Ridge / L2 Linear Baseline', score: '10.34 MPa RMSE · R² 0.62', pct: 62 }
+        ],
+        note: '<strong>Ablation Takeaway (59% RMSE Reduction vs. Linear):</strong> Feature importance permutation proved non-linear interaction between water-cement ratio and curing age dominates compressive strength.'
+    }
+};
+
+const ablationTabs = document.querySelectorAll('.ablation-tab');
+const ablationRowsEl = document.getElementById('ablation-rows');
+const ablationNoteEl = document.getElementById('ablation-note');
+
+if (ablationTabs.length > 0 && ablationRowsEl && ablationNoteEl) {
+    ablationTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const key = tab.dataset.bench;
+            const data = BENCHMARK_DATA[key];
+            if (!data) return;
+
+            ablationTabs.forEach(t => {
+                const active = t === tab;
+                t.classList.toggle('active', active);
+                t.setAttribute('aria-selected', String(active));
+            });
+
+            ablationRowsEl.innerHTML = data.rows.map(r => `
+                <div class="ablation-row ${r.winner ? 'is-winner' : ''}">
+                    <div class="ablation-meta">
+                        <span class="ablation-model">${r.model} ${r.badge ? `<span class="ablation-badge">${r.badge}</span>` : ''}</span>
+                        <span class="ablation-score">${r.score}</span>
+                    </div>
+                    <div class="ablation-track"><span class="ablation-fill" style="width: ${r.pct}%"></span></div>
+                </div>
+            `).join('');
+
+            ablationNoteEl.innerHTML = `<i class="fas fa-flask" aria-hidden="true"></i><div>${data.note}</div>`;
+            playSound('click');
+        });
+    });
+}
+
+/* --- INTERACTIVE ALGORITHMIC SANDBOX (DSA HOUSE PREVIEW) --- */
+const dsaBarsEl = document.getElementById('dsa-bars');
+const dsaLogEl = document.getElementById('dsa-log');
+const dsaTimeEl = document.getElementById('dsa-time');
+const dsaSpaceEl = document.getElementById('dsa-space');
+const dsaTargetEl = document.getElementById('dsa-target');
+const dsaStepBtn = document.getElementById('dsa-step-btn');
+const dsaRunBtn = document.getElementById('dsa-run-btn');
+const dsaResetBtn = document.getElementById('dsa-reset-btn');
+const dsaAlgoBtns = document.querySelectorAll('.dsa-algo-btn');
+
+if (dsaBarsEl && dsaLogEl) {
+    const ALGO_SCENARIOS = {
+        bsearch: {
+            time: 'O(log n)',
+            space: 'O(1)',
+            target: 'Find 42',
+            arr: [8, 14, 21, 29, 35, 42, 56, 68, 77, 91],
+            frames: [
+                { active: [4], dim: [], found: [], log: 'Step 1: L=0, R=9 → mid=4 (val=35 < 42). Discard left half [0..4].' },
+                { active: [7], dim: [0,1,2,3,4], found: [], log: 'Step 2: L=5, R=9 → mid=7 (val=68 > 42). Discard right half [7..9].' },
+                { active: [5], dim: [0,1,2,3,4,7,8,9], found: [5], log: 'Step 3: L=5, R=6 → mid=5 (val=42 == target). Found in 3 comparisons!' }
+            ]
+        },
+        quicksort: {
+            time: 'O(n log n)',
+            space: 'O(log n)',
+            target: 'Pivot Partition',
+            arr: [48, 22, 75, 16, 39, 90, 31, 64, 19, 42],
+            frames: [
+                { active: [9, 0, 1, 3, 4, 6, 8], dim: [], found: [], log: 'Step 1: Choose pivot = 42 (idx 9). Scan & swap elements ≤ 42 to left partition.' },
+                { active: [5], dim: [], found: [5], arr: [22, 16, 39, 31, 19, 42, 75, 64, 48, 90], log: 'Step 2: Place pivot 42 at final sorted index 5. Left ≤ 42, Right > 42.' },
+                { active: [], dim: [], found: [0,1,2,3,4,5,6,7,8,9], arr: [16, 19, 22, 31, 39, 42, 48, 64, 75, 90], log: 'Step 3: Recursively partition sub-arrays → Array fully sorted in-place!' }
+            ]
+        },
+        sliding: {
+            time: 'O(n)',
+            space: 'O(1)',
+            target: 'Max Sum (k=3)',
+            arr: [18, 45, 32, 60, 24, 52, 70, 28, 41, 36],
+            frames: [
+                { active: [0, 1, 2], dim: [], found: [], log: 'Step 1: Window [0..2] = 18 + 45 + 32 = 95. Max sum so far = 95.' },
+                { active: [1, 2, 3], dim: [0], found: [], log: 'Step 2: Slide right (+60, -18) → Window [1..3] sum = 137. New Max = 137.' },
+                { active: [4, 5, 6], dim: [0,1,2,3], found: [4, 5, 6], log: 'Step 3: Optimal Window [4..6] = 24 + 52 + 70 = 146 achieved in single O(n) pass!' }
+            ]
+        }
+    };
+
+    let currentAlgo = 'bsearch';
+    let stepIdx = -1;
+    let autoTimer = null;
+
+    const renderBars = (frame) => {
+        const spec = ALGO_SCENARIOS[currentAlgo];
+        const values = (frame && frame.arr) || spec.arr;
+        const maxVal = Math.max(...values, 100);
+        const activeSet = new Set((frame && frame.active) || []);
+        const dimSet = new Set((frame && frame.dim) || []);
+        const foundSet = new Set((frame && frame.found) || []);
+
+        dsaBarsEl.innerHTML = values.map((v, i) => {
+            const cls = [
+                'dsa-bar-col',
+                activeSet.has(i) ? 'is-active' : '',
+                foundSet.has(i) ? 'is-found' : '',
+                dimSet.has(i) ? 'is-dim' : ''
+            ].filter(Boolean).join(' ');
+            const hPct = Math.max(16, Math.round((v / maxVal) * 100));
+            return `
+                <div class="${cls}">
+                    <div class="dsa-bar-rect" style="height: ${hPct}%"></div>
+                    <span class="dsa-bar-val">${v}</span>
+                </div>
+            `;
+        }).join('');
+    };
+
+    const stopAuto = () => {
+        if (autoTimer) {
+            clearInterval(autoTimer);
+            autoTimer = null;
+        }
+    };
+
+    const loadScenario = (name) => {
+        stopAuto();
+        currentAlgo = name;
+        stepIdx = -1;
+        const spec = ALGO_SCENARIOS[name];
+        if (dsaTimeEl) dsaTimeEl.textContent = spec.time;
+        if (dsaSpaceEl) dsaSpaceEl.textContent = spec.space;
+        if (dsaTargetEl) dsaTargetEl.textContent = spec.target;
+        dsaLogEl.innerHTML = 'Click <strong>Step</strong> or <strong>Auto-Run</strong> to trace pointer movement and invariants.';
+        renderBars(null);
+    };
+
+    const stepForward = () => {
+        const spec = ALGO_SCENARIOS[currentAlgo];
+        stepIdx = (stepIdx + 1) % spec.frames.length;
+        const frame = spec.frames[stepIdx];
+        renderBars(frame);
+        dsaLogEl.textContent = frame.log;
+    };
+
+    dsaAlgoBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            dsaAlgoBtns.forEach(b => b.classList.toggle('active', b === btn));
+            loadScenario(btn.dataset.algo);
+            playSound('click');
+        });
+    });
+
+    if (dsaStepBtn) dsaStepBtn.addEventListener('click', () => { stopAuto(); stepForward(); playSound('click'); });
+    if (dsaResetBtn) dsaResetBtn.addEventListener('click', () => { loadScenario(currentAlgo); playSound('click'); });
+    if (dsaRunBtn) dsaRunBtn.addEventListener('click', () => {
+        stopAuto();
+        stepIdx = -1;
+        stepForward();
+        autoTimer = setInterval(() => {
+            const spec = ALGO_SCENARIOS[currentAlgo];
+            if (stepIdx >= spec.frames.length - 1) {
+                stopAuto();
+                return;
+            }
+            stepForward();
+        }, 950);
+        playSound('click');
+    });
+
+    loadScenario('bsearch');
+}
+
+// Add spotlight tracking to new DSA and Case Study cards
+document.querySelectorAll('.dsa-card, .case-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    });
+});
+

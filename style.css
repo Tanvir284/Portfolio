@@ -4633,5 +4633,558 @@ html.preloader-skip #preloader {
     transform: translateY(-1px);
 }
 
+/* ==========================================================================
+   GOOGLE SWE / AI ARCHITECT SIGNALS
+   1. Interactive ML Benchmark & Ablation Suite (.ablation-suite)
+   2. Algorithmic Rigor & Live DSA Visualizer Sandbox (.dsa-bento)
+   3. Engineering Deep-Dives / Technical Case Studies (.case-grid)
+   4. System Architecture & Engineering Trade-offs in Modal (.modal-arch-box)
+   ========================================================================== */
+
+/* --- 1. Interactive ML Benchmark & Ablation Suite --- */
+.ablation-suite {
+    margin-top: 36px;
+    padding: 28px 30px;
+    border-radius: 24px;
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    background:
+        radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 55%),
+        linear-gradient(180deg, color-mix(in srgb, var(--text) 4%, var(--surface)), var(--surface));
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--text) 10%, transparent),
+        0 20px 48px -22px rgba(0, 0, 0, 0.65);
+}
+
+.ablation-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.ablation-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin: 4px 0 0;
+}
+
+.ablation-tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 65%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.ablation-tab {
+    border: none;
+    background: transparent;
+    color: var(--text-gray);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 7px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all var(--dur) var(--ease);
+}
+
+.ablation-tab:hover {
+    color: var(--text);
+}
+
+.ablation-tab.active {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--primary) 70%, transparent);
+}
+
+.ablation-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ablation-row {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.ablation-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+}
+
+.ablation-model {
+    font-weight: 600;
+    color: var(--text-gray);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ablation-row.is-winner .ablation-model {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.ablation-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 42%, transparent);
+    color: var(--primary);
+}
+
+.ablation-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+.ablation-row.is-winner .ablation-score {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.ablation-track {
+    width: 100%;
+    height: 9px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    overflow: hidden;
+}
+
+.ablation-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text-gray) 45%, transparent);
+    transition: width 0.55s var(--ease);
+}
+
+.ablation-row.is-winner .ablation-fill,
+.dsa-topic-item .ablation-fill {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.ablation-note {
+    margin-top: 22px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--primary) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-gray);
+}
+
+.ablation-note i {
+    color: var(--primary);
+    font-size: 1rem;
+    margin-top: 3px;
+}
+
+.ablation-note strong {
+    color: var(--text);
+}
+
+/* --- 2. Algorithmic Rigor & Live DSA Sandbox (.dsa-bento) --- */
+.dsa-bento {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 24px;
+    align-items: stretch;
+}
+
+@media (max-width: 980px) {
+    .dsa-bento {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dsa-card {
+    border-radius: 24px;
+    padding: 26px 28px;
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    background:
+        radial-gradient(460px circle at var(--mouse-x, 50%) var(--mouse-y, -200%), color-mix(in srgb, var(--primary) 12%, transparent), transparent 60%),
+        linear-gradient(180deg, color-mix(in srgb, var(--text) 4.5%, var(--surface)), var(--surface));
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--text) 10%, transparent),
+        0 20px 46px -22px rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.dsa-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.dsa-algo-tabs {
+    display: inline-flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.dsa-algo-btn {
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    color: var(--text-gray);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 5px 13px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all var(--dur) var(--ease);
+}
+
+.dsa-algo-btn.active,
+.dsa-algo-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}
+
+.dsa-complexity-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dsa-comp-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 4px 11px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    color: var(--text-gray);
+}
+
+.dsa-comp-pill strong {
+    color: var(--primary);
+}
+
+.dsa-bars {
+    height: 150px;
+    padding: 16px 14px 12px;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.dsa-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    gap: 6px;
+}
+
+.dsa-bar-rect {
+    width: 100%;
+    border-radius: 6px 6px 3px 3px;
+    background: color-mix(in srgb, var(--text) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+    transition: height 0.32s var(--ease), background 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.dsa-bar-col.is-active .dsa-bar-rect {
+    background: var(--primary);
+    border-color: var(--primary);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--primary) 55%, transparent);
+    transform: translateY(-2px);
+}
+
+.dsa-bar-col.is-found .dsa-bar-rect {
+    background: #34d399;
+    border-color: #34d399;
+    box-shadow: 0 0 20px rgba(52, 211, 153, 0.6);
+}
+
+.dsa-bar-col.is-dim .dsa-bar-rect {
+    opacity: 0.25;
+}
+
+.dsa-bar-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-gray);
+}
+
+.dsa-bar-col.is-active .dsa-bar-val,
+.dsa-bar-col.is-found .dsa-bar-val {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.dsa-log {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--text-gray);
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
+    min-height: 2.6em;
+    display: flex;
+    align-items: center;
+}
+
+.dsa-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: auto;
+}
+
+.dsa-stats-head h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 4px 0 6px;
+}
+
+.dsa-stats-head p {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    line-height: 1.55;
+}
+
+.dsa-topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.dsa-topic-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dsa-topic-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-gray);
+}
+
+.dsa-topic-meta strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text);
+}
+
+.dsa-badges-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.dsa-mini-stat {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.dsa-mini-stat strong {
+    color: var(--primary);
+}
+
+/* --- 3. Engineering Deep-Dives / Case Studies (.case-grid) --- */
+.case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 24px;
+}
+
+.case-card {
+    border-radius: 22px;
+    padding: 26px 26px 24px;
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    background:
+        radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, -200%), color-mix(in srgb, var(--primary) 14%, transparent), transparent 60%),
+        linear-gradient(180deg, color-mix(in srgb, var(--text) 5%, var(--surface)), var(--surface));
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--text) 10%, transparent),
+        0 18px 42px -22px rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.case-card:hover {
+    transform: translateY(-5px);
+    border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--text) 18%, transparent),
+        0 26px 54px -20px rgba(0, 0, 0, 0.8);
+}
+
+.case-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.case-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+}
+
+.case-impact {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, #34d399 14%, transparent);
+    border: 1px solid color-mix(in srgb, #34d399 42%, transparent);
+    color: #34d399;
+}
+
+.case-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.32;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+.case-summary {
+    font-size: 0.88rem;
+    color: var(--text-gray);
+    line-height: 1.62;
+}
+
+.case-arch-mini {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg) 65%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.67rem;
+    color: var(--text);
+    margin-top: 4px;
+}
+
+.case-arch-mini i {
+    color: var(--primary);
+    font-size: 0.6rem;
+}
+
+.case-cta {
+    margin-top: auto;
+    padding-top: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* --- 4. System Architecture & Engineering Trade-offs inside Project Modal --- */
+.modal-arch-box,
+.modal-tradeoff-box {
+    margin: 0 0 16px;
+    padding: 13px 15px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--text) 3.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.modal-sub-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--dc, var(--primary));
+    margin-bottom: 8px;
+}
+
+.modal-arch-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-arch-node {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 35%, transparent);
+    color: var(--text);
+}
+
+.modal-arch-arrow {
+    color: var(--dc, var(--primary));
+    font-size: 0.7rem;
+}
+
+.modal-tradeoff-text {
+    font-size: 0.86rem;
+    line-height: 1.58;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+
 
 
