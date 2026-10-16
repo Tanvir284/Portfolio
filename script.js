@@ -1004,6 +1004,33 @@ const PREVIEW_SVGS = {
     </svg>`
 };
 
+const PROJECT_IMAGES = {
+    'AtlasRec': 'assets/projects/atlasrec.webp',
+    'Scopewise': 'assets/projects/scopewise.webp',
+    'DSA House': 'assets/projects/dsa-house.webp',
+    'MangoCare AI': 'assets/projects/mangocare-ai.webp',
+    'Ecommerce Admin Dashboard': 'assets/projects/ecommerce-admin.webp',
+    'FinPilot BD': 'assets/projects/finpilot-bd.webp',
+    'Employee & Family Registry': 'assets/projects/employee-registry.webp',
+    'TaskFlow': 'assets/projects/taskflow.webp',
+    'Tender Scraper': 'assets/projects/tender-scraper.webp',
+    'Matrix Trade & Engineering': 'assets/projects/matrix-website.webp',
+    'Pneumonia Classification': 'assets/projects/pneumonia-classification.webp',
+    'Breast Lesion AI': 'assets/projects/breast-lesion-ai.webp',
+    'Chicken Disease Detection': 'assets/projects/chicken-disease.webp',
+    'Concrete Strength Prediction': 'assets/projects/concrete-strength.webp',
+    'Cirrhosis Survival Classification': 'assets/projects/cirrhosis-survival.webp',
+    'EduPredict ML': 'assets/projects/edupredict-ml.webp',
+    'Cardiovascular Risk Prediction': 'assets/projects/cardiovascular-risk.webp',
+    'Diabetes Prediction': 'assets/projects/diabetes-prediction.webp',
+    'E-Commerce Shop': 'assets/projects/ecommerce-shop.webp',
+    'Employee Management': 'assets/projects/employee-management.webp',
+    'MedRemind': 'assets/projects/medremind.webp',
+    'E-Commerce Mobile App': 'assets/projects/ecommerce-mobile.webp',
+    'The Aviator 3D': 'assets/projects/the-aviator-3d.webp',
+    'Hotel Management System': 'assets/projects/hotel-management.webp'
+};
+
 const DOMAIN_ICONS = {
     ai: 'fas fa-brain',
     web: 'fas fa-layer-group',
@@ -1015,6 +1042,8 @@ const DOMAIN_ICONS = {
 document.querySelectorAll('.project-card').forEach(card => {
     if (card.querySelector('.p-preview')) return;
     const domain = card.dataset.domain || 'ai';
+    const titleText = card.querySelector('.p-title')?.textContent?.trim() || '';
+    const imgSrc = PROJECT_IMAGES[titleText];
     const hasLive = Boolean(card.querySelector('.p-link-live'));
     const firstMetricVal = card.querySelector('.p-metrics .m-val')?.textContent?.trim();
     const firstMetricKey = card.querySelector('.p-metrics .m-key')?.textContent?.trim();
@@ -1028,6 +1057,9 @@ document.querySelectorAll('.project-card').forEach(card => {
     const badgeText = hasLive ? 'LIVE DEPLOYMENT' : firstTag.toUpperCase();
     const iconCls = DOMAIN_ICONS[domain] || 'fas fa-cube';
     const svgArt = PREVIEW_SVGS[domain] || PREVIEW_SVGS.ai;
+    const artMarkup = imgSrc
+        ? `<img class="p-preview-img" src="${imgSrc}" alt="${titleText}" loading="lazy" decoding="async">`
+        : svgArt;
 
     const preview = document.createElement('div');
     preview.className = 'p-preview';
@@ -1037,7 +1069,7 @@ document.querySelectorAll('.project-card').forEach(card => {
             <div class="p-preview-dots"><span></span><span></span><span></span></div>
             <span class="p-preview-badge ${hasLive ? 'is-live' : ''}">${badgeText}</span>
         </div>
-        <div class="p-preview-art" style="color: var(--dc, var(--primary))">${svgArt}</div>
+        <div class="p-preview-art ${imgSrc ? 'has-photo' : ''}" style="color: var(--dc, var(--primary))">${artMarkup}</div>
         <div class="p-preview-center">
             <div class="p-preview-orb"><i class="${iconCls}"></i></div>
             <span class="p-preview-metric">${metricLabel}</span>
@@ -2080,9 +2112,11 @@ if (modalOverlay && projectCards.length > 0) {
         if (modalContent) modalContent.setAttribute('style', dcStyle);
 
         if (mVisual) {
-            const imgEl = card.querySelector('.glitch-wrap img');
+            const imgEl = card.querySelector('.p-preview-img, .glitch-wrap img');
             if (imgEl) {
                 mVisual.style.backgroundImage = `url('${imgEl.src}')`;
+                mVisual.style.backgroundSize = 'cover';
+                mVisual.style.backgroundPosition = 'center';
                 mVisual.innerHTML = '';
             } else {
                 mVisual.style.backgroundImage = '';

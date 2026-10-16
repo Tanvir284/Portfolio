@@ -4340,11 +4340,11 @@ html.preloader-skip #preloader {
 /* --- 5. Graphical Preview Window Inside Every Project Card (.p-preview) --- */
 .p-preview {
     position: relative;
-    height: 152px;
-    margin: -6px -6px 10px -6px;
+    height: 178px;
+    margin: -6px -6px 12px -6px;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
     background:
         radial-gradient(circle at 82% 22%, color-mix(in srgb, var(--dc, var(--primary)) 28%, transparent), transparent 58%),
         radial-gradient(circle at 18% 85%, color-mix(in srgb, var(--secondary) 16%, transparent), transparent 55%),
@@ -4352,7 +4352,7 @@ html.preloader-skip #preloader {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 12px 14px;
+    padding: 11px 13px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
@@ -4361,7 +4361,7 @@ html.preloader-skip #preloader {
         radial-gradient(circle at 82% 22%, color-mix(in srgb, var(--dc, var(--primary)) 18%, transparent), transparent 58%),
         radial-gradient(circle at 18% 85%, color-mix(in srgb, var(--secondary) 12%, transparent), transparent 55%),
         linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
-    border-color: rgba(15, 23, 42, 0.08);
+    border-color: rgba(15, 23, 42, 0.1);
 }
 
 .p-preview-top {
@@ -4375,6 +4375,10 @@ html.preloader-skip #preloader {
     display: inline-flex;
     gap: 5px;
     align-items: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(9, 10, 15, 0.55);
+    backdrop-filter: blur(6px);
 }
 
 .p-preview-dots span {
@@ -4384,20 +4388,20 @@ html.preloader-skip #preloader {
     background: color-mix(in srgb, var(--text) 20%, transparent);
 }
 
-.p-preview-dots span:nth-child(1) { background: rgba(255, 95, 86, 0.65); }
-.p-preview-dots span:nth-child(2) { background: rgba(255, 189, 46, 0.65); }
-.p-preview-dots span:nth-child(3) { background: rgba(39, 201, 63, 0.65); }
+.p-preview-dots span:nth-child(1) { background: rgba(255, 95, 86, 0.85); }
+.p-preview-dots span:nth-child(2) { background: rgba(255, 189, 46, 0.85); }
+.p-preview-dots span:nth-child(3) { background: rgba(39, 201, 63, 0.85); }
 
 .p-preview-badge {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.64rem;
+    font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     padding: 3px 9px;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--bg) 60%, transparent);
-    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 38%, transparent);
-    color: var(--dc, var(--primary));
+    background: rgba(9, 10, 15, 0.72);
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 45%, rgba(255, 255, 255, 0.18));
+    color: #f8fafc;
     backdrop-filter: blur(8px);
     display: inline-flex;
     align-items: center;
@@ -4423,6 +4427,33 @@ html.preloader-skip #preloader {
     z-index: 1;
 }
 
+.p-preview-art.has-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(9, 10, 15, 0.38) 0%,
+        rgba(9, 10, 15, 0.04) 38%,
+        rgba(9, 10, 15, 0.08) 65%,
+        rgba(9, 10, 15, 0.62) 100%
+    );
+    pointer-events: none;
+}
+
+.p-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.55s var(--ease), filter 0.45s var(--ease);
+}
+
+.project-card:hover .p-preview-img {
+    transform: scale(1.06);
+}
+
 .p-preview-svg {
     width: 100%;
     height: 100%;
@@ -4441,35 +4472,35 @@ html.preloader-skip #preloader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
     margin-top: auto;
 }
 
 .p-preview-orb {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background: color-mix(in srgb, var(--bg) 68%, transparent);
-    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 45%, transparent);
-    backdrop-filter: blur(12px);
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: rgba(9, 10, 15, 0.72);
+    border: 1px solid color-mix(in srgb, var(--dc, var(--primary)) 50%, rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(10px);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
+    font-size: 0.98rem;
     color: var(--dc, var(--primary));
-    box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.6);
 }
 
 .p-preview-metric {
     font-family: 'Outfit', sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--bg) 72%, transparent);
-    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
-    color: var(--text);
-    backdrop-filter: blur(12px);
+    padding: 4px 10px;
+    border-radius: 9px;
+    background: rgba(9, 10, 15, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f8fafc;
+    backdrop-filter: blur(10px);
 }
 
 .project-card .p-title {
