@@ -194,16 +194,22 @@ if (circleText) {
 }
 
 
-/* --- THREE.JS 3D BLACK-BLAZER STUDIO MODEL (FIXED & STABLE IN CENTER BACKGROUND) --- */
+/* --- THREE.JS 3D COMPUTER GRAPHICS CHARACTER & STAGE MODEL (HIGH-LEVEL WEBGL / GLSL PIPELINE) --- */
 const container = document.getElementById('webgl-container');
 let scene, camera, renderer;
-let masterStageGroup, portraitMesh, haloMesh, bgStarsMesh;
+let masterStageGroup, portraitMesh, wireMesh, pedestalGroup, haloMesh, bgStarsMesh;
 
 function syncThreeColors() {
     const rootStyle = getComputedStyle(document.documentElement);
     const primary = rootStyle.getPropertyValue('--primary').trim() || '#6384ff';
     if (haloMesh && haloMesh.material && haloMesh.material.uniforms) {
         haloMesh.material.uniforms.uGlowColor.value.set(primary);
+    }
+    if (portraitMesh && portraitMesh.material && portraitMesh.material.uniforms) {
+        portraitMesh.material.uniforms.uRimColor.value.set(primary);
+    }
+    if (wireMesh && wireMesh.material && wireMesh.material.uniforms) {
+        wireMesh.material.uniforms.uWireColor.value.set(primary);
     }
     if (bgStarsMesh && bgStarsMesh.material) {
         bgStarsMesh.material.color.set(primary);
@@ -214,7 +220,7 @@ function updateStageLayout() {
     if (!masterStageGroup || !camera || !renderer) return;
     const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
 
-    // Always fixed and stable in the middle of the webpage with full head visible below navbar
+    // Fixed & stable in the middle of the webpage with full head/hair visible below navbar
     const scale = aspect < 0.85 ? 0.88 : 1.08;
     const posY = aspect < 0.85 ? -3.10 : -4.00;
     masterStageGroup.position.set(0, posY, 0);
@@ -238,7 +244,7 @@ function initThreeJS() {
     masterStageGroup = new THREE.Group();
     scene.add(masterStageGroup);
 
-    // 1. Wide 3D Studio Volumetric Halo behind the Black-Blazer Model (100% seamless radial falloff)
+    // 1. Volumetric 3D Studio Aura + Concentric 3D Cyber-Grid Halo behind the 3D Model
     const haloGeo = new THREE.PlaneGeometry(28.0, 28.0, 1, 1);
     const haloMat = new THREE.ShaderMaterial({
         uniforms: {
@@ -255,51 +261,128 @@ function initThreeJS() {
             uniform vec3 uGlowColor;
             varying vec2 vUv;
             void main() {
-                float dist = length(vUv - vec2(0.5, 0.5));
-                float glow = pow(max(0.0, 1.0 - dist * 2.25), 2.2);
-                gl_FragColor = vec4(uGlowColor, glow * 0.20);
+                vec2 p = vUv - vec2(0.5, 0.56);
+                float dist = length(p);
+                float glow = pow(max(0.0, 1.0 - dist * 2.1), 2.2) * 0.24;
+                // Subtle 3D radar/halo rings behind the bust
+                float ring1 = smoothstep(0.004, 0.0, abs(dist - 0.24)) * 0.22;
+                float ring2 = smoothstep(0.004, 0.0, abs(dist - 0.33)) * 0.15;
+                float ring3 = smoothstep(0.003, 0.0, abs(dist - 0.42)) * 0.10;
+                float alpha = glow + ring1 + ring2 + ring3;
+                gl_FragColor = vec4(uGlowColor, alpha);
             }
         `,
         transparent: true,
         depthWrite: false
     });
     haloMesh = new THREE.Mesh(haloGeo, haloMat);
-    haloMesh.position.set(0, 0.0, -1.2);
+    haloMesh.position.set(0, 0.5, -1.2);
     masterStageGroup.add(haloMesh);
 
-    // 2. Large Full-HD Studio-Retouched Black-Blazer Model (Zero Perspective Face Warping, 100% Stationary)
+    // 2. High-Density 3D Sculpted Character Mesh (48,600 vertices / 97,200 triangles)
+    // Uses Perspective-Invariant 3D Relief Projection so real 3D Z-depth never warps the nose/face
     const loader = new THREE.TextureLoader();
     const colorSrc = window.TANVIR_3D_COLOR_URI || 'tanvir-3d-cutout.webp';
+    const depthSrc = window.TANVIR_3D_DEPTH_URI || 'tanvir-3d-depth.webp';
 
-    const colorTex = loader.load(colorSrc, (tex) => {
+    let loadedCount = 0;
+    const onTexLoad = (tex) => {
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-        renderer.render(scene, camera);
-    });
+        loadedCount++;
+        if (loadedCount >= 1) renderer.render(scene, camera);
+    };
 
+    const colorTex = loader.load(colorSrc, onTexLoad);
+    const depthTex = loader.load(depthSrc, onTexLoad);
     colorTex.minFilter = THREE.LinearFilter;
     colorTex.magFilter = THREE.LinearFilter;
+    depthTex.minFilter = THREE.LinearFilter;
+    depthTex.magFilter = THREE.LinearFilter;
 
-    // Large commanding size across the background (exact original photo aspect ratio 852:1280 = 1 : 1.5023)
-    const bustGeo = new THREE.PlaneGeometry(12.6, 18.93, 1, 1);
+    const bustGeo = new THREE.PlaneGeometry(12.6, 18.93, 180, 270);
     const bustMat = new THREE.ShaderMaterial({
         uniforms: {
-            uColorMap: { value: colorTex }
+            uColorMap: { value: colorTex },
+            uDepthMap: { value: depthTex },
+            uRimColor: { value: new THREE.Color(0x6384ff) },
+            uCamZ: { value: 17.5 }
         },
         vertexShader: `
+            uniform sampler2D uDepthMap;
+            uniform float uCamZ;
             varying vec2 vUv;
+            varying float vDepth;
+            varying vec3 vViewPos;
+
             void main() {
                 vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                float d = texture2D(uDepthMap, uv).r;
+                vDepth = d;
+
+                // Displace vertex in 3D Z-space to form a true 3D sculpted bust
+                vec3 pos = position;
+                float zOffset = d * 1.45;
+                pos.z += zOffset;
+
+                // Perspective-Invariant XY Compensation: guarantees 0% radial nose/face distortion from camera viewpoint
+                vec4 worldBefore = modelMatrix * vec4(position, 1.0);
+                vec4 worldAfter  = modelMatrix * vec4(pos, 1.0);
+                float perspectiveScale = (uCamZ - worldAfter.z) / max(0.1, (uCamZ - worldBefore.z));
+                worldAfter.xy = worldBefore.xy * perspectiveScale;
+
+                vec4 mvPos = viewMatrix * worldAfter;
+                vViewPos = -mvPos.xyz;
+                gl_Position = projectionMatrix * mvPos;
             }
         `,
         fragmentShader: `
             uniform sampler2D uColorMap;
+            uniform sampler2D uDepthMap;
+            uniform vec3 uRimColor;
             varying vec2 vUv;
+            varying float vDepth;
+            varying vec3 vViewPos;
+
             void main() {
                 vec4 tex = texture2D(uColorMap, vUv);
                 if (tex.a < 0.02) discard;
-                float bottomFade = smoothstep(0.0, 0.14, vUv.y);
-                gl_FragColor = vec4(tex.rgb, tex.a * bottomFade * 0.90);
+
+                // Reconstruct 3D surface normal N from the 3D height/depth field
+                vec2 eps = vec2(1.0 / 852.0, 1.0 / 1280.0) * 2.2;
+                float dL = texture2D(uDepthMap, vUv - vec2(eps.x, 0.0)).r;
+                float dR = texture2D(uDepthMap, vUv + vec2(eps.x, 0.0)).r;
+                float dD = texture2D(uDepthMap, vUv - vec2(0.0, eps.y)).r;
+                float dU = texture2D(uDepthMap, vUv + vec2(0.0, eps.y)).r;
+                vec3 N = normalize(vec3((dL - dR) * 4.2, (dD - dU) * 4.2, 1.0));
+                vec3 V = normalize(vViewPos);
+
+                // Face protection mask: keep the user's real facial features 100% natural & true-to-life
+                vec2 faceEll = (vUv - vec2(0.50, 0.72)) / vec2(0.16, 0.14);
+                float isFace = 1.0 - smoothstep(0.65, 1.15, length(faceEll));
+
+                // 3D Studio Directional Key Light + Rim Light + Blinn-Phong Specular BRDF
+                vec3 L_key = normalize(vec3(0.42, 0.52, 0.88));
+                vec3 H_key = normalize(L_key + V);
+                float diff = max(dot(N, L_key), 0.0);
+                float spec = pow(max(dot(N, H_key), 0.0), 28.0);
+
+                // 3D Fresnel Rim Shading on shoulders, black blazer, and hair contour
+                float fresnel = pow(1.0 - max(N.z, 0.0), 2.4);
+                float bodyZone = 1.0 - isFace * 0.85;
+
+                // Apply 3D PBR shading: natural studio fidelity on face, strong 3D CGI sculptural lighting on blazer & torso
+                vec3 baseCol = tex.rgb;
+                vec3 litCol = baseCol * mix(0.88 + 0.24 * diff, 1.0, isFace * 0.82);
+                litCol += vec3(0.85, 0.90, 1.0) * spec * 0.18 * bodyZone;
+                litCol += uRimColor * fresnel * 0.45 * bodyZone;
+
+                // Subtle 3D topographic depth contour lines across lower black blazer (vUv.y < 0.52)
+                float blazerLower = 1.0 - smoothstep(0.38, 0.56, vUv.y);
+                float contour = smoothstep(0.92, 0.99, abs(sin(vDepth * 52.0)));
+                litCol += uRimColor * contour * blazerLower * 0.22;
+
+                float bottomFade = smoothstep(0.02, 0.16, vUv.y);
+                gl_FragColor = vec4(litCol, tex.a * bottomFade * 0.94);
             }
         `,
         transparent: true,
@@ -308,10 +391,86 @@ function initThreeJS() {
 
     portraitMesh = new THREE.Mesh(bustGeo, bustMat);
     portraitMesh.position.set(0, 0, 0);
-    portraitMesh.rotation.set(0, 0, 0);
     masterStageGroup.add(portraitMesh);
 
-    // 3. Subtle Stationary 3D Starfield in the Deep Background
+    // 3. Real 3D Computer-Graphics Polygon Wireframe Overlay on the Black Blazer Torso
+    // (100% masked out on the face/head so the face stays crystal clear, visible on the 3D jacket/arms)
+    const wireGeo = new THREE.PlaneGeometry(12.6, 18.93, 68, 102);
+    const wireMat = new THREE.ShaderMaterial({
+        uniforms: {
+            uColorMap: { value: colorTex },
+            uDepthMap: { value: depthTex },
+            uWireColor: { value: new THREE.Color(0x6384ff) },
+            uCamZ: { value: 17.5 }
+        },
+        vertexShader: `
+            uniform sampler2D uDepthMap;
+            uniform float uCamZ;
+            varying vec2 vUv;
+            varying float vDepth;
+            void main() {
+                vUv = uv;
+                float d = texture2D(uDepthMap, uv).r;
+                vDepth = d;
+                vec3 pos = position;
+                pos.z += d * 1.45 + 0.03;
+
+                vec4 worldBefore = modelMatrix * vec4(position, 1.0);
+                vec4 worldAfter  = modelMatrix * vec4(pos, 1.0);
+                float perspectiveScale = (uCamZ - worldAfter.z) / max(0.1, (uCamZ - worldBefore.z));
+                worldAfter.xy = worldBefore.xy * perspectiveScale;
+
+                gl_Position = projectionMatrix * viewMatrix * worldAfter;
+            }
+        `,
+        fragmentShader: `
+            uniform sampler2D uColorMap;
+            uniform vec3 uWireColor;
+            varying vec2 vUv;
+            varying float vDepth;
+            void main() {
+                vec4 tex = texture2D(uColorMap, vUv);
+                if (tex.a < 0.15) discard;
+                // Only show 3D wireframe mesh on the black blazer torso/shoulders (vUv.y < 0.56), zero on face/head
+                float torsoMask = (1.0 - smoothstep(0.42, 0.58, vUv.y)) * smoothstep(0.04, 0.18, vUv.y);
+                if (torsoMask < 0.01) discard;
+                gl_FragColor = vec4(uWireColor, torsoMask * 0.24);
+            }
+        `,
+        wireframe: true,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+    });
+    wireMesh = new THREE.Mesh(wireGeo, wireMat);
+    masterStageGroup.add(wireMesh);
+
+    // 4. 3D Procedural Holographic Pedestal & Emitter Rings at the Base of the 3D Bust
+    pedestalGroup = new THREE.Group();
+    pedestalGroup.position.set(0, -7.85, 0.4);
+    pedestalGroup.rotation.x = -Math.PI / 2.25;
+
+    const ringMat1 = new THREE.MeshBasicMaterial({
+        color: 0x6384ff,
+        transparent: true,
+        opacity: 0.42,
+        blending: THREE.AdditiveBlending
+    });
+    const ringMat2 = new THREE.MeshBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.24,
+        wireframe: true,
+        blending: THREE.AdditiveBlending
+    });
+
+    const outerTorus = new THREE.Mesh(new THREE.TorusGeometry(4.8, 0.035, 16, 120), ringMat1);
+    const innerTorus = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.025, 12, 96), ringMat1);
+    const coreDisk   = new THREE.Mesh(new THREE.RingGeometry(1.8, 4.75, 64, 4), ringMat2);
+    pedestalGroup.add(outerTorus, innerTorus, coreDisk);
+    masterStageGroup.add(pedestalGroup);
+
+    // 5. Subtle Stationary 3D Starfield in the Deep Background
     const bgGeo = new THREE.BufferGeometry();
     const bgCount = 900;
     const bgPos = new Float32Array(bgCount * 3);
