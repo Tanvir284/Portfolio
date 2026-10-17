@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI &amp; ML Projects | Md Tanvir Islam &mdash; Forward Deployed Engineer &amp; AI Engineer</title>
-    <meta name="description" content="Ten machine learning and deep learning systems by Md Tanvir Islam (Forward Deployed Engineer &amp; AI Engineer), across explainable recommendation engines, medical imaging, agriculture, and production ML.">
+    <title>Projects | Md Tanvir Islam &mdash; Forward Deployed Engineer &amp; AI Engineer</title>
+    <meta name="description" content="All 24 shipped engineering projects by Md Tanvir Islam (Forward Deployed Engineer &amp; AI Engineer) — explainable AI, deep learning, medical imaging, full-stack production software, mobile apps, and automation.">
     <meta name="theme-color" content="#050505">
     <link rel="canonical" href="https://tanvir284.github.io/Portfolio/ai-projects.html">
 
-    <meta property="og:title" content="AI &amp; ML Projects | Md Tanvir Islam &mdash; Forward Deployed Engineer &amp; AI Engineer">
-    <meta property="og:description" content="Ten machine learning and deep learning systems by Md Tanvir Islam (Forward Deployed Engineer &amp; AI Engineer), across explainable recommendation engines, medical imaging, agriculture, and production ML.">
+    <meta property="og:title" content="Projects | Md Tanvir Islam &mdash; Forward Deployed Engineer &amp; AI Engineer">
+    <meta property="og:description" content="All 24 shipped engineering projects by Md Tanvir Islam (Forward Deployed Engineer &amp; AI Engineer) — explainable AI, deep learning, medical imaging, full-stack production software, mobile apps, and automation.">
     <meta property="og:type" content="profile">
     <meta property="og:url" content="https://tanvir284.github.io/Portfolio/ai-projects.html">
     <meta property="og:image" content="https://tanvir284.github.io/Portfolio/og-image.png">
@@ -61,181 +61,454 @@
         <div class="nav-items" id="nav-items">
             <a href="index.html">HOME</a>
             <a href="index.html#work">WORK</a>
-            <a href="ai-projects.html" class="is-current" aria-current="page">AI PROJECTS</a>
+            <a href="ai-projects.html" class="is-current" aria-current="page">PROJECTS</a>
             <a href="index.html#skills">SKILLS</a>
             <a href="about.html">ABOUT</a>
             <a href="index.html#github">GITHUB</a>
             <a href="resume.html">RESUME</a>
             <a href="hire.html" class="nav-cta">HIRE ME</a>
+            <button type="button" id="cmdk-trigger" class="cmdk-nav-btn" aria-label="Open Command Palette (Ctrl+K)" title="Quick Command Palette (Ctrl+K)">
+                <i class="fas fa-terminal" aria-hidden="true"></i> <span>⌘K</span>
+            </button>
             <button id="mode-toggle" class="mode-toggle" aria-label="Toggle Light/Dark Mode">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
     </nav>
 
-    <section class="section-container">
+    <section id="work" class="section-container">
         <div class="section-header">
-            <p class="eyebrow">AI &amp; MACHINE LEARNING</p>
-            <h1>NEURAL <span style="color:var(--primary)">WORK</span></h1>
-            <p>// 10 models and pipelines &mdash; explainable recommendation systems, medical imaging, agriculture and applied ML.</p>
+            <p class="eyebrow">FORWARD DEPLOYED &amp; AI ENGINEERING PORTFOLIO</p>
+            <h1>ALL <span style="color:var(--primary)">PROJECTS</span></h1>
+            <p>// 24 shipped projects &mdash; explainable AI, deep learning, full-stack systems and automation.</p>
         </div>
 
         <div class="stat-row">
-            <div class="stat-cell"><span class="stat-num" data-count="10">0</span><span class="stat-label">AI / ML projects</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="24">0</span><span class="stat-label">Shipped projects</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="10">0</span><span class="stat-label">AI &amp; ML pipelines</span></div>
             <div class="stat-cell"><span class="stat-num" data-count="91" data-suffix="%">0</span><span class="stat-label">Best Dice score</span></div>
-            <div class="stat-cell"><span class="stat-num" data-count="6">0</span><span class="stat-label">Medical &amp; agri models</span></div>
-            <div class="stat-cell"><span class="stat-num" data-count="2">0</span><span class="stat-label">Deployed to production</span></div>
+            <div class="stat-cell"><span class="stat-num" data-count="6">0</span><span class="stat-label">Live deployments</span></div>
         </div>
 
-        <div class="ai-index">
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">01</div>
-                <div class="ai-body">
-                    <p class="p-cat">EXPLAINABLE AI &amp; RECSYS &bull; DEPLOYED</p>
-                    <h3 class="p-title">AtlasRec &mdash; Explainable &amp; Counterfactual Recommendation Engine</h3>
-                    <p class="p-desc">Next-generation explainable AI recommendation platform &amp; e-commerce store serving 20,500+ real Amazon products across 250 departments. Features a counterfactual Taste Studio (&ldquo;What-If&rdquo; sandbox), 4-pillar Match DNA X-Ray explainability, 6 ML recommendation algorithms + FAISS vector search, Argon2id + CSRF + RBAC security, and an MLOps workbench.</p>
-                <ul class="p-metrics"><li><span class="m-val">20.5K+</span><span class="m-key">products</span></li><li><span class="m-val">6</span><span class="m-key">ML models + FAISS</span></li></ul>
-                    <div class="p-tags"><span>Next.js 15</span><span>FastAPI</span><span>PyTorch</span><span>FAISS</span><span>Docker</span></div>
-                    <div class="p-actions">
-                        <a href="https://ruhittanvir14-atlasrec.hf.space" target="_blank" rel="noopener noreferrer"
-                            class="p-link p-link-live"><span class="live-dot" aria-hidden="true"></span>LIVE</a>
-                        <a href="https://github.com/Tanvir284/atlasrec-personalized-recommendation-engine" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+        <div class="project-search-wrap">
+            <label for="project-search" class="sr-only">Search projects by meaning</label>
+            <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
+            <input type="search" id="project-search" autocomplete="off"
+                placeholder="Describe what you're looking for &mdash; e.g. &ldquo;computer vision models that got deployed&rdquo;">
+        </div>
+        <p id="project-search-status" class="search-status" role="status" aria-live="polite"></p>
+
+        <div class="project-filters" role="group" aria-label="Filter projects by domain">
+            <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">ALL</button>
+            <button type="button" class="filter-btn" data-filter="ai" aria-pressed="false">AI &amp; DEEP LEARNING</button>
+            <button type="button" class="filter-btn" data-filter="ml" aria-pressed="false">MACHINE LEARNING</button>
+            <button type="button" class="filter-btn" data-filter="web" aria-pressed="false">FULL-STACK</button>
+            <button type="button" class="filter-btn" data-filter="mobile" aria-pressed="false">MOBILE</button>
+            <button type="button" class="filter-btn" data-filter="systems" aria-pressed="false">SYSTEMS</button>
+        </div>
+        <p class="filter-count" role="status" aria-live="polite"></p>
+
+        <div class="project-grid">
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
+                <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">EXPLAINABLE AI &bull; RECSYS &amp; MLOPS &bull; DEPLOYED</p>
+                <h3 class="p-title">AtlasRec</h3>
+                <p class="p-desc">A full-stack AI e-commerce &amp; personalized recommendation platform serving 20,500+ Amazon products across 250 departments, featuring counterfactual Taste Studio ("What-If" sandbox), 4-pillar Match DNA X-Ray explainability, 6 ML algorithms + FAISS vector search, and an MLOps workbench.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">20.5K+</span><span class="m-key">products</span></li>
+                    <li><span class="m-val">6 + FAISS</span><span class="m-key">ML models</span></li>
+                    <li><span class="m-val">250</span><span class="m-key">departments</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>Next.js 15</span>
+                    <span>FastAPI</span>
+                    <span>PyTorch</span>
+                    <span>FAISS</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/atlasrec-personalized-recommendation-engine" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="https://ruhittanvir14-atlasrec.hf.space" target="_blank" rel="noopener noreferrer" class="p-link p-link-live">LIVE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">02</div>
-                <div class="ai-body">
-                    <p class="p-cat">COMPUTER VISION &bull; DEPLOYED</p>
-                    <h3 class="p-title">MangoCare AI</h3>
-                    <p class="p-desc">A full-stack diagnostic app classifying 8 mango leaf disease categories from a fine-tuned DenseNet-121. Secure authentication, a dashboard showing confidence scores and treatment recommendations, and a REST API. Containerised with Docker and deployed to Hugging Face Spaces.</p>
-                <ul class="p-metrics"><li><span class="m-val">8</span><span class="m-key">classes</span></li></ul>
-                    <div class="p-tags"><span>PyTorch</span><span>DenseNet-121</span><span>Flask</span><span>Docker</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/MangoCare-AI" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">FULL-STACK &bull; AGENCY WORKSPACE &bull; DEPLOYED</p>
+                <h3 class="p-title">Scopewise</h3>
+                <p class="p-desc">A rule-based workspace for software agencies to manage projects, client scope-change reviews, linked backlog tasks, acceptance criteria, approvals, time tracking, and real-time project costing with Neon PostgreSQL.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">Rule-Based</span><span class="m-key">scope engine</span></li>
+                    <li><span class="m-val">Neon DB</span><span class="m-key">PostgreSQL</span></li>
+                    <li><span class="m-val">Playwright</span><span class="m-key">QA verified</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>Node.js 24</span>
+                    <span>PostgreSQL</span>
+                    <span>JavaScript</span>
+                    <span>Playwright</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/scopewise" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="https://scopewise-tanvir284.netlify.app" target="_blank" rel="noopener noreferrer" class="p-link p-link-live">LIVE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">03</div>
-                <div class="ai-body">
-                    <p class="p-cat">MEDICAL IMAGING &bull; RESEARCH</p>
-                    <h3 class="p-title">Breast Lesion Segmentation</h3>
-                    <p class="p-desc">An encoder-decoder pipeline segmenting and classifying breast lesions in ultrasound images, using U-Net with a ResNet-50 backbone and transfer learning. My strongest research result to date.</p>
-                <ul class="p-metrics"><li><span class="m-val">91%</span><span class="m-key">Dice</span></li><li><span class="m-val">+7pp</span><span class="m-key">vs baseline</span></li></ul>
-                    <div class="p-tags"><span>TensorFlow</span><span>U-Net</span><span>ResNet-50</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">FULL-STACK &bull; LEARNING PLATFORM</p>
+                <h3 class="p-title">DSA House</h3>
+                <p class="p-desc">An interactive platform for learning data structures and algorithms: a 150-topic curriculum, 16 step-through visualisers, 600 problems and timed mock interviews.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">150</span><span class="m-key">topics</span></li>
+                    <li><span class="m-val">16</span><span class="m-key">visualisers</span></li>
+                    <li><span class="m-val">600</span><span class="m-key">problems</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>Next.js 16</span>
+                    <span>React 19</span>
+                    <span>TypeScript</span>
+                    <span>Tailwind v4</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Dsa-house" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="https://dsa-house.vercel.app" target="_blank" rel="noopener noreferrer" class="p-link p-link-live">LIVE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">04</div>
-                <div class="ai-body">
-                    <p class="p-cat">MEDICAL IMAGING &bull; DETECTION</p>
-                    <h3 class="p-title">Pneumonia Classification</h3>
-                    <p class="p-desc">Chest X-ray classification separating normal from pneumonia-affected scans with YOLOv8, tracked on precision, recall, F1 and mAP across a 70/15/15 split with augmentation.</p>
-                <ul class="p-metrics"><li><span class="m-val">95%+</span><span class="m-key">accuracy</span></li></ul>
-                    <div class="p-tags"><span>YOLOv8</span><span>PyTorch</span><span>Ultralytics</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/Pneumonia-Classification-with-YOLOv8" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
+                <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">DEEP LEARNING &bull; DEPLOYED</p>
+                <h3 class="p-title">MangoCare AI</h3>
+                <p class="p-desc">A full-stack AI web app classifying 8 mango leaf disease categories in real time with a fine-tuned DenseNet-121, served through a REST API and containerised with Docker.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">8</span><span class="m-key">disease classes</span></li>
+                    <li><span class="m-val">DenseNet-121</span><span class="m-key">fine-tuned</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>PyTorch</span>
+                    <span>Flask</span>
+                    <span>Docker</span>
+                    <span>REST API</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/MangoCare-AI" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">05</div>
-                <div class="ai-body">
-                    <p class="p-cat">TRANSFER LEARNING &bull; AGRICULTURE</p>
-                    <h3 class="p-title">Chicken Disease Detection</h3>
-                    <p class="p-desc">Poultry disease detection from images using transfer learning on a pre-trained convolutional backbone, developed and published as a public Kaggle notebook.</p>
-                    <div class="p-tags"><span>TensorFlow</span><span>Transfer Learning</span><span>Kaggle</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/Chicken-Disease-Detection-with-Transfer-Learning-" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">BACKEND &bull; RBAC &bull; REST API</p>
+                <h3 class="p-title">Ecommerce Admin Dashboard</h3>
+                <p class="p-desc">An enterprise admin system built end-to-end across 9 modules, with a global JWT guard, per-route permission checks and a Swagger-documented API.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">9</span><span class="m-key">modules</span></li>
+                    <li><span class="m-val">JWT + RBAC</span><span class="m-key">access control</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>NestJS 10</span>
+                    <span>TypeScript</span>
+                    <span>React</span>
+                    <span>PostgreSQL</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/ecommerce-admin-dashboard" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="https://ecommerce-admin-dashboard-seven.vercel.app" target="_blank" rel="noopener noreferrer" class="p-link p-link-live">LIVE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">06</div>
-                <div class="ai-body">
-                    <p class="p-cat">ENSEMBLES &bull; CALIBRATION</p>
-                    <h3 class="p-title">Cirrhosis Survival Classification</h3>
-                    <p class="p-desc">Multiclass prediction of patient survival status, combining stacking with weighted blending and applying temperature scaling so the predicted probabilities mean what they claim. Trained on a synthetic dataset.</p>
-                    <div class="p-tags"><span>XGBoost</span><span>LightGBM</span><span>CatBoost</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/Cirrhosis_Multiclass_classification_with_ML" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">FULL-STACK &bull; FINTECH</p>
+                <h3 class="p-title">FinPilot BD</h3>
+                <p class="p-desc">A personal-finance app built for Bangladesh: taka-native formatting, mobile wallets alongside bank accounts, and decimal arithmetic end to end.</p>
+                <div class="p-tags">
+                    <span>Next.js 15</span>
+                    <span>PostgreSQL</span>
+                    <span>Tailwind</span>
+                    <span>Server Actions</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/finpilot-bd" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">07</div>
-                <div class="ai-body">
-                    <p class="p-cat">END-TO-END ML PIPELINE &bull; AWS</p>
-                    <h3 class="p-title">EduPredict ML &mdash; Student Performance Pipeline</h3>
-                    <p class="p-desc">Modular machine learning pipeline predicting student math scores from demographic and exam telemetry with automated data ingestion, ColumnTransformer preprocessing, multi-model GridSearchCV (CatBoost, XGBoost, Scikit-learn), Flask + SQLAlchemy auth, and AWS Elastic Beanstalk deployment config.</p>
-                <ul class="p-metrics"><li><span class="m-val">0.88+</span><span class="m-key">R&sup2; score</span></li><li><span class="m-val">7+</span><span class="m-key">models</span></li></ul>
-                    <div class="p-tags"><span>CatBoost</span><span>Scikit-learn</span><span>Flask</span><span>AWS Beanstalk</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/machine-Learning-project-" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">FULL-STACK &bull; .NET + REACT</p>
+                <h3 class="p-title">Employee &amp; Family Registry</h3>
+                <p class="p-desc">A registry for employee profiles and family relationships, with role-based JWT auth, validated NID and phone fields, and PDF export of profiles.</p>
+                <div class="p-tags">
+                    <span>ASP.NET Core 6</span>
+                    <span>EF Core</span>
+                    <span>React</span>
+                    <span>QuestPDF</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Employee-Family-Registry-System" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="https://employee-family-registry-system-rho.vercel.app" target="_blank" rel="noopener noreferrer" class="p-link p-link-live">LIVE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">08</div>
-                <div class="ai-body">
-                    <p class="p-cat">REGRESSION &bull; MODEL COMPARISON</p>
-                    <h3 class="p-title">Concrete Strength Prediction</h3>
-                    <p class="p-desc">Five regression models built and compared to predict concrete compressive strength, with the water-cement ratio identified as the dominant predictor.</p>
-                <ul class="p-metrics"><li><span class="m-val">4.2</span><span class="m-key">MPa RMSE</span></li><li><span class="m-val">5</span><span class="m-key">models</span></li></ul>
-                    <div class="p-tags"><span>Scikit-learn</span><span>XGBoost</span><span>Pandas</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">FULL-STACK &bull; REST API</p>
+                <h3 class="p-title">TaskFlow</h3>
+                <p class="p-desc">A task manager backed by a REST API and persistent SQLite storage, with validation on both ends and a Vitest and Supertest suite covering the API.</p>
+                <div class="p-tags">
+                    <span>React 19</span>
+                    <span>Express</span>
+                    <span>SQLite</span>
+                    <span>Vitest</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/TaskFlow" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="https://task-flow-tau-murex.vercel.app" target="_blank" rel="noopener noreferrer" class="p-link p-link-live">LIVE <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">09</div>
-                <div class="ai-body">
-                    <p class="p-cat">CLASSIFICATION &bull; HEALTH DATA</p>
-                    <h3 class="p-title">Cardiovascular Risk Prediction</h3>
-                    <p class="p-desc">Predicting cardiovascular disease across 70,000+ medical examination records, working through blood-pressure outlier filtering, BMI feature engineering, and benchmarking XGBoost, LightGBM, and Stacking Ensembles.</p>
-                <ul class="p-metrics"><li><span class="m-val">70K+</span><span class="m-key">records</span></li><li><span class="m-val">74.2%</span><span class="m-key">CV accuracy</span></li></ul>
-                    <div class="p-tags"><span>Scikit-learn</span><span>XGBoost</span><span>LightGBM</span><span>Pandas</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/Cardiovascular-Disease-prediction-" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">AUTOMATION &bull; DATA EXTRACTION</p>
+                <h3 class="p-title">Tender Scraper</h3>
+                <p class="p-desc">Automates Bangladesh defence procurement research: collects active tenders from four portals, downloads the attached specifications and builds Excel workbooks.</p>
+                <div class="p-tags">
+                    <span>Django 4.2</span>
+                    <span>Selenium</span>
+                    <span>BeautifulSoup</span>
+                    <span>OpenPyXL</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Tender-scraper" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
-            <article class="ai-row">
-                <div class="ai-num" aria-hidden="true">10</div>
-                <div class="ai-body">
-                    <p class="p-cat">CLASSIFICATION &bull; CLINICAL EDA</p>
-                    <h3 class="p-title">Diabetes Prediction</h3>
-                    <p class="p-desc">Exploratory clinical biomarker data analysis and supervised classification pipeline evaluating glucose, BMI, insulin and pedigree indicators.</p>
-                <ul class="p-metrics"><li><span class="m-val">82.4%</span><span class="m-key">precision</span></li><li><span class="m-val">8</span><span class="m-key">biomarkers</span></li></ul>
-                    <div class="p-tags"><span>Python</span><span>Pandas</span><span>Scikit-learn</span><span>Seaborn</span></div>
-                    <div class="p-actions">
-                        <a href="https://github.com/Tanvir284/Diabetes_prediction" target="_blank" rel="noopener noreferrer"
-                            class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">WEB SYSTEM &bull; CMS</p>
+                <h3 class="p-title">Matrix Trade &amp; Engineering</h3>
+                <p class="p-desc">A corporate web system with a JSON-powered content management engine and a secure admin panel for managing services, staff and equipment listings.</p>
+                <div class="p-tags">
+                    <span>PHP</span>
+                    <span>Bootstrap</span>
+                    <span>JSON</span>
+                    <span>Apache</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Matrix-Website" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
+                <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">DEEP LEARNING &bull; MEDICAL IMAGING</p>
+                <h3 class="p-title">Pneumonia Classification</h3>
+                <p class="p-desc">A chest X-ray classifier built on YOLOv8 distinguishing normal from pneumonia-affected scans, tracking precision, recall, F1 and mAP.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">95%+</span><span class="m-key">accuracy</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>YOLOv8</span>
+                    <span>PyTorch</span>
+                    <span>Ultralytics</span>
+                    <span>OpenCV</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Pneumonia-Classification-with-YOLOv8" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
+                <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">DEEP LEARNING &bull; HEALTHCARE AI</p>
+                <h3 class="p-title">Breast Lesion AI</h3>
+                <p class="p-desc">A deep learning pipeline using U-Net with a ResNet-50 backbone to segment and classify breast lesions from ultrasound images.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">91%</span><span class="m-key">Dice coefficient</span></li>
+                    <li><span class="m-val">+7pp</span><span class="m-key">over baseline</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>TensorFlow</span>
+                    <span>U-Net</span>
+                    <span>ResNet-50</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/breast-lesion-segmentation-and-classification-using-transfer_learning-encoder-decoder-network" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ai" style="--dc-d:#6384ff;--dc-lt:#007e85">
+                <i class="fas fa-brain p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">TRANSFER LEARNING &bull; AGRICULTURE</p>
+                <h3 class="p-title">Chicken Disease Detection</h3>
+                <p class="p-desc">A transfer-learning classifier detecting disease in poultry from images, developed and published as a Kaggle notebook.</p>
+                <div class="p-tags">
+                    <span>TensorFlow</span>
+                    <span>Transfer Learning</span>
+                    <span>Kaggle</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Chicken-Disease-Detection-with-Transfer-Learning-" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ml" style="--dc-d:#c33fff;--dc-lt:#b000ff">
+                <i class="fas fa-chart-line p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">MACHINE LEARNING &bull; REGRESSION</p>
+                <h3 class="p-title">Concrete Strength Prediction</h3>
+                <p class="p-desc">Built and compared five regression models to predict concrete compressive strength, identifying the water-cement ratio as the dominant predictor.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">4.2</span><span class="m-key">MPa RMSE</span></li>
+                    <li><span class="m-val">5</span><span class="m-key">models</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>Scikit-learn</span>
+                    <span>XGBoost</span>
+                    <span>Pandas</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Concrete-Comprehensive-Strength-prediction-using-machine-learning-Algorithms" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ml" style="--dc-d:#c33fff;--dc-lt:#b000ff">
+                <i class="fas fa-chart-line p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">MACHINE LEARNING &bull; ENSEMBLES</p>
+                <h3 class="p-title">Cirrhosis Survival Classification</h3>
+                <p class="p-desc">A multiclass pipeline predicting patient survival status, combining stacking and weighted blending with temperature-scaled probability calibration.</p>
+                <div class="p-tags">
+                    <span>XGBoost</span>
+                    <span>LightGBM</span>
+                    <span>CatBoost</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Cirrhosis_Multiclass_classification_with_ML" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ml" style="--dc-d:#c33fff;--dc-lt:#b000ff">
+                <i class="fas fa-chart-line p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">END-TO-END ML &bull; CLOUD PIPELINE</p>
+                <h3 class="p-title">EduPredict ML</h3>
+                <p class="p-desc">An end-to-end student academic performance prediction web application featuring modular data ingestion, transformation and CatBoost/Scikit-learn training pipelines, Flask + SQLAlchemy auth, and AWS Elastic Beanstalk deployment.</p>
+                <div class="p-tags">
+                    <span>CatBoost</span>
+                    <span>Scikit-learn</span>
+                    <span>Flask</span>
+                    <span>SQLAlchemy</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/machine-Learning-project-" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ml" style="--dc-d:#c33fff;--dc-lt:#b000ff">
+                <i class="fas fa-chart-line p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">MACHINE LEARNING &bull; CLINICAL DATA</p>
+                <h3 class="p-title">Cardiovascular Risk Prediction</h3>
+                <p class="p-desc">A clinical machine learning pipeline predicting cardiovascular disease across 70,000+ medical examination records, benchmarking Logistic Regression against XGBoost, LightGBM and Stacking Ensembles.</p>
+                <div class="p-tags">
+                    <span>XGBoost</span>
+                    <span>LightGBM</span>
+                    <span>Scikit-learn</span>
+                    <span>Pandas</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Cardiovascular-Disease-prediction-" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="ml" style="--dc-d:#c33fff;--dc-lt:#b000ff">
+                <i class="fas fa-chart-line p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">MACHINE LEARNING &bull; BIOMARKER ANALYSIS</p>
+                <h3 class="p-title">Diabetes Prediction</h3>
+                <p class="p-desc">An exploratory clinical data analysis and diagnostic classification study built in the Knowledge Engineering Lab to predict diabetes risk from physiological biomarkers.</p>
+                <div class="p-tags">
+                    <span>Python</span>
+                    <span>Scikit-learn</span>
+                    <span>Pandas</span>
+                    <span>Seaborn</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Diabetes_prediction" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">FULL-STACK &bull; WEB DEVELOPMENT</p>
+                <h3 class="p-title">E-Commerce Shop</h3>
+                <p class="p-desc">A full-stack e-commerce system with product catalogue, cart, order management and an admin dashboard, with optimised SQL queries.</p>
+                <ul class="p-metrics">
+                    <li><span class="m-val">200+</span><span class="m-key">SKUs</span></li>
+                    <li><span class="m-val">-35%</span><span class="m-key">load time</span></li>
+                </ul>
+                <div class="p-tags">
+                    <span>PHP</span>
+                    <span>MySQL</span>
+                    <span>JavaScript</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/E-Commerce-Shop" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="web" style="--dc-d:#3b82f6;--dc-lt:#326ed1">
+                <i class="fas fa-layer-group p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">ENTERPRISE &bull; .NET</p>
+                <h3 class="p-title">Employee Management</h3>
+                <p class="p-desc">A desktop employee management system with full CRUD operations, built on WinForms with Entity Framework Core over SQL Server.</p>
+                <div class="p-tags">
+                    <span>C#</span>
+                    <span>.NET 6</span>
+                    <span>WinForms</span>
+                    <span>EF Core</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Employee-Management-system-" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="mobile" style="--dc-d:#22c55e;--dc-lt:#16823e">
+                <i class="fas fa-mobile-screen p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">MOBILE &bull; HEALTHCARE &amp; FLUTTER</p>
+                <h3 class="p-title">MedRemind</h3>
+                <p class="p-desc">A cross-platform medication reminder and adherence analytics app with timezone-aware alarm scheduling, Riverpod reactive state, offline Hive NoSQL storage, fl_chart adherence tracking and PDF report printing.</p>
+                <div class="p-tags">
+                    <span>Flutter</span>
+                    <span>Riverpod</span>
+                    <span>Hive NoSQL</span>
+                    <span>fl_chart</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/MedRemind" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="mobile" style="--dc-d:#22c55e;--dc-lt:#16823e">
+                <i class="fas fa-mobile-screen p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">MOBILE &bull; FLUTTER</p>
+                <h3 class="p-title">E-Commerce Mobile App</h3>
+                <p class="p-desc">A mobile storefront with a locally persisted wishlist and cart, plus a product image carousel on the details screen.</p>
+                <div class="p-tags">
+                    <span>Flutter</span>
+                    <span>Dart</span>
+                    <span>shared_preferences</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/E-Commerce-app" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="systems" style="--dc-d:#f59e0b;--dc-lt:#9d6507">
+                <i class="fas fa-microchip p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">COMPUTER GRAPHICS &bull; OPENGL</p>
+                <h3 class="p-title">The Aviator 3D</h3>
+                <p class="p-desc">A 3D flight simulation built from scratch to explore the core computer graphics rendering pipeline, with procedural generation and lighting.</p>
+                <div class="p-tags">
+                    <span>C++</span>
+                    <span>OpenGL</span>
+                    <span>3D Engine</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/THE_AVIATOR_3D_PLANE" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+            <article class="project-card" data-domain="systems" style="--dc-d:#f59e0b;--dc-lt:#9d6507">
+                <i class="fas fa-microchip p-watermark" aria-hidden="true"></i>
+                <p class="p-cat">SOFTWARE ENGINEERING &bull; CORE C</p>
+                <h3 class="p-title">Hotel Management System</h3>
+                <p class="p-desc">A hotel management system written in core C and C++, covering reservations, room allocation and billing with file-based persistence.</p>
+                <div class="p-tags">
+                    <span>C</span>
+                    <span>C++</span>
+                    <span>Data Structures</span>
+                </div>
+                <div class="p-actions">
+                    <a href="https://github.com/Tanvir284/Hotel-Management-Sytem-With-C" target="_blank" rel="noopener noreferrer" class="p-link">SOURCE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
         </div>
 
-        <div class="prose" style="margin-top:48px">
-            <p>Every model above lives in a public repository. For the full engineering side &mdash; APIs,
-                dashboards and deployments &mdash; see <a href="index.html#work">all 24 projects</a>.</p>
-        </div>
+        <p class="no-results" hidden>No projects in this category. <button type="button" class="linklike" data-filter-reset>Show all projects</button></p>
     </section>
-
 
     <footer>
         <p>&copy; <span id="year"></span> <span>Md Tanvir Islam</span> &middot; <a href="index.html">Back to
@@ -246,9 +519,106 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </div>
 
+    <!-- AI CHATBOT WIDGET (JARVIS) -->
+    <button id="chatbot-toggle" class="chatbot-toggle" type="button" aria-label="Open AI assistant"
+        aria-expanded="false" aria-controls="ai-chatbot-window">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+        <div class="chat-ping"></div>
+    </button>
+
+    <div id="ai-chatbot-window" class="chatbot-window">
+        <div class="chat-header">
+            <span><i class="fas fa-microchip" aria-hidden="true"></i> Portfolio Assistant</span>
+            <button id="close-chatbot" type="button" aria-label="Close AI assistant"><i class="fas fa-times"
+                    aria-hidden="true"></i></button>
+        </div>
+        <div class="chat-body" id="chat-messages">
+            <div class="chat-msg ai-msg">
+                Ask me anything about this portfolio. A sentence-transformer runs in your browser and finds the
+                closest match from the real content on this page &mdash; it retrieves and quotes, it does not
+                make things up.
+            </div>
+        </div>
+        <div class="chat-prompts" role="group" aria-label="Suggested questions">
+            <button type="button" class="chat-prompt-chip" data-prompt="Medical imaging & deep learning research">Medical AI</button>
+            <button type="button" class="chat-prompt-chip" data-prompt="Full-stack web apps deployed live">Full-Stack</button>
+            <button type="button" class="chat-prompt-chip" data-prompt="What technologies and AI frameworks does Tanvir know?">Skills</button>
+            <button type="button" class="chat-prompt-chip" data-prompt="Education, certifications and research experience">Background</button>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" aria-label="Message the AI assistant"
+                placeholder="Ask me about Tanvir's projects...">
+            <button id="chat-send" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Project Modal Overlay -->
+    <div id="project-modal" class="project-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="project-modal-content">
+            <button id="close-modal" class="close-modal-btn" type="button" aria-label="Close project details"><i
+                    class="fas fa-times" aria-hidden="true"></i></button>
+            <div class="modal-body">
+                <div class="modal-visual" id="modal-visual"></div>
+                <div class="modal-info">
+                    <div class="modal-cat" id="modal-cat">CATEGORY</div>
+                    <h3 class="modal-title" id="modal-title">Project Title</h3>
+                    <div class="modal-desc" id="modal-desc">Project Description</div>
+
+                    <!-- LIVE INTERACTIVE MODEL SANDBOX INSIDE MODAL -->
+                    <div class="modal-playground" id="modal-playground" hidden>
+                        <div class="modal-pg-head">
+                            <span class="modal-sub-label"><i class="fas fa-bolt" aria-hidden="true"></i> LIVE INTERACTIVE MODEL SANDBOX</span>
+                            <label class="modal-upload-btn" for="modal-sample-upload">
+                                <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i> Upload Test Image / Sample
+                                <input type="file" id="modal-sample-upload" accept="image/*" hidden>
+                            </label>
+                        </div>
+                        <div class="modal-pg-presets" id="modal-pg-presets"></div>
+                        <div class="modal-pg-output" id="modal-pg-output"></div>
+                    </div>
+
+                    <div class="modal-arch-box" id="modal-arch-box">
+                        <span class="modal-sub-label">SYSTEM ARCHITECTURE PIPELINE (SVG DATA FLOW)</span>
+                        <div class="modal-arch-svg" id="modal-arch-svg"></div>
+                        <div class="modal-arch-flow" id="modal-arch"></div>
+                    </div>
+                    <div class="modal-tradeoff-box" id="modal-tradeoff-box">
+                        <span class="modal-sub-label">ENGINEERING DECISION &amp; TRADE-OFF</span>
+                        <p class="modal-tradeoff-text" id="modal-tradeoff"></p>
+                    </div>
+                    <ul class="p-metrics modal-metrics" id="modal-metrics"></ul>
+                    <div class="modal-tags p-tags" id="modal-tags"></div>
+                    <div class="modal-actions p-actions" id="modal-actions">
+                        <a href="#" id="modal-link" target="_blank" rel="noopener noreferrer" class="modal-btn btn btn-primary">VIEW SOURCE <i
+                                class="fas fa-arrow-right" style="margin-left: 8px;" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GLOBAL ⌘K / CTRL+K DEVELOPER COMMAND PALETTE MODAL -->
+    <div id="cmdk-modal" class="cmdk-overlay" role="dialog" aria-modal="true" aria-labelledby="cmdk-input" hidden>
+        <div class="cmdk-box">
+            <div class="cmdk-search-bar">
+                <i class="fas fa-magnifying-glass cmdk-search-ico" aria-hidden="true"></i>
+                <input type="text" id="cmdk-input" autocomplete="off" placeholder="Type a command or search projects, skills, actions... (Esc to close)">
+                <kbd class="cmdk-kbd">ESC</kbd>
+            </div>
+            <div class="cmdk-list" id="cmdk-list" role="listbox"></div>
+            <div class="cmdk-foot">
+                <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> to navigate &middot; <kbd>&crarr;</kbd> to execute</span>
+                <span>Tanvir AI Engineering Hub &middot; Spotlight</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="subpage.js?v=41"></script>
+    <script src="script.js?v=69"></script>
+    <script type="module" src="ai-ui.js?v=4"></script>
 </body>
 
 </html>

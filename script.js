@@ -1277,24 +1277,28 @@ if (chatbotToggle && chatbotWindow) {
 // Initial Page Load Animations
 if (!prefersReducedMotion) window.addEventListener('load', () => {
     // Reveal Hero Text
-    gsap.from(".hero-content .tagline, .hero h1, .hero h2, .hero p, .hero a", {
-        opacity: 0,
-        y: 30,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out",
-        delay: 0.5 // Wait for preloader a bit
-    });
+    if (document.querySelector('.hero-content')) {
+        gsap.from(".hero-content .tagline, .hero h1, .hero h2, .hero p, .hero a", {
+            opacity: 0,
+            y: 30,
+            duration: 1,
+            stagger: 0.15,
+            ease: "power3.out",
+            delay: 0.5 // Wait for preloader a bit
+        });
+    }
 
     // Reveal 3D Elements/Floating cards
-    gsap.from(".main-img, .float-card", {
-        opacity: 0,
-        scale: 0.8,
-        duration: 1.5,
-        stagger: 0.2,
-        ease: "elastic.out(1, 0.5)",
-        delay: 1
-    });
+    if (document.querySelector('.main-img, .float-card')) {
+        gsap.from(".main-img, .float-card", {
+            opacity: 0,
+            scale: 0.8,
+            duration: 1.5,
+            stagger: 0.2,
+            ease: "elastic.out(1, 0.5)",
+            delay: 1
+        });
+    }
 });
 
 /* --- CARD HOVER IS HANDLED VIA GPU-ACCELERATED CSS TRANSFORMS --- */
